@@ -4,10 +4,12 @@ import ch.epfl.cs107.play.game.areagame.AreaBehavior;
 import ch.epfl.cs107.play.game.areagame.Cell;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Window;
 
+import java.lang.annotation.Inherited;
+
 public class Tuto2Behavior extends AreaBehavior {
-    private Cell[][] grid;
     /**
      * AreaBehavior Constructor
      *
@@ -19,6 +21,10 @@ public class Tuto2Behavior extends AreaBehavior {
         for (int x = 0; x < getWidth(); x++)
             for (int y = 0; y < getHeight(); y++)
                 this.setCell(x, y, new Tuto2Cell(x, y, Tuto2CellType.toType(getRGB((getHeight() - 1 - y), x))));
+    }
+
+    public Tuto2CellType getCellType(Vector position) {
+        return ((Tuto2Cell) this.getCell((int) position.x, (int) position.y)).getCellType();
     }
 
     public enum Tuto2CellType {
@@ -59,14 +65,18 @@ public class Tuto2Behavior extends AreaBehavior {
             this.cellType = type;
         }
 
+        public Tuto2CellType getCellType() {
+            return this.cellType;
+        }
+
         @Override
         protected boolean canLeave(Interactable entity) {
-            return false;
+            return true;
         }
 
         @Override
         protected boolean canEnter(Interactable entity) {
-            return false;
+            return this.cellType.isWalkable;
         }
 
         @Override

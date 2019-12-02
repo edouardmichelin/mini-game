@@ -1,14 +1,18 @@
 package ch.epfl.cs107.play.game.tutos.area;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.AreaBehavior;
+import ch.epfl.cs107.play.game.areagame.Cell;
 import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
 import ch.epfl.cs107.play.game.tutos.Tuto2Behavior;
 import ch.epfl.cs107.play.io.FileSystem;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Image;
 import ch.epfl.cs107.play.window.Window;
 
 public abstract class Tuto2Area extends Area {
     private Window window;
+    private Tuto2Behavior ab;
 
     /**
      * Create the area by adding all its actors
@@ -25,7 +29,9 @@ public abstract class Tuto2Area extends Area {
     public boolean begin(Window window, FileSystem fileSystem) {
         this.window = window;
         if (super.begin(window, fileSystem)) {
-            setBehavior(new Tuto2Behavior(window, getTitle()));
+            this.ab = new Tuto2Behavior(window, getTitle());
+            setBehavior(this.ab);
+
             createArea();
             return true;
         }
@@ -35,6 +41,10 @@ public abstract class Tuto2Area extends Area {
     @Override
     public String getTitle() {
         return null;
+    }
+
+    public Tuto2Behavior.Tuto2CellType getCellType(Vector position) {
+        return this.ab.getCellType(position);
     }
 
 }

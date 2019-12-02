@@ -42,6 +42,11 @@ public class Tuto1 extends AreaGame {
     }
 
     @Override
+    public int getFrameRate() {
+        return 60;
+    }
+
+    @Override
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
             // traitement spécifiques à Tuto1

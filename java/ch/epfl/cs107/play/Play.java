@@ -2,7 +2,7 @@ package ch.epfl.cs107.play;
 
 import ch.epfl.cs107.play.game.Game;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
-import ch.epfl.cs107.play.game.tutos.Tuto1;
+import ch.epfl.cs107.play.game.tutos.Tuto2;
 import ch.epfl.cs107.play.io.DefaultFileSystem;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.io.ResourceFileSystem;
@@ -32,7 +32,7 @@ public class Play {
 		XMLTexts.initialize(fileSystem, "strings/icmon_fr.xml");
        
         // final Game game = new ARPG();
-		final AreaGame game = new Tuto1();
+		final AreaGame game = new Tuto2();
 
 		// Use Swing display
 		final Window window = new SwingWindow(game.getTitle(), fileSystem, 550, 550);

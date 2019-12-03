@@ -35,7 +35,7 @@ public class Play {
 		final AreaGame game = new Tuto2();
 
 		// Use Swing display
-		final Window window = new SwingWindow(game.getTitle(), fileSystem, 550, 550);
+		final Window window = new SwingWindow(game.getTitle(), fileSystem, 800, 800);
 		
 		//Recorder recorder = new Recorder(window); 
 		//RecordReplayer replayer = new RecordReplayer(window); // not used in this project

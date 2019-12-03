@@ -24,7 +24,7 @@ public class Tuto2 extends AreaGame {
         this.player = new GhostPlayer(
                 (this.getCurrentArea()),
                 Orientation.DOWN,
-                new DiscreteCoordinates(18, 7), "ghost.1"
+                new DiscreteCoordinates(18, 13), "ghost.1"
         );
     }
 

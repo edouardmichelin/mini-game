@@ -1,25 +1,31 @@
 package ch.epfl.cs107.play.game.tutos.actor;
 
+import ch.epfl.cs107.play.game.actor.TextGraphics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.MovableAreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.tutos.Tuto2Behavior;
+import ch.epfl.cs107.play.game.tutos.area.Tuto2Area;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.window.Button;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
+import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
 public class GhostPlayer extends MovableAreaEntity {
     private static final int DEFAULT_SPEED = 1;
     private final static int ANIMATION_DURATION = 8;
+    private final static float DEFAULT_HEALTH_POINTS = 100f;
 
     private Keyboard keyboard;
     private Sprite sprite;
+    private TextGraphics hpText;
+    private float hp = DEFAULT_HEALTH_POINTS;
     private boolean isNextToDoor = false;
 
     /**
@@ -31,12 +37,27 @@ public class GhostPlayer extends MovableAreaEntity {
      */
     public GhostPlayer(Area area, Orientation orientation, DiscreteCoordinates position, String spriteName) {
         super(area, orientation, position);
+
         this.sprite = new Sprite(spriteName, 1f, 1f, this);
+        this.hpText = initHpText(Color.WHITE);
         this.enterArea(area, position);
     }
 
     private void initKeyboard(Area area) {
         this.keyboard = area.getKeyboard();
+    }
+
+    private TextGraphics initHpText(Color color) {
+        TextGraphics hpt = new TextGraphics(Integer.toString((int) this.hp), 0.4f, color);
+        hpt.setParent(this);
+        hpt.setAnchor(new Vector(-0.3f, 0.1f));
+
+        return hpt;
+    }
+
+    private void decreaseHp(float damage) {
+        this.hp = this.hp - damage <= 0 ? 0 : this.hp - damage;
+        this.hpText.setText(Integer.toString((int) this.hp));
     }
 
     public void enterArea(Area area, DiscreteCoordinates position) {
@@ -49,29 +70,29 @@ public class GhostPlayer extends MovableAreaEntity {
     }
 
     public void leaveArea(Area area) {
+        this.isNextToDoor = false;
         area.unregisterActor(this);
-        // this.setOwnerArea(null);
     }
 
     public void update(float deltaTime) {
+        this.decreaseHp(deltaTime);
 
-        if (this.keyboard.get(Keyboard.UP).isDown()) this.moveUp();
-        if (this.keyboard.get(Keyboard.DOWN).isDown()) this.moveDown();
-        if (this.keyboard.get(Keyboard.LEFT).isDown()) this.moveLeft();
-        if (this.keyboard.get(Keyboard.RIGHT).isDown()) this.moveRight();
+        if (this.keyboard.get(Keyboard.UP).isDown()) this.move(Orientation.UP);
+        if (this.keyboard.get(Keyboard.DOWN).isDown()) this.move(Orientation.DOWN);
+        if (this.keyboard.get(Keyboard.LEFT).isDown()) this.move(Orientation.LEFT);
+        if (this.keyboard.get(Keyboard.RIGHT).isDown()) this.move(Orientation.RIGHT);
 
-        // this.isNextToDoor = this.getCurrentCells().contains(this.).get(0).toVector();
+        for (DiscreteCoordinates dc : getCurrentCells())
+            if (((Tuto2Area) getOwnerArea()).getCell(dc).getType().equals(Tuto2Behavior.Tuto2CellType.DOOR))
+                this.isNextToDoor = true;
 
         super.update(deltaTime);
-    }
-
-    public boolean getIsNextToDoor() {
-        return this.isNextToDoor;
     }
 
     @Override
     public void draw(Canvas canvas) {
         this.sprite.draw(canvas);
+        this.hpText.draw(canvas);
     }
 
     @Override
@@ -99,31 +120,22 @@ public class GhostPlayer extends MovableAreaEntity {
 
     }
 
-    public void moveUp() {
-        if (!this.getOrientation().equals(Orientation.UP))
-            this.orientate(Orientation.UP);
-        else
-            this.move(ANIMATION_DURATION, DEFAULT_SPEED);
+    public boolean isWeak() {
+        return this.hp <= 0;
     }
 
-    public void moveDown() {
-        if (!this.getOrientation().equals(Orientation.DOWN))
-            this.orientate(Orientation.DOWN);
-        else
-            this.move(ANIMATION_DURATION, DEFAULT_SPEED);
+    public void strengthen() {
+        this.hp = DEFAULT_HEALTH_POINTS;
     }
 
-    public void moveLeft() {
-        if (!this.getOrientation().equals(Orientation.LEFT))
-            this.orientate(Orientation.LEFT);
-        else
-            this.move(ANIMATION_DURATION, DEFAULT_SPEED);
+    public boolean getIsNextToDoor() {
+        return this.isNextToDoor;
     }
 
-    public void moveRight() {
-        if (!this.getOrientation().equals(Orientation.RIGHT))
-            this.orientate(Orientation.RIGHT);
-        else
+    private void move(Orientation orientation) {
+        if (this.getOrientation().equals(orientation))
             this.move(ANIMATION_DURATION, DEFAULT_SPEED);
+        else
+            this.orientate(orientation);
     }
 }

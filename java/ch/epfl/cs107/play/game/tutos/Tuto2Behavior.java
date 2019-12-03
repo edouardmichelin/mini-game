@@ -1,13 +1,10 @@
 package ch.epfl.cs107.play.game.tutos;
 
 import ch.epfl.cs107.play.game.areagame.AreaBehavior;
-import ch.epfl.cs107.play.game.areagame.Cell;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.math.Vector;
+import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
-
-import java.lang.annotation.Inherited;
 
 public class Tuto2Behavior extends AreaBehavior {
     /**
@@ -23,17 +20,17 @@ public class Tuto2Behavior extends AreaBehavior {
                 this.setCell(x, y, new Tuto2Cell(x, y, Tuto2CellType.toType(getRGB((getHeight() - 1 - y), x))));
     }
 
-    public Tuto2CellType getCellType(Vector position) {
-        return ((Tuto2Cell) this.getCell((int) position.x, (int) position.y)).getCellType();
+    public Tuto2Cell getCell(DiscreteCoordinates coordinates) {
+        return ((Tuto2Cell) this.getCell(coordinates.x, coordinates.y));
     }
 
     public enum Tuto2CellType {
         NULL(0, false),
-        WALL(-16777216, false), // #000000 RGB code of black
-        IMPASSABLE(-8750470, false), // #7A7A7A, RGB color of grey
-        INTERACT(-256, true), // #FFFF00, RGB color of yellow
-        DOOR(-195580, true), // #FD0404, RGB color of red
-        WALKABLE(-1, true),; // #FFFFFF, RGB color of white
+        WALL(-16777216, false),
+        IMPASSABLE(-8750470, false),
+        INTERACT(-256, true),
+        DOOR(-195580, true),
+        WALKABLE(-1, true);
 
         final int type;
         final boolean isWalkable;
@@ -43,30 +40,27 @@ public class Tuto2Behavior extends AreaBehavior {
             this.isWalkable = isWalkable;
         }
 
-        static Tuto2CellType toType(int type) {
-            switch (type) {
-                case -16777216: return WALL;
-                case -8750470: return IMPASSABLE;
-                case -256: return INTERACT;
-                case -195580: return DOOR;
-                case -1: return WALKABLE;
-                case 0:
-                default: return NULL;
+        public static Tuto2CellType toType(int type){
+            for(Tuto2CellType ct : Tuto2CellType.values()){
+                if(ct.type == type)
+                    return ct;
             }
+
+            return NULL;
         }
     }
 
 
-    class Tuto2Cell extends Cell {
-        private Tuto2CellType cellType;
+    public class Tuto2Cell extends Cell {
+        private Tuto2CellType type;
 
         public Tuto2Cell(int x, int y, Tuto2CellType type) {
             super(x, y);
-            this.cellType = type;
+            this.type = type;
         }
 
-        public Tuto2CellType getCellType() {
-            return this.cellType;
+        public Tuto2CellType getType() {
+            return this.type;
         }
 
         @Override
@@ -76,7 +70,7 @@ public class Tuto2Behavior extends AreaBehavior {
 
         @Override
         protected boolean canEnter(Interactable entity) {
-            return this.cellType.isWalkable;
+            return this.type.isWalkable;
         }
 
         @Override

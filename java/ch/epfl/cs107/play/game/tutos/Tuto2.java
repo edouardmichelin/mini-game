@@ -4,34 +4,32 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.tutos.actor.GhostPlayer;
-import ch.epfl.cs107.play.game.tutos.actor.SimpleGhost;
-import ch.epfl.cs107.play.game.tutos.area.Tuto2Area;
 import ch.epfl.cs107.play.game.tutos.area.tuto2.Ferme;
 import ch.epfl.cs107.play.game.tutos.area.tuto2.Village;
 import ch.epfl.cs107.play.io.FileSystem;
-import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.math.Vector;
-import ch.epfl.cs107.play.window.Button;
-import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Tuto2 extends AreaGame {
     private GhostPlayer player;
+    private List<String> areas = new ArrayList<>();
+    private int currentAreaIndex = 0;
 
     private void init() {
         this.createAreas();
-        this.setCurrentArea("zelda/Village", true);
+        this.setCurrentArea(areas.get(this.currentAreaIndex), true);
         this.player = new GhostPlayer(
                 (this.getCurrentArea()),
                 Orientation.DOWN,
-                new DiscreteCoordinates(18, 13), "ghost.1"
+                this.getCurrentArea().getStartingCoordinates(), "ghost.1"
         );
     }
 
     private void switchArea() {
-        String nextArea = this.getCurrentArea().getTitle().equals("zelda/Village") ?
-                "zelda/Ferme" :
-                "zelda/Village";
+        this.currentAreaIndex = (this.currentAreaIndex + 1) % this.areas.size();
+        String nextArea = areas.get(this.currentAreaIndex);
 
         this.player.leaveArea(this.getCurrentArea());
         this.setCurrentArea(nextArea, false);
@@ -59,15 +57,19 @@ public class Tuto2 extends AreaGame {
     @Override
     public void update(float deltaTime) {
 
-        if (((Tuto2Area) this.getCurrentArea())
-                .getCellType(this.player.getPosition())
-                .equals(Tuto2Behavior.Tuto2CellType.DOOR) ) switchArea();
+        if (this.player.getIsNextToDoor()) switchArea();
 
         super.update(deltaTime);
     }
 
     private void createAreas() {
-        super.addArea(new Ferme());
-        super.addArea(new Village());
+        Area ferme = new Ferme();
+        Area village = new Village();
+
+        super.addArea(ferme);
+        super.addArea(village);
+
+        areas.add(ferme.getTitle());
+        areas.add(village.getTitle());
     }
 }

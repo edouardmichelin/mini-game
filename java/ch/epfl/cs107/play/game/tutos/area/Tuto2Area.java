@@ -2,10 +2,10 @@ package ch.epfl.cs107.play.game.tutos.area;
 
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaBehavior;
-import ch.epfl.cs107.play.game.areagame.Cell;
 import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
 import ch.epfl.cs107.play.game.tutos.Tuto2Behavior;
 import ch.epfl.cs107.play.io.FileSystem;
+import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Image;
 import ch.epfl.cs107.play.window.Window;
@@ -43,8 +43,8 @@ public abstract class Tuto2Area extends Area {
         return null;
     }
 
-    public Tuto2Behavior.Tuto2CellType getCellType(Vector position) {
-        return this.ab.getCellType(position);
+    public Tuto2Behavior.Tuto2Cell getCell(DiscreteCoordinates coordinates) {
+        return this.ab.getCell(coordinates);
     }
 
 }

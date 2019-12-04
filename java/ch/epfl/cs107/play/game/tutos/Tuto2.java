@@ -38,7 +38,7 @@ public class Tuto2 extends AreaGame {
 
     @Override
     public String getTitle() {
-        return "Tuto2";
+        return "Tuto 2";
     }
 
     @Override

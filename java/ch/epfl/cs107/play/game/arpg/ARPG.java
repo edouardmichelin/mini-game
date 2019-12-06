@@ -19,7 +19,7 @@ public class ARPG extends RPG {
                 (this.getCurrentArea()),
                 Orientation.DOWN,
                 new DiscreteCoordinates(6, 10),
-                "ghost.1"
+                "zelda/player"
         ));
     }
 

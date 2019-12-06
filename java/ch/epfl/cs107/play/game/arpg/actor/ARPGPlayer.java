@@ -102,7 +102,7 @@ public class ARPGPlayer extends Player {
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        return null;
+        return Collections.singletonList (getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
     }
 
     @Override

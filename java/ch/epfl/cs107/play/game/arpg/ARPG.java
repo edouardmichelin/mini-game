@@ -1,40 +1,26 @@
 package ch.epfl.cs107.play.game.arpg;
 
-import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.arpg.actor.ARPGPlayer;
+import ch.epfl.cs107.play.game.arpg.area.Areas;
 import ch.epfl.cs107.play.game.arpg.area.Ferme;
 import ch.epfl.cs107.play.game.arpg.area.Village;
 import ch.epfl.cs107.play.game.arpg.area.Route;
 import ch.epfl.cs107.play.game.rpg.RPG;
 import ch.epfl.cs107.play.io.FileSystem;
+import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ARPG extends RPG {
-    private ARPGPlayer player;
-    private List<String> areas = new ArrayList<>();
-    private int currentAreaIndex = 0;
-
     private void init() {
         this.createAreas();
-        this.setCurrentArea(areas.get(this.currentAreaIndex), true);
-        this.player = new ARPGPlayer(
+        this.setCurrentArea(Areas.FERME.getTitle(), true);
+        this.initPlayer(new ARPGPlayer(
                 (this.getCurrentArea()),
                 Orientation.DOWN,
-                this.getCurrentArea().getStartingCoordinates(), "ghost.1"
-        );
-    }
-
-    private void switchArea() {
-        this.currentAreaIndex = (this.currentAreaIndex + 1) % this.areas.size();
-        String nextArea = areas.get(this.currentAreaIndex);
-
-        this.player.leaveArea(this.getCurrentArea());
-        this.setCurrentArea(nextArea, false);
-        this.player.enterArea(this.getCurrentArea(), this.getCurrentArea().getStartingCoordinates());
+                new DiscreteCoordinates(6, 10),
+                "ghost.1"
+        ));
     }
 
     @Override
@@ -56,13 +42,8 @@ public class ARPG extends RPG {
     }
 
     private void createAreas() {
-        createArea(new Ferme());
-        createArea(new Village());
-        createArea(new Route());
-    }
-
-    private void createArea(Area area) {
-        super.addArea(area);
-        areas.add(area.getTitle());
+        this.addArea(new Ferme());
+        this.addArea(new Village());
+        this.addArea(new Route());
     }
 }

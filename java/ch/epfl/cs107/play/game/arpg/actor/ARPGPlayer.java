@@ -6,9 +6,10 @@ import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior;
+import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
+import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
-import ch.epfl.cs107.play.game.tutos.Tuto2Behavior;
-import ch.epfl.cs107.play.game.tutos.area.Tuto2Area;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
@@ -22,11 +23,11 @@ public class ARPGPlayer extends Player {
     private final static int ANIMATION_DURATION = 8;
     private final static float DEFAULT_HEALTH_POINTS = 100f;
 
+    private ARPGPlayerHandler interactionHandler;
     private Keyboard keyboard;
     private Sprite sprite;
     private TextGraphics hpText;
     private float hp = DEFAULT_HEALTH_POINTS;
-    private boolean isNextToDoor = false;
 
     /**
      * Default MovableAreaEntity constructor
@@ -40,10 +41,7 @@ public class ARPGPlayer extends Player {
 
         this.sprite = new Sprite(spriteName, 1f, 1f, this);
         this.hpText = initHpText(Color.WHITE);
-        this.enterArea(area, position);
-    }
-
-    private void initKeyboard(Area area) {
+        this.interactionHandler = new ARPGPlayerHandler();
         this.keyboard = area.getKeyboard();
     }
 
@@ -60,20 +58,6 @@ public class ARPGPlayer extends Player {
         this.hpText.setText(Integer.toString((int) this.hp));
     }
 
-    public void enterArea(Area area, DiscreteCoordinates position) {
-        initKeyboard(area);
-        area.registerActor(this);
-        this.setOwnerArea(area);
-        this.setCurrentPosition(position.toVector());
-        area.setViewCandidate(this);
-        resetMotion();
-    }
-
-    public void leaveArea(Area area) {
-        this.isNextToDoor = false;
-        area.unregisterActor(this);
-    }
-
     public void update(float deltaTime) {
         this.decreaseHp(deltaTime);
 
@@ -81,10 +65,6 @@ public class ARPGPlayer extends Player {
         if (this.keyboard.get(Keyboard.DOWN).isDown()) this.move(Orientation.DOWN);
         if (this.keyboard.get(Keyboard.LEFT).isDown()) this.move(Orientation.LEFT);
         if (this.keyboard.get(Keyboard.RIGHT).isDown()) this.move(Orientation.RIGHT);
-
-        for (DiscreteCoordinates dc : getCurrentCells())
-            if (((Tuto2Area) getOwnerArea()).getCell(dc).getType().equals(Tuto2Behavior.Tuto2CellType.DOOR))
-                this.isNextToDoor = true;
 
         super.update(deltaTime);
     }
@@ -107,7 +87,7 @@ public class ARPGPlayer extends Player {
 
     @Override
     public boolean wantsCellInteraction() {
-        return false;
+        return true;
     }
 
     @Override
@@ -117,7 +97,7 @@ public class ARPGPlayer extends Player {
 
     @Override
     public void interactWith(Interactable other) {
-
+        other.acceptInteraction(this.interactionHandler);
     }
 
     @Override
@@ -127,7 +107,7 @@ public class ARPGPlayer extends Player {
 
     @Override
     public boolean isCellInteractable() {
-        return true;
+        return false;
     }
 
     @Override
@@ -137,7 +117,6 @@ public class ARPGPlayer extends Player {
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
-
     }
 
     public boolean isWeak() {
@@ -153,5 +132,22 @@ public class ARPGPlayer extends Player {
             this.move(ANIMATION_DURATION, 0);
         else
             this.orientate(orientation);
+    }
+
+    private class ARPGPlayerHandler implements ARPGInteractionVisitor {
+
+        @Override
+        public void interactWith(Door door) {
+            setIsPassingADoor(door);
+        }
+
+        public void interactWith(ARPGBehavior.ARPGCell cell){
+            // by default the interaction is empty
+        }
+
+        public void interactWith(ARPGPlayer player){
+            // by default the interaction is empty
+        }
+
     }
 }

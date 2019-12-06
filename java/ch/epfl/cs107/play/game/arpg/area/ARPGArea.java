@@ -3,7 +3,6 @@ package ch.epfl.cs107.play.game.arpg.area;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaBehavior;
 import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
-import ch.epfl.cs107.play.game.tutos.Tuto2Behavior;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
@@ -12,7 +11,7 @@ import ch.epfl.cs107.play.window.Window;
 
 public abstract class ARPGArea extends Area {
     private Window window;
-    private Tuto2Behavior ab;
+    private ARPGBehavior ab;
 
     /**
      * Create the area by adding all its actors
@@ -29,7 +28,7 @@ public abstract class ARPGArea extends Area {
     public boolean begin(Window window, FileSystem fileSystem) {
         this.window = window;
         if (super.begin(window, fileSystem)) {
-            this.ab = new Tuto2Behavior(window, getTitle());
+            this.ab = new ARPGBehavior(window, getTitle());
             setBehavior(this.ab);
 
             createArea();
@@ -43,7 +42,7 @@ public abstract class ARPGArea extends Area {
         return null;
     }
 
-    public Tuto2Behavior.Tuto2Cell getCell(DiscreteCoordinates coordinates) {
+    public ARPGBehavior.ARPGCell getCell(DiscreteCoordinates coordinates) {
         return this.ab.getCell(coordinates);
     }
 

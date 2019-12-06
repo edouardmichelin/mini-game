@@ -17,14 +17,14 @@ public class ARPGBehavior extends AreaBehavior {
         super(window, name);
         for (int x = 0; x < getWidth(); x++)
             for (int y = 0; y < getHeight(); y++)
-                this.setCell(x, y, new ARPGCell(x, y, Tuto2CellType.toType(getRGB((getHeight() - 1 - y), x))));
+                this.setCell(x, y, new ARPGCell(x, y, ARPGCellType.toType(getRGB((getHeight() - 1 - y), x))));
     }
 
     public ARPGCell getCell(DiscreteCoordinates coordinates) {
         return ((ARPGCell) this.getCell(coordinates.x, coordinates.y));
     }
 
-    public enum Tuto2CellType {
+    public enum ARPGCellType {
         NULL(0, false),
         WALL(-16777216, false),
         IMPASSABLE(-8750470, false),
@@ -35,13 +35,13 @@ public class ARPGBehavior extends AreaBehavior {
         final int type;
         final boolean isWalkable;
 
-        Tuto2CellType(int type, boolean isWalkable) {
+        ARPGCellType(int type, boolean isWalkable) {
             this.type = type;
             this.isWalkable = isWalkable;
         }
 
-        public static Tuto2CellType toType(int type){
-            for (Tuto2CellType ct : Tuto2CellType.values()){
+        public static ARPGCellType toType(int type){
+            for (ARPGCellType ct : ARPGCellType.values()){
                 if (ct.type == type)
                     return ct;
             }
@@ -52,14 +52,14 @@ public class ARPGBehavior extends AreaBehavior {
 
 
     public class ARPGCell extends Cell {
-        private Tuto2CellType type;
+        private ARPGCellType type;
 
-        public ARPGCell(int x, int y, Tuto2CellType type) {
+        public ARPGCell(int x, int y, ARPGCellType type) {
             super(x, y);
             this.type = type;
         }
 
-        public Tuto2CellType getType() {
+        public ARPGCellType getType() {
             return this.type;
         }
 

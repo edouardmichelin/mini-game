@@ -27,11 +27,9 @@ public class ARPGPlayer extends Player {
 
     private ARPGPlayerHandler interactionHandler;
     private Keyboard keyboard;
-    private Sprite[][] sprites;
     private Animation[] animations;
     private TextGraphics hpText;
     private float hp = DEFAULT_HEALTH_POINTS;
-    private int playerDirection;
 
     /**
      * Default MovableAreaEntity constructor
@@ -43,16 +41,26 @@ public class ARPGPlayer extends Player {
     public ARPGPlayer(Area area, Orientation orientation, DiscreteCoordinates position, String spriteName) {
         super(area, orientation, position);
 
-        sprites = RPGSprite.extractSprites(spriteName, 4, 1, 2,
-                this, 16, 32, new Orientation[]{Orientation.DOWN, Orientation.RIGHT,
-                        Orientation.UP, Orientation.LEFT});
+        Sprite[][] sprites = RPGSprite.extractSprites(
+                spriteName,
+                4,
+                1,
+                2,
+                this,
+                16,
+                32,
+                new Orientation[] {Orientation.DOWN, Orientation.RIGHT, Orientation.UP, Orientation.LEFT}
+        );
 
-        animations = RPGSprite.createAnimations(ANIMATION_DURATION / 2, sprites);
+        this.animations = RPGSprite.createAnimations(ANIMATION_DURATION / 2, sprites);
+
+        this.keyboard = area.getKeyboard();
         this.hpText = initHpText(Color.WHITE);
         this.interactionHandler = new ARPGPlayerHandler();
-        this.keyboard = area.getKeyboard();
-        this.playerDirection = 2; //Looking down by default when created
+    }
 
+    private Animation getAnimation() {
+        return this.animations[this.getOrientation().ordinal()];
     }
 
     private TextGraphics initHpText(Color color) {
@@ -75,18 +83,23 @@ public class ARPGPlayer extends Player {
         if (this.keyboard.get(Keyboard.DOWN).isDown()) this.move(Orientation.DOWN);
         if (this.keyboard.get(Keyboard.LEFT).isDown()) this.move(Orientation.LEFT);
         if (this.keyboard.get(Keyboard.RIGHT).isDown()) this.move(Orientation.RIGHT);
-        this.animations[playerDirection].update(deltaTime);
+
+        this.getAnimation().update(deltaTime);
+
         super.update(deltaTime);
     }
 
     @Override
     public void draw(Canvas canvas) {
+        Animation currentAnimation = this.getAnimation();
+
         if (this.isDisplacementOccurs()) {
-            this.animations[playerDirection].draw(canvas);
+            currentAnimation.draw(canvas);
         } else {
-            this.animations[playerDirection].reset();
-            this.animations[playerDirection].draw(canvas);
+            currentAnimation.reset();
+            currentAnimation.draw(canvas);
         }
+
         this.hpText.draw(canvas);
     }
 
@@ -143,7 +156,6 @@ public class ARPGPlayer extends Player {
     }
 
     private void move(Orientation orientation) {
-        this.playerDirection = orientation.ordinal();
         if (this.getOrientation().equals(orientation))
             this.move(ANIMATION_DURATION, 0);
         else

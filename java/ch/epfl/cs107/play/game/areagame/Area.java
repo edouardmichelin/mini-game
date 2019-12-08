@@ -344,10 +344,4 @@ public abstract class Area implements Playable {
         // by default does nothing
     	// can save the Area state somewhere if wanted
     }
-
-    /**
-     *
-     * @return the position when entering the area
-     */
-    public abstract DiscreteCoordinates getStartingCoordinates();
 }

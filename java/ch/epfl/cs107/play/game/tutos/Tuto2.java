@@ -20,11 +20,14 @@ public class Tuto2 extends AreaGame {
     private void init() {
         this.createAreas();
         this.setCurrentArea(areas.get(this.currentAreaIndex), true);
+        /*
         this.player = new GhostPlayer(
                 (this.getCurrentArea()),
                 Orientation.DOWN,
                 this.getCurrentArea().getStartingCoordinates(), "ghost.1"
         );
+
+         */
     }
 
     private void switchArea() {
@@ -33,7 +36,7 @@ public class Tuto2 extends AreaGame {
 
         this.player.leaveArea(this.getCurrentArea());
         this.setCurrentArea(nextArea, false);
-        this.player.enterArea(this.getCurrentArea(), this.getCurrentArea().getStartingCoordinates());
+        // this.player.enterArea(this.getCurrentArea(), this.getCurrentArea().getStartingCoordinates());
     }
 
     @Override

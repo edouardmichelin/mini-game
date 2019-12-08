@@ -23,9 +23,4 @@ public class Village extends SimpleArea {
     public String getTitle() {
         return "zelda/Village";
     }
-
-    @Override
-    public DiscreteCoordinates getStartingCoordinates() {
-        return null;
-    }
 }

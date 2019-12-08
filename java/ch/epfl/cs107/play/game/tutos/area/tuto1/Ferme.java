@@ -16,9 +16,4 @@ public class Ferme extends SimpleArea {
     public String getTitle() {
         return "zelda/Ferme";
     }
-
-    @Override
-    public DiscreteCoordinates getStartingCoordinates() {
-        return null;
-    }
 }

@@ -120,7 +120,7 @@ public class ARPGPlayer extends Player {
 
     @Override
     public boolean wantsViewInteraction() {
-        return false;
+        return true;
     }
 
     @Override
@@ -135,7 +135,7 @@ public class ARPGPlayer extends Player {
 
     @Override
     public boolean isCellInteractable() {
-        return false;
+        return true;
     }
 
     @Override
@@ -157,9 +157,16 @@ public class ARPGPlayer extends Player {
 
     private void move(Orientation orientation) {
         if (this.getOrientation().equals(orientation))
-            this.move(ANIMATION_DURATION, 0);
+            if (keyboard.get(Keyboard.SPACE).isDown())
+                this.move(ANIMATION_DURATION / 2, 0);
+            else
+                this.move(ANIMATION_DURATION, 0);
         else
             this.orientate(orientation);
+    }
+
+    private boolean isInteractionKeyPressed() {
+        return this.keyboard.get(Keyboard.E).isDown();
     }
 
     private class ARPGPlayerHandler implements ARPGInteractionVisitor {
@@ -170,11 +177,14 @@ public class ARPGPlayer extends Player {
         }
 
         public void interactWith(ARPGBehavior.ARPGCell cell){
-            // by default the interaction is empty
         }
 
         public void interactWith(ARPGPlayer player){
-            // by default the interaction is empty
+        }
+
+        public void interactWith(Grass grass) {
+            if (isInteractionKeyPressed())
+                grass.cut();
         }
 
     }

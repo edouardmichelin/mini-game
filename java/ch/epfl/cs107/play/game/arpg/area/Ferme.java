@@ -8,15 +8,16 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
 public class Ferme extends ARPGArea {
+
     @Override
     protected void createArea() {
-        registerActor(new Background(this));
-        registerActor(new Foreground(this));
-        registerDoors();
+        this.registerActor(new Background(this));
+        this.registerActor(new Foreground(this));
+        this.registerDoors();
     }
 
     private void registerDoors() {
-        registerActor(new Door(
+        this.registerActor(new Door(
                 Areas.ROUTE.getTitle(),
                 new DiscreteCoordinates(1, 15),
                 Logic.TRUE,
@@ -24,7 +25,7 @@ public class Ferme extends ARPGArea {
                 Orientation.RIGHT,
                 new DiscreteCoordinates(19, 15),
                 new DiscreteCoordinates(19, 16)));
-        registerActor(new Door(
+        this.registerActor(new Door(
                 Areas.VILLAGE.getTitle(),
                 new DiscreteCoordinates(4, 18),
                 Logic.TRUE,
@@ -32,7 +33,7 @@ public class Ferme extends ARPGArea {
                 Orientation.DOWN,
                 new DiscreteCoordinates(4, 0),
                 new DiscreteCoordinates(5, 0)));
-        registerActor(new Door(
+        this.registerActor(new Door(
                 Areas.VILLAGE.getTitle(),
                 new DiscreteCoordinates(14, 18),
                 Logic.TRUE,
@@ -47,7 +48,4 @@ public class Ferme extends ARPGArea {
         return Areas.FERME.getTitle();
     }
 
-    public DiscreteCoordinates getStartingCoordinates() {
-        return new DiscreteCoordinates(2,10);
-    }
 }

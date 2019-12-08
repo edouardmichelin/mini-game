@@ -1,10 +1,19 @@
 package ch.epfl.cs107.play.game.arpg.handler;
 
 import ch.epfl.cs107.play.game.arpg.actor.ARPGPlayer;
+import ch.epfl.cs107.play.game.arpg.actor.Grass;
 import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior.ARPGCell;
 import ch.epfl.cs107.play.game.rpg.handler.RPGInteractionVisitor;
 
 public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
+
+    /**
+     * Simulate and interaction between RPG Interactor and a grass
+     * @param grass (ARPGCell), not null
+     */
+    default void interactWith(Grass grass){
+        // by default the interaction is empty
+    }
 
     /**
      * Simulate and interaction between RPG Interactor and a cell

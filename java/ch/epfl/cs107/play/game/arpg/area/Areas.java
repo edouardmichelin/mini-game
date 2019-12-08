@@ -6,7 +6,7 @@ public enum Areas {
     ROUTE("zelda/Route"),
     ;
 
-    private Areas(String title) {
+    Areas(String title) {
         this.title = title;
     }
 

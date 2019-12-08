@@ -24,13 +24,13 @@ import java.util.List;
 
 public class ARPGPlayer extends Player {
     private final static int ANIMATION_DURATION = 8;
-    private final static float DEFAULT_HEALTH_POINTS = 100f;
+    private final static float DEFAULT_HEALTH_POINTS = 5f;
 
     private ARPGPlayerHandler interactionHandler;
     private Keyboard keyboard;
     private Animation[] animations;
     private TextGraphics hpText;
-    private float hp = DEFAULT_HEALTH_POINTS;
+    private float hp;
 
     /**
      * Default MovableAreaEntity constructor
@@ -41,6 +41,7 @@ public class ARPGPlayer extends Player {
      */
     public ARPGPlayer(Area area, Orientation orientation, DiscreteCoordinates position, String spriteName) {
         super(area, orientation, position);
+        this.hp = DEFAULT_HEALTH_POINTS;
 
         Sprite[][] sprites = RPGSprite.extractSprites(
                 spriteName,

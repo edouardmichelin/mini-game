@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.arpg.area;
 import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.game.areagame.actor.Foreground;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.arpg.actor.Bomb;
 import ch.epfl.cs107.play.game.arpg.actor.Grass;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -16,6 +17,9 @@ public class Route extends ARPGArea {
         this.registerActor(new Foreground(this));
         this.registerDoors();
         this.plantGrasses();
+
+        // EXAMPLE
+        this.registerActor(new Bomb(this, Orientation.DOWN, new DiscreteCoordinates(7, 11)));
     }
 
     private void registerDoors() {

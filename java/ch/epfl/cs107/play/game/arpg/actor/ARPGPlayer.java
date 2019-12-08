@@ -8,6 +8,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior;
+import ch.epfl.cs107.play.game.arpg.config.Keys;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
@@ -79,10 +80,10 @@ public class ARPGPlayer extends Player {
     public void update(float deltaTime) {
         this.decreaseHp(deltaTime);
 
-        if (this.keyboard.get(Keyboard.UP).isDown()) this.move(Orientation.UP);
-        if (this.keyboard.get(Keyboard.DOWN).isDown()) this.move(Orientation.DOWN);
-        if (this.keyboard.get(Keyboard.LEFT).isDown()) this.move(Orientation.LEFT);
-        if (this.keyboard.get(Keyboard.RIGHT).isDown()) this.move(Orientation.RIGHT);
+        if (this.keyboard.get(Keys.MOVE_UP).isDown()) this.move(Orientation.UP);
+        if (this.keyboard.get(Keys.MOVE_DOWN).isDown()) this.move(Orientation.DOWN);
+        if (this.keyboard.get(Keys.MOVE_LEFT).isDown()) this.move(Orientation.LEFT);
+        if (this.keyboard.get(Keys.MOVE_RIGHT).isDown()) this.move(Orientation.RIGHT);
 
         this.getAnimation().update(deltaTime);
 
@@ -157,7 +158,7 @@ public class ARPGPlayer extends Player {
 
     private void move(Orientation orientation) {
         if (this.getOrientation().equals(orientation))
-            if (keyboard.get(Keyboard.SPACE).isDown())
+            if (keyboard.get(Keys.RUN).isDown())
                 this.move(ANIMATION_DURATION / 2, 0);
             else
                 this.move(ANIMATION_DURATION, 0);
@@ -166,7 +167,8 @@ public class ARPGPlayer extends Player {
     }
 
     private boolean isInteractionKeyPressed() {
-        return this.keyboard.get(Keyboard.E).isDown();
+        return this.keyboard.get(Keys.INTERACTION_KEY)
+                .isPressed();
     }
 
     private class ARPGPlayerHandler implements ARPGInteractionVisitor {
@@ -176,12 +178,15 @@ public class ARPGPlayer extends Player {
             setIsPassingADoor(door);
         }
 
+        @Override
         public void interactWith(ARPGBehavior.ARPGCell cell){
         }
 
+        @Override
         public void interactWith(ARPGPlayer player){
         }
 
+        @Override
         public void interactWith(Grass grass) {
             if (isInteractionKeyPressed())
                 grass.cut();

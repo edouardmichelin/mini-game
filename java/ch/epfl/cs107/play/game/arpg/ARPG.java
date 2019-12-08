@@ -6,6 +6,7 @@ import ch.epfl.cs107.play.game.arpg.area.Areas;
 import ch.epfl.cs107.play.game.arpg.area.Ferme;
 import ch.epfl.cs107.play.game.arpg.area.Village;
 import ch.epfl.cs107.play.game.arpg.area.Route;
+import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.rpg.RPG;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -25,12 +26,12 @@ public class ARPG extends RPG {
 
     @Override
     public String getTitle() {
-        return "Step1";
+        return Settings.GAME_TITLE;
     }
 
     @Override
     public int getFrameRate() {
-        return 60;
+        return Settings.FRAME_RATE;
     }
 
     @Override

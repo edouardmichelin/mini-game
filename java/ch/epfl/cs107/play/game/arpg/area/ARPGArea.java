@@ -1,6 +1,7 @@
 package ch.epfl.cs107.play.game.arpg.area;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
@@ -17,7 +18,7 @@ public abstract class ARPGArea extends Area {
 
     @Override
     public float getCameraScaleFactor() {
-        return 20f;
+        return Settings.CAMERA_SCALE_FACTOR;
     }
 
     @Override

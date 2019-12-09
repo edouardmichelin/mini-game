@@ -20,6 +20,7 @@ import java.util.List;
 
 public class Bomb extends AreaEntity implements Interactor {
     private final static int DEFAULT_COUNTDOWN = 5 * Settings.FRAME_RATE;
+    private final static float DEFAULT_DAMAGE = 1f;
 
     private int countdown;
     private RPGSprite sprite;
@@ -89,12 +90,12 @@ public class Bomb extends AreaEntity implements Interactor {
 
     @Override
     public boolean takeCellSpace() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCellInteractable() {
-        return false;
+        return true;
     }
 
     @Override
@@ -119,6 +120,7 @@ public class Bomb extends AreaEntity implements Interactor {
 
         @Override
         public void interactWith(ARPGPlayer player){
+            player.damage(DEFAULT_DAMAGE);
         }
 
         @Override

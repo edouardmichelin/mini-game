@@ -1,6 +1,7 @@
 package ch.epfl.cs107.play.game.arpg.handler;
 
 import ch.epfl.cs107.play.game.arpg.actor.ARPGPlayer;
+import ch.epfl.cs107.play.game.arpg.actor.Bomb;
 import ch.epfl.cs107.play.game.arpg.actor.Grass;
 import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior.ARPGCell;
 import ch.epfl.cs107.play.game.rpg.handler.RPGInteractionVisitor;

@@ -35,7 +35,7 @@ public class Grass extends AreaEntity {
         );
     }
 
-    public void cut() {
+    void cut() {
         this.getOwnerArea().unregisterActor(this);
     }
 

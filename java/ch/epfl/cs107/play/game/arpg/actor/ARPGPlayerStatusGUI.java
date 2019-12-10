@@ -11,6 +11,7 @@ import ch.epfl.cs107.play.window.Canvas;
 public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
     private final static int DEPTH = 100000;
 
+    private boolean displayFortune = false;
     private float healthPoint;
     private String itemSpriteName;
     private InventoryContentAccessor inventory;
@@ -34,7 +35,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
 
         this.drawCoinsDisplay(canvas, width, height);
         this.drawCoinsDigits(canvas, width, height);
-        this.drawHeartDisplay(canvas, width, height);
+        this.drawHearts(canvas, width, height);
         this.drawGearDisplay(canvas, width, height);
         this.drawCurrentEquipment(canvas, width, height);
     }
@@ -46,7 +47,11 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
 
     @Override
     public void setHealthPoints(float hp) {
+        this.healthPoint = hp;
+    }
 
+    public void switchCoinsDisplay() {
+        this.displayFortune = !this.displayFortune;
     }
 
     private void drawGearDisplay(Canvas canvas, float width, float height) {
@@ -95,11 +100,17 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
         final float OFFSET = 0.75f;
         final float SIZE = 1f;
         final float X = 2.25f, Y = 0.8f;
-        String[] money = ("" + this.inventory.getWealth()).split("");
+
+        String[] data = Integer.toString(
+                this.displayFortune ?
+                        this.inventory.getFortune() :
+                        this.inventory.getWealth()
+        ).split("");
+
         Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(width / 2, height / 2));
 
         for (int i = 2; i >= 0; i--) {
-            int digit = i < money.length ? Integer.parseInt(money[money.length - (i + 1)]) : 0;
+            int digit = i < data.length ? Integer.parseInt(data[data.length - (i + 1)]) : 0;
             new ImageGraphics(
                     ResourcePath.getSprite("zelda/digits"),
                     SIZE,
@@ -112,8 +123,29 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
         }
     }
 
-    private void drawHeartDisplay(Canvas canvas, float width, float height) {
-        //
+    private void drawHearts(Canvas canvas, float width, float height) {
+        final float OFFSET = 1.5f;
+        final float SIZE = 1.5f;
+        final float X = 3f, Y = height - 2.25f;
+
+        Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(width / 2, height / 2));
+
+        // 5 -> MAXIMUM PLAYER'S HP
+        // TODO - PLAYER CAN FIND HEARTS THAT INCREASE HIS MAX HP
+        // TODO - 2 HP: HEARTS START SHAKING / 1 HP: HEARTS SHAKE STRONGER
+        for (int i = 0; i < 5; i++) {
+            float data = (this.healthPoint - i) > 0f ? this.healthPoint - i > 0.5f ? 1f : 0.5f : 0f;
+
+            new ImageGraphics(
+                    ResourcePath.getSprite("zelda/heartDisplay"),
+                    SIZE,
+                    SIZE,
+                    HeartsRegionOfInterest.fromFloat(data).getROI(),
+                    anchor.add(new Vector(X + i * OFFSET, Y)),
+                    1,
+                    DEPTH * 2
+            ).draw(canvas);
+        }
     }
 
     private enum DigitsRegionOfInterest {
@@ -147,6 +179,33 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
             }
 
             return NIL;
+        }
+    }
+
+    public enum HeartsRegionOfInterest {
+        EMPTY(0f, 0, 0),
+        HALF(0.5f, 16, 0),
+        FULL(1f, 32, 0)
+        ;
+
+        private float value;
+        private RegionOfInterest roi;
+
+        HeartsRegionOfInterest(float value, int x, int y) {
+            this.value = value;
+            this.roi = new RegionOfInterest(x, y, 16, 16);
+        }
+
+        public RegionOfInterest getROI() {
+            return this.roi;
+        }
+
+        public static HeartsRegionOfInterest fromFloat(float value) {
+            for (HeartsRegionOfInterest hroi : HeartsRegionOfInterest.values()) {
+                if (hroi.value == value) return hroi;
+            }
+
+            return EMPTY;
         }
     }
 }

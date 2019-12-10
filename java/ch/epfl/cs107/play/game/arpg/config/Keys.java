@@ -10,4 +10,5 @@ public abstract class Keys {
     public static int INTERACTION_KEY = Keyboard.E;
     public static int RUN = Keyboard.SPACE;
     public static int SWITCH_ITEM = Keyboard.TAB;
+    public static int SWITCH_COINS_DISPLAY = Keyboard.L;
 }

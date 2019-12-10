@@ -5,6 +5,7 @@ import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Interactor;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.areagame.actor.Throwable;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
 import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior;
@@ -18,9 +19,9 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
-public class Bomb extends AreaEntity implements Interactor {
+public class Bomb extends AreaEntity implements Interactor, Throwable {
     private final static int DEFAULT_COUNTDOWN = 5 * Settings.FRAME_RATE;
-    private final static float DEFAULT_DAMAGE = 1f;
+    private final static float DEFAULT_DAMAGE = 2.5f;
 
     private int countdown;
     private RPGSprite sprite;
@@ -106,6 +107,11 @@ public class Bomb extends AreaEntity implements Interactor {
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
 
+    }
+
+    @Override
+    public void throwItem(AreaEntity user) {
+        //
     }
 
     private class ARPGBombHandler implements ARPGInteractionVisitor {

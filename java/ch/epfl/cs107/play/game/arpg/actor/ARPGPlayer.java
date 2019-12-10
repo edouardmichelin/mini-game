@@ -61,11 +61,14 @@ public class ARPGPlayer extends Player {
         this.interactionHandler = new ARPGPlayerHandler();
         this.inventory = new ARPGInventory(30, this);
 
-        this.inventory.addItem(ARPGInventory.ARPGItem.BOMB, 5);
+        this.inventory.addItem(ARPGInventory.ARPGItem.BOMB, 2);
         this.inventory.addItem(ARPGInventory.ARPGItem.BOW, 1);
-        this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 15);
+        this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 5);
+        this.inventory.addItem(ARPGInventory.ARPGItem.CASTLE_KEY, 1);
+        this.inventory.addItem(ARPGInventory.ARPGItem.STAFF, 1);
+        this.inventory.addItem(ARPGInventory.ARPGItem.SWORD, 1);
 
-        this.inventory.addMoney(666);
+        this.inventory.addMoney(19);
 
         this.GUI = new ARPGPlayerStatusGUI(this.inventory, this.currentItemId, this.hp);
     }
@@ -130,6 +133,7 @@ public class ARPGPlayer extends Player {
         if (this.keyboard.get(Keys.MOVE_RIGHT).isDown()) this.move(Orientation.RIGHT);
 
         if (this.keyboard.get(Keys.SWITCH_ITEM).isPressed()) this.switchItem();
+        if (this.keyboard.get(Keys.SWITCH_COINS_DISPLAY).isPressed()) this.GUI.switchCoinsDisplay();
 
         this.getAnimation().update(deltaTime);
 

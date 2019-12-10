@@ -53,7 +53,6 @@ public class ARPGInventory implements Inventory {
 
     public int getFortune() {
         return this.wealth + this.inventoryValue;
-
     }
 
     public int getWealth() {
@@ -98,12 +97,12 @@ public class ARPGInventory implements Inventory {
     }
 
     public enum ARPGItem implements Inventory.InventoryItem {
-        ARROW(0, 0, "zelda/arrow.icon"),
-        BOW(0, 0, "zelda/bow.icon"),
-        SWORD(0, 0, "zelda/sword.icon"),
-        STAFF(0, 0, "zelda/staff_water.icon"),
-        BOMB(0, 0, "zelda/bomb"),
-        CASTLE_KEY(0, 0, "zelda/key.icon")
+        ARROW(0, 5, "zelda/arrow.icon"),
+        BOW(0, 15, "zelda/bow.icon"),
+        SWORD(0, 20, "zelda/sword.icon"),
+        STAFF(0, 200, "zelda/staff_water.icon"),
+        BOMB(0, 50, "zelda/bomb"),
+        CASTLE_KEY(0, 100, "zelda/key")
         ;
 
         private String title;

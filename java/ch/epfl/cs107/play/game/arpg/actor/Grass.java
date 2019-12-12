@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Grass extends AreaEntity {
-    private final static int ANIMATION_DURATION = Settings.FRAME_RATE / 3;
+    private final static int ANIMATION_DURATION = Settings.FRAME_RATE / 4;
 
     private RPGSprite sprite;
     private Animation animation;

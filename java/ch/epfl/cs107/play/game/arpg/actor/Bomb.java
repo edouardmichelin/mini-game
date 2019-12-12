@@ -3,7 +3,6 @@ package ch.epfl.cs107.play.game.arpg.actor;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
 import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
@@ -15,7 +14,6 @@ import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 public class Bomb extends AreaEntity implements Interactor {
     private final static int DEFAULT_COUNTDOWN = 5 * Settings.FRAME_RATE;
@@ -57,12 +55,12 @@ public class Bomb extends AreaEntity implements Interactor {
             sprites[frame] = new RPGSprite("zelda/explosion", 1, 1, this,
                     new RegionOfInterest(frame * 32, 0, 32, 32));
         }
-        this.animation = new Animation(Settings.FRAME_RATE / 6, sprites, true);
+        this.animation = new Animation(Settings.FRAME_RATE / 18, sprites, true);
     }
 
     @Override
     public void update(float deltaTime) {
-        if (this.countdown < -1 * Settings.FRAME_RATE) {
+        if (this.countdown < - (Settings.FRAME_RATE / 4)) {
             this.getOwnerArea().unregisterActor(this);
             return;
         }

@@ -27,7 +27,7 @@ public class ARPGInventory implements Inventory {
     }
 
     public ARPGItem[] getItems() {
-        return this.content.keySet().toArray(ARPGItem[]::new).clone();
+        return this.content.keySet().toArray(ARPGItem[]::new);
     }
 
     private int getItemQuantity(InventoryItem item) {

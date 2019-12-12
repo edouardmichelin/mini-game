@@ -17,10 +17,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class Grass extends AreaEntity {
-    private final static int ANIMATION_DURATION = Settings.FRAME_RATE / 2;
+    private final static int ANIMATION_DURATION = Settings.FRAME_RATE / 3;
 
     private RPGSprite sprite;
-    private Animation[] animation;
+    private Animation animation;
     private boolean isSliced;
     private int despawnTime;
 
@@ -34,29 +34,19 @@ public class Grass extends AreaEntity {
     public Grass(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
-        this.sprite = new RPGSprite(
-                "zelda/Grass",
-                1,
-                1,
-                this,
-                new RegionOfInterest(0, 0, 16, 16)
-        );
+        this.sprite = new RPGSprite("zelda/Grass", 1, 1, this,
+                new RegionOfInterest(0, 0, 16, 16));
 
         Sprite sprites[] = new Sprite[4];
         for (int frame = 0; frame < 4; frame++) {
-            sprites[frame] = new RPGSprite(
-                    "zelda/grass.sliced",
-                    1,
-                    1,
-                    this,
-                    new RegionOfInterest(frame * 32, 0, 32, 32)
-            );
+            sprites[frame] = new RPGSprite("zelda/grass.sliced", 1, 1, this,
+                    new RegionOfInterest(frame * 32, 0, 32, 32));
         }
-        this.animation = new Animation[]{new Animation(
+        this.animation = new Animation(
                 ANIMATION_DURATION / 3,
                 sprites,
                 true)
-        };
+        ;
 
         this.isSliced = false;
         this.despawnTime = ANIMATION_DURATION;
@@ -66,18 +56,14 @@ public class Grass extends AreaEntity {
         this.isSliced = true;
     }
 
-    public boolean getIsSliced() {
-        return this.isSliced;
-    }
-
     @Override
     public void update(float deltaTime) {
-        if(despawnTime <= 0) {
+        if (despawnTime <= 0) {
             this.getOwnerArea().unregisterActor(this);
         }
-        if (this.getIsSliced()) {
+        if (this.isSliced) {
             this.despawnTime = despawnTime - 1;
-            this.animation[0].update(deltaTime);
+            this.animation.update(deltaTime);
         }
         super.update(deltaTime);
     }
@@ -87,7 +73,7 @@ public class Grass extends AreaEntity {
         if (!isSliced) {
             this.sprite.draw(canvas);
         } else {
-            this.animation[0].draw(canvas);
+            this.animation.draw(canvas);
         }
     }
 

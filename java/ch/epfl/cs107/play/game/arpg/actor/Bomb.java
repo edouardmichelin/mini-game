@@ -21,7 +21,7 @@ public class Bomb extends AreaEntity implements Interactor {
     private final static int DEFAULT_COUNTDOWN = 5 * Settings.FRAME_RATE;
 
     private int countdown;
-    private Animation[] animation;
+    private Animation animation;
     private ARPGBombHandler interactionHandler;
 
     /**
@@ -35,21 +35,15 @@ public class Bomb extends AreaEntity implements Interactor {
         super(area, orientation, position);
 
         Sprite sprites[] = new Sprite[2];
-        for(int frame = 0; frame < 2; frame++){
-            sprites[frame] = new RPGSprite(
-                    "zelda/bomb",
-                    1,
-                    1,
-                    this,
-                    new RegionOfInterest(frame*16, 0, 16, 16)
-            );
+        for (int frame = 0; frame < 2; frame++) {
+            sprites[frame] = new RPGSprite("zelda/bomb", 1, 1, this,
+                    new RegionOfInterest(frame * 16, 0, 16, 16));
         }
-        Animation bombAnimation[] = {new Animation(
+
+        this.animation = new Animation(
                 Settings.FRAME_RATE / 3,
                 sprites,
-                true)
-        };
-        this.animation = bombAnimation;
+                true);
 
         this.countdown = DEFAULT_COUNTDOWN;
 
@@ -57,22 +51,13 @@ public class Bomb extends AreaEntity implements Interactor {
     }
 
     private void explode() {
-        this.animation[0].reset();
+        this.animation.reset();
         Sprite sprites[] = new Sprite[7];
-        for(int frame = 0; frame < 7; frame++){
-            sprites[frame] = new RPGSprite(
-                "zelda/explosion",
-                1,
-                1,
-                this,
-                new RegionOfInterest(frame*32, 0, 32, 32)
-            );
+        for (int frame = 0; frame < 7; frame++) {
+            sprites[frame] = new RPGSprite("zelda/explosion", 1, 1, this,
+                    new RegionOfInterest(frame * 32, 0, 32, 32));
         }
-        this.animation = new Animation[]{new Animation(
-                Settings.FRAME_RATE / 6,
-                sprites,
-                true)
-        };
+        this.animation = new Animation(Settings.FRAME_RATE / 6, sprites, true);
     }
 
     @Override
@@ -83,13 +68,13 @@ public class Bomb extends AreaEntity implements Interactor {
         }
 
         this.countdown = this.countdown - 1;
-        this.animation[0].update(deltaTime);
+        this.animation.update(deltaTime);
         super.update(deltaTime);
     }
 
     @Override
     public void draw(Canvas canvas) {
-        this.animation[0].draw(canvas);
+        this.animation.draw(canvas);
     }
 
     @Override
@@ -145,16 +130,16 @@ public class Bomb extends AreaEntity implements Interactor {
         }
 
         @Override
-        public void interactWith(ARPGBehavior.ARPGCell cell){
+        public void interactWith(ARPGBehavior.ARPGCell cell) {
         }
 
         @Override
-        public void interactWith(ARPGPlayer player){
+        public void interactWith(ARPGPlayer player) {
         }
 
         @Override
         public void interactWith(Grass grass) {
-                grass.cut();
+            grass.cut();
         }
 
     }

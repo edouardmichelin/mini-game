@@ -1,9 +1,12 @@
 package ch.epfl.cs107.play.game.arpg.actor;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.Animation;
 import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -14,7 +17,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class Grass extends AreaEntity {
+    private final static int ANIMATION_DURATION = Settings.FRAME_RATE / 4;
+
     private RPGSprite sprite;
+    private Animation animation;
+    private boolean isSliced;
+    private int despawnTime;
 
     /**
      * Default AreaEntity constructor
@@ -26,22 +34,47 @@ public class Grass extends AreaEntity {
     public Grass(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
-        this.sprite = new RPGSprite(
-                "zelda/Grass",
-                1,
-                1,
-                this,
-                new RegionOfInterest(0, 0, 16, 16)
-        );
+        this.sprite = new RPGSprite("zelda/Grass", 1, 1, this,
+                new RegionOfInterest(0, 0, 16, 16));
+
+        Sprite sprites[] = new Sprite[4];
+        for (int frame = 0; frame < 4; frame++) {
+            sprites[frame] = new RPGSprite("zelda/grass.sliced", 1, 1, this,
+                    new RegionOfInterest(frame * 32, 0, 32, 32));
+        }
+        this.animation = new Animation(
+                ANIMATION_DURATION / 3,
+                sprites,
+                true)
+        ;
+
+        this.isSliced = false;
+        this.despawnTime = ANIMATION_DURATION;
     }
 
     public void cut() {
-        this.getOwnerArea().unregisterActor(this);
+        this.isSliced = true;
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        if (despawnTime <= 0) {
+            this.getOwnerArea().unregisterActor(this);
+        }
+        if (this.isSliced) {
+            this.despawnTime = despawnTime - 1;
+            this.animation.update(deltaTime);
+        }
+        super.update(deltaTime);
     }
 
     @Override
     public void draw(Canvas canvas) {
-        this.sprite.draw(canvas);
+        if (!isSliced) {
+            this.sprite.draw(canvas);
+        } else {
+            this.animation.draw(canvas);
+        }
     }
 
     @Override

@@ -1,18 +1,15 @@
 package ch.epfl.cs107.play.game.arpg.actor;
 
 import ch.epfl.cs107.play.game.areagame.Area;
-import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
-import ch.epfl.cs107.play.game.areagame.actor.Interactable;
-import ch.epfl.cs107.play.game.areagame.actor.Interactor;
-import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
 import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.Collections;
@@ -22,7 +19,7 @@ public class Bomb extends AreaEntity implements Interactor {
     private final static int DEFAULT_COUNTDOWN = 5 * Settings.FRAME_RATE;
 
     private int countdown;
-    private RPGSprite sprite;
+    private Animation animation;
     private ARPGBombHandler interactionHandler;
 
     /**
@@ -35,30 +32,47 @@ public class Bomb extends AreaEntity implements Interactor {
     public Bomb(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
+        Sprite sprites[] = new Sprite[2];
+        for (int frame = 0; frame < 2; frame++) {
+            sprites[frame] = new RPGSprite("zelda/bomb", 1, 1, this,
+                    new RegionOfInterest(frame * 16, 0, 16, 16));
+        }
+
+        this.animation = new Animation(
+                Settings.FRAME_RATE / 3,
+                sprites,
+                true);
+
         this.countdown = DEFAULT_COUNTDOWN;
 
-        this.sprite = new RPGSprite("zelda/bomb", 1, 1, this);
         this.interactionHandler = new ARPGBombHandler();
     }
 
     private void explode() {
-        this.sprite.setName(ResourcePath.getSprite("zelda/explosion"));
+        this.animation.reset();
+        Sprite sprites[] = new Sprite[7];
+        for (int frame = 0; frame < 7; frame++) {
+            sprites[frame] = new RPGSprite("zelda/explosion", 1, 1, this,
+                    new RegionOfInterest(frame * 32, 0, 32, 32));
+        }
+        this.animation = new Animation(Settings.FRAME_RATE / 18, sprites, true);
     }
 
     @Override
     public void update(float deltaTime) {
-        if (this.countdown < -1 * Settings.FRAME_RATE) {
+        if (this.countdown < - (Settings.FRAME_RATE / 4)) {
             this.getOwnerArea().unregisterActor(this);
             return;
         }
 
         this.countdown = this.countdown - 1;
+        this.animation.update(deltaTime);
         super.update(deltaTime);
     }
 
     @Override
     public void draw(Canvas canvas) {
-        this.sprite.draw(canvas);
+        this.animation.draw(canvas);
     }
 
     @Override
@@ -114,16 +128,16 @@ public class Bomb extends AreaEntity implements Interactor {
         }
 
         @Override
-        public void interactWith(ARPGBehavior.ARPGCell cell){
+        public void interactWith(ARPGBehavior.ARPGCell cell) {
         }
 
         @Override
-        public void interactWith(ARPGPlayer player){
+        public void interactWith(ARPGPlayer player) {
         }
 
         @Override
         public void interactWith(Grass grass) {
-                grass.cut();
+            grass.cut();
         }
 
     }

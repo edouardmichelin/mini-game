@@ -26,6 +26,7 @@ public class ARPGPlayer extends Player {
     private final static int ANIMATION_DURATION = 8;
     private final static float DEFAULT_HEALTH_POINTS = 5f;
 
+    private float maxHp;
     private float hp;
     private int currentItemId = 0;
 
@@ -46,7 +47,8 @@ public class ARPGPlayer extends Player {
         super(area, orientation, position);
 
         this.keyboard = area.getKeyboard();
-        this.hp = DEFAULT_HEALTH_POINTS;
+        this.maxHp = DEFAULT_HEALTH_POINTS;
+        this.hp = this.maxHp;
 
         Sprite[][] sprites = RPGSprite.extractSprites(
                 spriteName,
@@ -208,6 +210,23 @@ public class ARPGPlayer extends Player {
         public void interactWith(Grass grass) {
             if (isInteractionKeyPressed())
                 grass.cut();
+        }
+
+        @Override
+        public void interactWith(Coin coin) {
+            ARPGPlayer.this.inventory.addMoney(coin.getValue());
+            coin.collect();
+        }
+
+        @Override
+        public void interactWith(Heart heart) {
+            if (ARPGPlayer.this.hp <= (ARPGPlayer.this.maxHp - 1))
+                ARPGPlayer.this.hp++;
+            else
+                ARPGPlayer.this.hp = ARPGPlayer.this.maxHp;
+
+            ARPGPlayer.this.GUI.setHealthPoints(ARPGPlayer.this.hp);
+            heart.collect();
         }
 
     }

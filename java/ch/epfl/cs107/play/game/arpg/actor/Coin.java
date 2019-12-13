@@ -2,6 +2,7 @@ package ch.epfl.cs107.play.game.arpg.actor;
 
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
+import ch.epfl.cs107.play.game.areagame.actor.CollectibleAreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
@@ -13,13 +14,20 @@ import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
-public class Grass extends AreaEntity {
-    private static final double PROBABILITY_TO_DROP_ITEM = 0.5;
-    private static final double PROBABILITY_TO_DROP_HEART = 0.3;
+public class Coin extends CollectibleAreaEntity {
+    private static final int DEFAULT_VALUE = 20;
+
     private RPGSprite sprite;
-    private boolean isSliced = false;
+    private int value;
+
+    public static void drop(AreaEntity source, Area area) {
+        DiscreteCoordinates position = source
+                .getCurrentCells()
+                .get(0);
+
+        area.registerActor(new Coin(area, Orientation.DOWN, position));
+    }
 
     /**
      * Default AreaEntity constructor
@@ -28,30 +36,25 @@ public class Grass extends AreaEntity {
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
      */
-    public Grass(Area area, Orientation orientation, DiscreteCoordinates position) {
+    public Coin(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
+        int random = RandomGenerator.getInstance().nextInt(10);
+        float coefficient = random > 8 ? 2 : random > 4 ? 1 : 0.5f;
+
+        this.value = Math.round(DEFAULT_VALUE * coefficient);
+
         this.sprite = new RPGSprite(
-                "zelda/Grass",
-                1,
-                1,
+                "zelda/coin",
+                coefficient,
+                coefficient,
                 this,
                 new RegionOfInterest(0, 0, 16, 16)
         );
     }
 
-    void cut() {
-        this.isSliced = true;
-
-        Random prng = RandomGenerator.getInstance();
-
-        if (prng.nextDouble() < PROBABILITY_TO_DROP_ITEM)
-            if (prng.nextDouble() < PROBABILITY_TO_DROP_HEART)
-                Heart.drop(this, this.getOwnerArea());
-            else
-                Coin.drop(this, this.getOwnerArea());
-
-        this.getOwnerArea().unregisterActor(this);
+    public int getValue() {
+        return this.value;
     }
 
     @Override
@@ -66,7 +69,7 @@ public class Grass extends AreaEntity {
 
     @Override
     public boolean takeCellSpace() {
-        return !this.isSliced;
+        return false;
     }
 
     @Override
@@ -76,7 +79,7 @@ public class Grass extends AreaEntity {
 
     @Override
     public boolean isViewInteractable() {
-        return true;
+        return false;
     }
 
     @Override

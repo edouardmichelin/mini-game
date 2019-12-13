@@ -1,9 +1,18 @@
 package ch.epfl.cs107.play.game.arpg.actor;
 
 import ch.epfl.cs107.play.game.actor.Entity;
+import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
+import ch.epfl.cs107.play.game.arpg.ARPG;
 import ch.epfl.cs107.play.game.rpg.equipment.Inventory;
+import com.sun.jdi.VoidType;
+import com.sun.jdi.VoidValue;
 
+import java.lang.invoke.LambdaMetafactory;
 import java.util.HashMap;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class ARPGInventory implements Inventory {
     private Entity holder;
@@ -23,6 +32,8 @@ public class ARPGInventory implements Inventory {
     }
 
     public ARPGItem getItem(int id) {
+        if (id >= this.content.size()) return null;
+
         return this.getItems()[id];
     }
 
@@ -92,37 +103,36 @@ public class ARPGInventory implements Inventory {
         return true;
     }
 
-    protected boolean removeSingleItem(InventoryItem item) {
+    boolean removeSingleItem(InventoryItem item) {
         return this.removeItem(item, 1);
     }
 
     public enum ARPGItem implements Inventory.InventoryItem {
-        ARROW(0, 5, "zelda/arrow.icon"),
-        BOW(0, 15, "zelda/bow.icon"),
-        SWORD(0, 20, "zelda/sword.icon"),
-        STAFF(0, 200, "zelda/staff_water.icon"),
-        BOMB(0, 50, "zelda/bomb"),
-        CASTLE_KEY(0, 100, "zelda/key")
+        ARROW("Arrow", 0, 5, "zelda/arrow.icon"),
+        BOW("Bow", 0, 15, "zelda/bow.icon"),
+        SWORD("Sword", 0, 20, "zelda/sword.icon"),
+        STAFF("Staff", 0, 200, "zelda/staff_water.icon"),
+        BOMB("Bomb", 0, 50, "zelda/bomb", Bomb::consume),
+        CASTLE_KEY("CastleKey", 0, 100, "zelda/key")
         ;
 
         private String title;
         private float weight;
         private int price;
         private String spriteName;
+        private BiConsumer<AreaEntity, Area> consumeMethod;
 
-        ARPGItem(float weight, int price, String spriteName) {
-            this.title = this.name();
+        ARPGItem(String title, float weight, int price, String spriteName) {
+            this.title = title;
             this.weight = weight;
             this.price = price;
             this.spriteName = spriteName;
+            this.consumeMethod = null;
         }
 
-        public static ARPGItem getFromTitle(String title) {
-            for (ARPGItem item : ARPGItem.values()) {
-                if (item.title == title) return item;
-            }
-
-            return null;
+        ARPGItem(String title, float weight, int price, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod) {
+            this(title, weight, price, spriteName);
+            this.consumeMethod = consumeMethod;
         }
 
         @Override
@@ -142,6 +152,10 @@ public class ARPGInventory implements Inventory {
 
         public String getSpriteName() {
             return this.spriteName;
+        }
+
+        public BiConsumer<AreaEntity, Area> getConsumeMethod() {
+            return this.consumeMethod;
         }
     }
 }

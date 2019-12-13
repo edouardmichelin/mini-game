@@ -1,5 +1,10 @@
 package ch.epfl.cs107.play.game.rpg.equipment;
 
+import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
+
+import java.util.function.BiConsumer;
+
 public interface Inventory extends InventoryContentAccessor {
 
     boolean contains(InventoryItem item);
@@ -21,5 +26,7 @@ public interface Inventory extends InventoryContentAccessor {
         int getPrice();
 
         String getSpriteName();
+
+        BiConsumer<AreaEntity, Area> getConsumeMethod();
     }
 }

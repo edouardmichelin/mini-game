@@ -17,6 +17,8 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
@@ -102,29 +104,6 @@ public class ARPGPlayer extends Player {
         this.GUI.setHealthPoints(this.hp);
     }
 
-    private class ARPGPlayerHandler implements ARPGInteractionVisitor {
-
-        @Override
-        public void interactWith(Door door) {
-            setIsPassingADoor(door);
-        }
-
-        @Override
-        public void interactWith(ARPGBehavior.ARPGCell cell){
-        }
-
-        @Override
-        public void interactWith(ARPGPlayer player){
-        }
-
-        @Override
-        public void interactWith(Grass grass) {
-            if (isInteractionKeyPressed())
-                grass.cut();
-        }
-
-    }
-
     @Override
     public void update(float deltaTime) {
         if (this.keyboard.get(Keys.MOVE_UP).isDown()) this.move(Orientation.UP);
@@ -134,6 +113,7 @@ public class ARPGPlayer extends Player {
 
         if (this.keyboard.get(Keys.SWITCH_ITEM).isPressed()) this.switchItem();
         if (this.keyboard.get(Keys.SWITCH_COINS_DISPLAY).isPressed()) this.GUI.switchCoinsDisplay();
+        if (this.keyboard.get(Keys.CONSUME_ITEM).isPressed()) this.consumeCurrentItem();
 
         this.getAnimation().update(deltaTime);
 
@@ -196,5 +176,39 @@ public class ARPGPlayer extends Player {
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((ARPGInteractionVisitor) v).interactWith(this);
+    }
+
+    private void consumeCurrentItem() {
+        ARPGInventory.ARPGItem item = this.inventory.getItem(this.currentItemId);
+        if (item.getConsumeMethod() == null) return;
+
+        item.getConsumeMethod().accept(this, this.getOwnerArea());
+        this.inventory.removeSingleItem(item);
+
+        ARPGInventory.ARPGItem newItem = this.inventory.getItem(this.currentItemId);
+        if (newItem == null || !newItem.equals(item)) this.switchItem();
+    }
+
+    private class ARPGPlayerHandler implements ARPGInteractionVisitor {
+
+        @Override
+        public void interactWith(Door door) {
+            setIsPassingADoor(door);
+        }
+
+        @Override
+        public void interactWith(ARPGBehavior.ARPGCell cell){
+        }
+
+        @Override
+        public void interactWith(ARPGPlayer player){
+        }
+
+        @Override
+        public void interactWith(Grass grass) {
+            if (isInteractionKeyPressed())
+                grass.cut();
+        }
+
     }
 }

@@ -5,7 +5,6 @@ import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Interactor;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.areagame.actor.Throwable;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
 import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior;
@@ -14,18 +13,28 @@ import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.Collections;
 import java.util.List;
 
-public class Bomb extends AreaEntity implements Interactor, Throwable {
+public class Bomb extends AreaEntity implements Interactor {
     private final static int DEFAULT_COUNTDOWN = 5 * Settings.FRAME_RATE;
     private final static float DEFAULT_DAMAGE = 2.5f;
 
     private int countdown;
     private RPGSprite sprite;
     private ARPGBombHandler interactionHandler;
+
+    public static void consume(AreaEntity consumer, Area area) {
+        DiscreteCoordinates position = consumer
+                .getCurrentCells()
+                .get(0)
+                .jump(consumer.getOrientation().toVector());
+
+        area.registerActor(new Bomb(area, Orientation.DOWN, position));
+    }
 
     /**
      * Default AreaEntity constructor
@@ -107,11 +116,6 @@ public class Bomb extends AreaEntity implements Interactor, Throwable {
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
 
-    }
-
-    @Override
-    public void throwItem(AreaEntity user) {
-        //
     }
 
     private class ARPGBombHandler implements ARPGInteractionVisitor {

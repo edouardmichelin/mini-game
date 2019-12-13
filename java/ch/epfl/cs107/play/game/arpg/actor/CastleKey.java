@@ -11,7 +11,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.window.Canvas;
 
-public class Heart extends CollectibleAreaEntity {
+public class CastleKey extends CollectibleAreaEntity {
     private RPGSprite sprite;
 
     public static void drop(AreaEntity source, Area area) {
@@ -19,7 +19,7 @@ public class Heart extends CollectibleAreaEntity {
                 .getCurrentCells()
                 .get(0);
 
-        area.registerActor(new Heart(area, Orientation.DOWN, position));
+        area.registerActor(new CastleKey(area, Orientation.DOWN, position));
     }
 
     /**
@@ -29,11 +29,11 @@ public class Heart extends CollectibleAreaEntity {
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
      */
-    public Heart(Area area, Orientation orientation, DiscreteCoordinates position) {
+    public CastleKey(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
         this.sprite = new RPGSprite(
-                "zelda/heart",
+                "zelda/key",
                 1,
                 1,
                 this,
@@ -44,6 +44,12 @@ public class Heart extends CollectibleAreaEntity {
     @Override
     public void draw(Canvas canvas) {
         this.sprite.draw(canvas);
+    }
+
+    public ARPGInventory.ARPGItem collect() {
+        super.collect();
+
+        return ARPGInventory.ARPGItem.CASTLE_KEY;
     }
 
     @Override

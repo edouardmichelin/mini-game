@@ -75,7 +75,7 @@ public class ARPGInventory implements Inventory {
         return this.getItemQuantity(item) > 0;
     }
 
-    boolean addItem(InventoryItem item, int quantity) {
+    public boolean addItem(InventoryItem item, int quantity) {
         if (this.remainingCapacity < quantity) return false;
 
         int qt = this.getItemQuantity(item);
@@ -90,7 +90,7 @@ public class ARPGInventory implements Inventory {
         return this.addItem(item, 1);
     }
 
-    boolean removeItem(InventoryItem item, int quantity) {
+    public boolean removeItem(InventoryItem item, int quantity) {
         int qt = this.getItemQuantity(item) - quantity;
 
         if (qt < 0) return false;

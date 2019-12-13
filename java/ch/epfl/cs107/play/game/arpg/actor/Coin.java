@@ -63,26 +63,6 @@ public class Coin extends CollectibleAreaEntity {
     }
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
-
-    @Override
-    public boolean takeCellSpace() {
-        return false;
-    }
-
-    @Override
-    public boolean isCellInteractable() {
-        return true;
-    }
-
-    @Override
-    public boolean isViewInteractable() {
-        return false;
-    }
-
-    @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((ARPGInteractionVisitor) v).interactWith(this);
     }

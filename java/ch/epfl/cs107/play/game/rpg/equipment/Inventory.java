@@ -9,13 +9,9 @@ public interface Inventory extends InventoryContentAccessor {
 
     boolean contains(InventoryItem item);
 
-    private boolean addItem(InventoryItem item) {
-        return false;
-    }
+    boolean addItem(InventoryItem item, int quantity);
 
-    private boolean removeItem(InventoryItem item) {
-        return false;
-    }
+    boolean removeItem(InventoryItem item, int quantity);
 
     interface InventoryItem {
 

@@ -39,10 +39,26 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a castle key
+     * @param castleKey (ARPGPlayer), not null
+     */
+    default void interactWith(CastleKey castleKey){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a heart
      * @param heart (ARPGPlayer), not null
      */
     default void interactWith(Heart heart){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a castle door
+     * @param castleDoor (ARPGPlayer), not null
+     */
+    default void interactWith(CastleDoor castleDoor){
         // by default the interaction is empty
     }
 

@@ -68,7 +68,6 @@ public class ARPGPlayer extends Player {
         this.inventory.addItem(ARPGInventory.ARPGItem.BOMB, 2);
         this.inventory.addItem(ARPGInventory.ARPGItem.BOW, 1);
         this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 5);
-        this.inventory.addItem(ARPGInventory.ARPGItem.CASTLE_KEY, 1);
         this.inventory.addItem(ARPGInventory.ARPGItem.STAFF, 1);
         this.inventory.addItem(ARPGInventory.ARPGItem.SWORD, 1);
 
@@ -227,6 +226,25 @@ public class ARPGPlayer extends Player {
 
             ARPGPlayer.this.GUI.setHealthPoints(ARPGPlayer.this.hp);
             heart.collect();
+        }
+
+        @Override
+        public void interactWith(CastleKey castleKey) {
+            ARPGPlayer.this.inventory.addSingleItem(castleKey.collect());
+        }
+
+
+        @Override
+        public void interactWith(CastleDoor castleDoor) {
+            if (
+                    isInteractionKeyPressed() &&
+                    ARPGPlayer.this.inventory.contains(ARPGInventory.ARPGItem.CASTLE_KEY)
+            )
+                castleDoor.open();
+            else if (castleDoor.isOpen()) {
+                ARPGPlayer.this.setIsPassingADoor(castleDoor);
+                castleDoor.close();
+            }
         }
 
     }

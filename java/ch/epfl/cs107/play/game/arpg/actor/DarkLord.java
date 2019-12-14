@@ -14,9 +14,11 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.Vector;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DarkLord extends Monster {
+    private static final int ACTION_RADIUS = 3;
     private static final int MIN_SPELL_WAIT_DURATION = 100;
     private static final int MAX_SPELL_WAIT_DURATION = 300;
     private static final int TELEPORTATION_RADIUS = 3;
@@ -42,13 +44,13 @@ public class DarkLord extends Monster {
     private Sprite[][] getSprites(String spriteName) {
         return RPGSprite.extractSprites(
                 spriteName,
-                4,
-                1,
+                3,
+                2,
                 2,
                 this,
-                16,
                 32,
-                new Orientation[] {Orientation.DOWN, Orientation.RIGHT, Orientation.UP, Orientation.LEFT}
+                32,
+                new Orientation[] {Orientation.UP, Orientation.LEFT, Orientation.DOWN, Orientation.RIGHT}
         );
     }
 
@@ -69,6 +71,9 @@ public class DarkLord extends Monster {
     public void update(float deltaTime) {
         super.update(deltaTime);
         this.simulationStep++;
+
+        if (!this.state.equals(State.IDLE))
+            this.move(20);
 
         if (this.simulationStep % this.simulationCyle == 0) {
             double random = RandomGenerator.getInstance().nextDouble();
@@ -121,7 +126,14 @@ public class DarkLord extends Monster {
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        return getCurrentMainCellCoordinates().getNeighbours();
+        DiscreteCoordinates dc = this.getCurrentMainCellCoordinates();
+
+        List<DiscreteCoordinates> fowc = new ArrayList<>();
+        for (int x = -ACTION_RADIUS; x < ACTION_RADIUS + 1; x++)
+            for (int y = -ACTION_RADIUS; y < ACTION_RADIUS + 1; y++)
+                fowc.add(dc.jump(x, y));
+
+        return fowc;
     }
 
     @Override

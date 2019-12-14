@@ -18,11 +18,20 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
     private float despawnTime;
     private boolean onDyingExecuted;
     private float hp;
+    private float maxHp;
+    private Animation deathAnimation;
 
     public Monster(Area area, Orientation orientation, DiscreteCoordinates coordinates) {
         super(area, orientation, coordinates);
+
         this.despawnTime = Settings.FRAME_RATE / 2f;
-        this.hp = this.getMaxHp();
+        this.maxHp = this.getMaxHp();
+        this.hp = this.maxHp;
+        this.deathAnimation = new Animation(
+                DEATH_ANIMATION_DURATION / (DEATH_ANIMATION_FRAMES - 1),
+                this.getDeathSprites(),
+                false
+        );
     }
 
     protected abstract Animation[] getCharacterAnimations();
@@ -38,11 +47,7 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
             return this.getCharacterAnimations()[this.getOrientation().ordinal()];
         }
 
-        return new Animation(
-                DEATH_ANIMATION_DURATION / (DEATH_ANIMATION_FRAMES - 1),
-                this.getDeathSprites(),
-                false
-        );
+        return this.deathAnimation;
     }
 
     private Sprite[] getDeathSprites() {
@@ -76,12 +81,12 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
 
     @Override
     public boolean isWeak() {
-        return this.hp < this.getMaxHp() / 5;
+        return this.hp < this.maxHp / 5;
     }
 
     @Override
     public void strengthen() {
-        this.hp = this.getMaxHp();
+        this.hp = this.maxHp;
     }
 
     @Override
@@ -91,8 +96,10 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
         this.getAnimation().update(deltaTime);
 
         if (!this.isAlive()) {
-            if (!this.onDyingExecuted)
+            if (!this.onDyingExecuted) {
                 this.onDying();
+                this.onDyingExecuted = true;
+            }
             this.despawnTime -= 1;
             if (this.despawnTime <= 0) this.getOwnerArea().unregisterActor(this);
         }

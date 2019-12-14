@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Grass extends AreaEntity {
-    private static final double PROBABILITY_TO_DROP_ITEM = 0.5;
-    private static final double PROBABILITY_TO_DROP_HEART = 0.3;
+    private static final double PROBABILITY_TO_DROP_ITEM = 0.25;
+    private static final double PROBABILITY_TO_DROP_HEART = 0.8;
     private static final String TEX = "zelda/Grass";
     private static final String CUT_TEX = "zelda/grass.sliced";
 

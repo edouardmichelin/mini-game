@@ -1,9 +1,7 @@
 package ch.epfl.cs107.play.game.arpg.actor;
 
 import ch.epfl.cs107.play.game.areagame.Area;
-import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
-import ch.epfl.cs107.play.game.areagame.actor.CollectibleAreaEntity;
-import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
@@ -12,13 +10,10 @@ import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.window.Canvas;
 
-import java.util.Collections;
-import java.util.List;
-
 public class Coin extends CollectibleAreaEntity {
     private static final int DEFAULT_VALUE = 20;
 
-    private RPGSprite sprite;
+    private Animation animation;
     private int value;
 
     public static void drop(AreaEntity source, Area area) {
@@ -44,13 +39,16 @@ public class Coin extends CollectibleAreaEntity {
 
         this.value = Math.round(DEFAULT_VALUE * coefficient);
 
-        this.sprite = new RPGSprite(
-                "zelda/coin",
-                coefficient,
-                coefficient,
-                this,
-                new RegionOfInterest(0, 0, 16, 16)
-        );
+        Sprite sprites[] = new Sprite[4];
+        for (int frame = 0; frame < 4; frame++) {
+            sprites[frame] = new RPGSprite("zelda/coin", 1, 1, this,
+                    new RegionOfInterest(frame * 16, 0, 16, 16));
+        }
+        this.animation = new Animation(
+                10,
+                sprites,
+                true)
+        ;
     }
 
     public int getValue() {
@@ -58,8 +56,13 @@ public class Coin extends CollectibleAreaEntity {
     }
 
     @Override
+    public void update(float deltaTime) {
+        this.animation.update(deltaTime);
+    }
+
+    @Override
     public void draw(Canvas canvas) {
-        this.sprite.draw(canvas);
+        this.animation.draw(canvas);
     }
 
     @Override

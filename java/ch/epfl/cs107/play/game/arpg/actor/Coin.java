@@ -35,23 +35,33 @@ public class Coin extends CollectibleAreaEntity {
     public Coin(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
-        int random = RandomGenerator.getInstance().nextInt(10);
-        float coefficient = random > 8 ? 2 : random > 5 ? 1 : 0.5f;
-        Vector anchor = coefficient == 2 ? new Vector(-0.4f, 0) : coefficient == 1 ?
-                new Vector(0.1f, 0.1f) : new Vector(0.3f, 0.2f);
+        double random = RandomGenerator.getInstance().nextDouble();
+        float coefficient = random > 0.9f ? 2 : random > 0.6f ? 1 : 0.5f;
 
         this.value = Math.round(DEFAULT_VALUE * coefficient);
 
-        Sprite sprites[] = new Sprite[4];
-        for (int frame = 0; frame < 4; frame++) {
-            sprites[frame] = new RPGSprite("zelda/coin", coefficient, coefficient, this,
-                    new RegionOfInterest(frame * 16, 0, 16, 16), anchor);
-        }
         this.animation = new Animation(
                 10,
-                sprites,
-                true)
-        ;
+                this.getSprites(coefficient),
+                true
+        );
+    }
+
+    private Sprite[] getSprites(float coefficient) {
+        Vector anchor = coefficient == 2 ?
+                new Vector(-0.4f, 0) :
+                coefficient == 1 ?
+                        new Vector(0.1f, 0.1f) :
+                        new Vector(0.3f, 0.2f);
+
+        Sprite[] s = new Sprite[4];
+
+        for (int frame = 0; frame < 4; frame++) {
+            s[frame] = new RPGSprite("zelda/coin", coefficient, coefficient, this,
+                    new RegionOfInterest(frame * 16, 0, 16, 16), anchor);
+        }
+        
+        return s;
     }
 
     public int getValue() {

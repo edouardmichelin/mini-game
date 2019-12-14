@@ -133,7 +133,7 @@ public class ARPGInventory implements Inventory {
             this.roi = new RegionOfInterest(0,0,32,32);
         }
 
-        ARPGItem(String title, float weight, int price, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod ) {
+        ARPGItem(String title, float weight, int price, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod) {
             this(title, weight, price, spriteName);
             this.consumeMethod = consumeMethod;
         }

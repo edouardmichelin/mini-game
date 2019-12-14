@@ -65,7 +65,7 @@ public class ARPGPlayer extends Player {
         this.interactionHandler = new ARPGPlayerHandler();
         this.inventory = new ARPGInventory(30, this);
 
-        this.inventory.addItem(ARPGInventory.ARPGItem.BOMB, 2);
+        this.inventory.addItem(ARPGInventory.ARPGItem.BOMB, 5);
         this.inventory.addItem(ARPGInventory.ARPGItem.BOW, 1);
         this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 5);
         this.inventory.addItem(ARPGInventory.ARPGItem.STAFF, 1);
@@ -101,7 +101,11 @@ public class ARPGPlayer extends Player {
     }
 
     void damage(float damageAmount) {
-        this.hp -= damageAmount;
+        if (this.hp > damageAmount)
+            this.hp -= damageAmount;
+        else
+            this.hp = 0;
+
         this.GUI.setHealthPoints(this.hp);
     }
 
@@ -112,9 +116,9 @@ public class ARPGPlayer extends Player {
         if (this.keyboard.get(Keys.MOVE_LEFT).isDown()) this.move(Orientation.LEFT);
         if (this.keyboard.get(Keys.MOVE_RIGHT).isDown()) this.move(Orientation.RIGHT);
 
+        if (this.keyboard.get(Keys.CONSUME_ITEM).isPressed() && !this.isDisplacementOccurs()) this.consumeCurrentItem();
         if (this.keyboard.get(Keys.SWITCH_ITEM).isPressed()) this.switchItem();
         if (this.keyboard.get(Keys.SWITCH_COINS_DISPLAY).isPressed()) this.GUI.switchCoinsDisplay();
-        if (this.keyboard.get(Keys.CONSUME_ITEM).isPressed()) this.consumeCurrentItem();
 
         this.getAnimation().update(deltaTime);
 

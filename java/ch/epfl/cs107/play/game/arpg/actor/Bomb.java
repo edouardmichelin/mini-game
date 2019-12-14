@@ -121,7 +121,7 @@ public class Bomb extends AreaEntity implements Interactor {
 
     @Override
     public boolean takeCellSpace() {
-        return true;
+        return false;
     }
 
     @Override

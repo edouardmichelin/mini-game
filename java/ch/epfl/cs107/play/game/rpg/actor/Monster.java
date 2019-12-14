@@ -16,6 +16,7 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
     private final static int DEATH_ANIMATION_FRAMES = 7;
 
     private float despawnTime;
+    private boolean onDyingExecuted;
     private float hp;
 
     public Monster(Area area, Orientation orientation, DiscreteCoordinates coordinates) {
@@ -26,12 +27,10 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
 
     protected abstract Animation[] getCharacterAnimations();
 
+    protected abstract List<DamageType> getWeaknesses();
+
     public float getHp() {
         return this.hp;
-    }
-
-    protected DamageType[] getWeaknesses() {
-        return DamageType.values();
     }
 
     private Animation getAnimation() {
@@ -63,12 +62,37 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
     }
 
     @Override
+    public float damage(int damage, DamageType type) {
+        if (this.getWeaknesses().contains(type))
+            this.hp -= damage;
+
+        return this.hp;
+    }
+
+    @Override
+    public void destroy() {
+        this.hp = 0;
+    }
+
+    @Override
+    public boolean isWeak() {
+        return this.hp < this.getMaxHp() / 5;
+    }
+
+    @Override
+    public void strengthen() {
+        this.hp = this.getMaxHp();
+    }
+
+    @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
 
         this.getAnimation().update(deltaTime);
 
         if (!this.isAlive()) {
+            if (!this.onDyingExecuted)
+                this.onDying();
             this.despawnTime -= 1;
             if (this.despawnTime <= 0) this.getOwnerArea().unregisterActor(this);
         }
@@ -86,17 +110,7 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        return Collections.singletonList (getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
-    }
-
-    @Override
-    public boolean wantsCellInteraction() {
-        return false;
-    }
-
-    @Override
-    public boolean wantsViewInteraction() {
-        return false;
+        return Collections.singletonList(getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
     }
 
     @Override

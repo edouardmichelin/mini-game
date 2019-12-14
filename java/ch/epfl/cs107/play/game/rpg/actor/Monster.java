@@ -8,78 +8,111 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.window.Canvas;
 
+import java.util.Collections;
+import java.util.List;
+
 public abstract class Monster extends MovableAreaEntity implements Destroyable, Interactor {
-    private final static int ANIMATION_DURATION = Settings.FRAME_RATE / 3;
-    private int maxHp;
+    private final static int DEATH_ANIMATION_DURATION = Settings.FRAME_RATE / 3;
+    private final static int DEATH_ANIMATION_FRAMES = 7;
+
+    private float despawnTime;
     private float hp;
-    private boolean isDead;
-    private int despawnTime;
-    private DamageType[] weakness;
-    private Animation[] animations;
-    private Animation deathAnimation;
 
     public Monster(Area area, Orientation orientation, DiscreteCoordinates coordinates) {
         super(area, orientation, coordinates);
-        this.hp = maxHp;
-        this.despawnTime = Settings.FRAME_RATE / 2;
-        this.isDead = false;
-        this.weakness = DamageType.values();
-
-        Sprite sprites[] = new Sprite[7];
-        for (int frame = 0; frame < 7; frame++) {
-            sprites[frame] = new RPGSprite("zelda/vanish", 1, 1, this,
-                    new RegionOfInterest(frame * 32, 0, 32, 32));
-        }
-        this.deathAnimation = new Animation(
-                ANIMATION_DURATION / 6,
-                sprites,
-                true)
-        ;
+        this.despawnTime = Settings.FRAME_RATE / 2f;
+        this.hp = this.getMaxHp();
     }
 
-    public void die() {
-        this.isDead = true;
+    protected abstract Animation[] getCharacterAnimations();
+
+    public float getHp() {
+        return this.hp;
+    }
+
+    protected DamageType[] getWeaknesses() {
+        return DamageType.values();
     }
 
     private Animation getAnimation() {
-        if(this.isDead) {
-            return this.deathAnimation;
+        if(this.isAlive()) {
+            return this.getCharacterAnimations()[this.getOrientation().ordinal()];
         }
-        return this.animations[this.getOrientation().ordinal()];
+
+        return new Animation(
+                DEATH_ANIMATION_DURATION / (DEATH_ANIMATION_FRAMES - 1),
+                this.getDeathSprites(),
+                false
+        );
     }
 
-    public void update(float deltaTime) {
-        super.update(deltaTime);
-        this.getAnimation().update(deltaTime);
+    private Sprite[] getDeathSprites() {
+        Sprite[] sprites = new Sprite[DEATH_ANIMATION_FRAMES];
+
+        for (int frame = 0; frame < DEATH_ANIMATION_FRAMES; frame++) {
+            sprites[frame] = new RPGSprite(
+                    "zelda/vanish",
+                    1,
+                    1,
+                    this,
+                    new RegionOfInterest(frame * 32, 0, 32, 32)
+            );
+        }
+
+        return sprites;
     }
 
     @Override
-    public boolean isWeak() {
-        return this.hp <= ((float) this.maxHp / 10);
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+
+        this.getAnimation().update(deltaTime);
+
+        if (!this.isAlive()) {
+            this.despawnTime -= 1;
+            if (this.despawnTime <= 0) this.getOwnerArea().unregisterActor(this);
+        }
     }
 
     @Override
     public void draw(Canvas canvas) {
-        if (this.isDead) {
-            this.deathAnimation.draw(canvas);
-        } else {
-            this.animations[this.getOrientation().ordinal()].draw(canvas);
-        }
+        this.getAnimation().draw(canvas);
     }
 
     @Override
-    public void strengthen() {
-        this.hp = this.maxHp;
+    public List<DiscreteCoordinates> getCurrentCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 
     @Override
-    public int damage(int damage, DamageType type) {
-        this.hp = this.hp - damage;
-        return (int) this.hp;
+    public List<DiscreteCoordinates> getFieldOfViewCells() {
+        return Collections.singletonList (getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
     }
 
     @Override
-    public void destroy() {
-        this.hp = 0;
+    public boolean wantsCellInteraction() {
+        return false;
     }
+
+    @Override
+    public boolean wantsViewInteraction() {
+        return false;
+    }
+
+    @Override
+    public boolean takeCellSpace() {
+        return this.isAlive();
+    }
+
+    @Override
+    public boolean isCellInteractable() {
+        return this.isAlive();
+    }
+
+    @Override
+    public boolean isViewInteractable() {
+        return this.isAlive();
+    }
+
+
 }

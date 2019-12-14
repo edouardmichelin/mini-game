@@ -17,9 +17,6 @@ public class Route extends ARPGArea {
         this.registerActor(new Foreground(this));
         this.registerDoors();
         this.plantGrasses();
-
-        // EXAMPLE
-        this.registerActor(new Bomb(this, Orientation.DOWN, new DiscreteCoordinates(7, 11)));
     }
 
     private void registerDoors() {
@@ -39,6 +36,14 @@ public class Route extends ARPGArea {
                 Orientation.DOWN,
                 new DiscreteCoordinates(9, 0),
                 new DiscreteCoordinates(10, 0)));
+        this.registerActor(new Door(
+                Areas.ROUTE_CHATEAU.getTitle(),
+                new DiscreteCoordinates(9, 1),
+                Logic.TRUE,
+                this,
+                Orientation.UP,
+                new DiscreteCoordinates(10, 19),
+                new DiscreteCoordinates(9, 19)));
     }
 
     private void plantGrasses() {

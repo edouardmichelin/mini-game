@@ -14,23 +14,27 @@ import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
-import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
 public class ARPGPlayer extends Player {
     private final static int ANIMATION_DURATION = 8;
-    private final static float DEFAULT_HEALTH_POINTS = 100f;
+    private final static float DEFAULT_HEALTH_POINTS = 5f;
 
-    private ARPGPlayerHandler interactionHandler;
+    private float maxHp;
+    private float hp;
+    private int currentItemId = 0;
+
     private Keyboard keyboard;
     private Animation[] animations;
-    private TextGraphics hpText;
-    private float hp = DEFAULT_HEALTH_POINTS;
+    private ARPGInventory inventory;
+    private ARPGPlayerHandler interactionHandler;
+    private ARPGPlayerStatusGUI GUI;
 
     /**
      * Default MovableAreaEntity constructor
@@ -41,6 +45,10 @@ public class ARPGPlayer extends Player {
      */
     public ARPGPlayer(Area area, Orientation orientation, DiscreteCoordinates position, String spriteName) {
         super(area, orientation, position);
+
+        this.keyboard = area.getKeyboard();
+        this.maxHp = DEFAULT_HEALTH_POINTS;
+        this.hp = this.maxHp;
 
         Sprite[][] sprites = RPGSprite.extractSprites(
                 spriteName,
@@ -54,36 +62,63 @@ public class ARPGPlayer extends Player {
         );
 
         this.animations = RPGSprite.createAnimations(ANIMATION_DURATION / 2, sprites);
-
-        this.keyboard = area.getKeyboard();
-        this.hpText = initHpText(Color.WHITE);
         this.interactionHandler = new ARPGPlayerHandler();
+        this.inventory = new ARPGInventory(30, this);
+
+        this.inventory.addItem(ARPGInventory.ARPGItem.BOMB, 5);
+        this.inventory.addItem(ARPGInventory.ARPGItem.BOW, 1);
+        this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 5);
+        this.inventory.addItem(ARPGInventory.ARPGItem.STAFF, 1);
+        this.inventory.addItem(ARPGInventory.ARPGItem.SWORD, 1);
+
+        this.inventory.addMoney(19);
+
+        this.GUI = new ARPGPlayerStatusGUI(this.inventory, this.currentItemId, this.hp);
     }
 
     private Animation getAnimation() {
         return this.animations[this.getOrientation().ordinal()];
     }
 
-    private TextGraphics initHpText(Color color) {
-        TextGraphics hpt = new TextGraphics(Integer.toString((int) this.hp), 0.4f, color);
-        hpt.setParent(this);
-        hpt.setAnchor(new Vector(-0.3f, 0.1f));
-
-        return hpt;
+    private void switchItem() {
+        this.currentItemId = (this.currentItemId + 1) % this.inventory.size();
+        this.GUI.setCurrentItem(this.currentItemId);
     }
 
-    private void decreaseHp(float damage) {
-        this.hp = this.hp - damage <= 0 ? 0 : this.hp - damage;
-        this.hpText.setText(Integer.toString((int) this.hp));
+    private boolean isInteractionKeyPressed() {
+        return this.keyboard.get(Keys.INTERACTION_KEY)
+                .isPressed();
     }
 
+    private void move(Orientation orientation) {
+        if (this.getOrientation().equals(orientation))
+            if (keyboard.get(Keys.RUN).isDown())
+                this.move(ANIMATION_DURATION / 2, 0);
+            else
+                this.move(ANIMATION_DURATION, 0);
+        else
+            this.orientate(orientation);
+    }
+
+    void damage(float damageAmount) {
+        if (this.hp > damageAmount)
+            this.hp -= damageAmount;
+        else
+            this.hp = 0;
+
+        this.GUI.setHealthPoints(this.hp);
+    }
+
+    @Override
     public void update(float deltaTime) {
-        this.decreaseHp(deltaTime);
-
         if (this.keyboard.get(Keys.MOVE_UP).isDown()) this.move(Orientation.UP);
         if (this.keyboard.get(Keys.MOVE_DOWN).isDown()) this.move(Orientation.DOWN);
         if (this.keyboard.get(Keys.MOVE_LEFT).isDown()) this.move(Orientation.LEFT);
         if (this.keyboard.get(Keys.MOVE_RIGHT).isDown()) this.move(Orientation.RIGHT);
+
+        if (this.keyboard.get(Keys.CONSUME_ITEM).isPressed() && !this.isDisplacementOccurs()) this.consumeCurrentItem();
+        if (this.keyboard.get(Keys.SWITCH_ITEM).isPressed()) this.switchItem();
+        if (this.keyboard.get(Keys.SWITCH_COINS_DISPLAY).isPressed()) this.GUI.switchCoinsDisplay();
 
         this.getAnimation().update(deltaTime);
 
@@ -93,6 +128,7 @@ public class ARPGPlayer extends Player {
     @Override
     public void draw(Canvas canvas) {
         Animation currentAnimation = this.getAnimation();
+        this.GUI.draw(canvas);
 
         if (this.isDisplacementOccurs()) {
             currentAnimation.draw(canvas);
@@ -100,8 +136,6 @@ public class ARPGPlayer extends Player {
             currentAnimation.reset();
             currentAnimation.draw(canvas);
         }
-
-        this.hpText.draw(canvas);
     }
 
     @Override
@@ -146,29 +180,18 @@ public class ARPGPlayer extends Player {
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
+        ((ARPGInteractionVisitor) v).interactWith(this);
     }
 
-    public boolean isWeak() {
-        return this.hp <= 0;
-    }
+    private void consumeCurrentItem() {
+        ARPGInventory.ARPGItem item = this.inventory.getItem(this.currentItemId);
+        if (item.getConsumeMethod() == null) return;
 
-    public void strengthen() {
-        this.hp = DEFAULT_HEALTH_POINTS;
-    }
+        item.getConsumeMethod().accept(this, this.getOwnerArea());
+        this.inventory.removeSingleItem(item);
 
-    private void move(Orientation orientation) {
-        if (this.getOrientation().equals(orientation))
-            if (keyboard.get(Keys.RUN).isDown())
-                this.move(ANIMATION_DURATION / 2, 0);
-            else
-                this.move(ANIMATION_DURATION, 0);
-        else
-            this.orientate(orientation);
-    }
-
-    private boolean isInteractionKeyPressed() {
-        return this.keyboard.get(Keys.INTERACTION_KEY)
-                .isPressed();
+        ARPGInventory.ARPGItem newItem = this.inventory.getItem(this.currentItemId);
+        if (newItem == null || !newItem.equals(item)) this.switchItem();
     }
 
     private class ARPGPlayerHandler implements ARPGInteractionVisitor {
@@ -190,6 +213,42 @@ public class ARPGPlayer extends Player {
         public void interactWith(Grass grass) {
             if (isInteractionKeyPressed())
                 grass.cut();
+        }
+
+        @Override
+        public void interactWith(Coin coin) {
+            ARPGPlayer.this.inventory.addMoney(coin.getValue());
+            coin.collect();
+        }
+
+        @Override
+        public void interactWith(Heart heart) {
+            if (ARPGPlayer.this.hp <= (ARPGPlayer.this.maxHp - 1))
+                ARPGPlayer.this.hp++;
+            else
+                ARPGPlayer.this.hp = ARPGPlayer.this.maxHp;
+
+            ARPGPlayer.this.GUI.setHealthPoints(ARPGPlayer.this.hp);
+            heart.collect();
+        }
+
+        @Override
+        public void interactWith(CastleKey castleKey) {
+            ARPGPlayer.this.inventory.addSingleItem(castleKey.collect());
+        }
+
+
+        @Override
+        public void interactWith(CastleDoor castleDoor) {
+            if (
+                    isInteractionKeyPressed() &&
+                    ARPGPlayer.this.inventory.contains(ARPGInventory.ARPGItem.CASTLE_KEY)
+            )
+                castleDoor.open();
+            else if (castleDoor.isOpen()) {
+                ARPGPlayer.this.setIsPassingADoor(castleDoor);
+                castleDoor.close();
+            }
         }
 
     }

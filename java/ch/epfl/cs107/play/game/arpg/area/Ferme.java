@@ -3,6 +3,8 @@ package ch.epfl.cs107.play.game.arpg.area;
 import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.game.areagame.actor.Foreground;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.arpg.actor.CastleKey;
+import ch.epfl.cs107.play.game.arpg.actor.Coin;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
@@ -14,6 +16,8 @@ public class Ferme extends ARPGArea {
         this.registerActor(new Background(this));
         this.registerActor(new Foreground(this));
         this.registerDoors();
+
+        this.registerActor(new CastleKey(this, Orientation.DOWN, new DiscreteCoordinates(6, 6)));
     }
 
     private void registerDoors() {

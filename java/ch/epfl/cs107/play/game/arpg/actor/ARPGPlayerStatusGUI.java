@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.arpg.actor;
 import ch.epfl.cs107.play.game.actor.ImageGraphics;
 import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
 import ch.epfl.cs107.play.game.arpg.gui.ARPGStatusGUI;
+import ch.epfl.cs107.play.game.rpg.equipment.Inventory;
 import ch.epfl.cs107.play.game.rpg.equipment.InventoryContentAccessor;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.math.Vector;
@@ -13,7 +14,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
 
     private boolean displayFortune = false;
     private float healthPoint;
-    private String itemSpriteName;
+    private Inventory.InventoryItem currentItem;
     private InventoryContentAccessor inventory;
 
     public ARPGPlayerStatusGUI() {
@@ -23,8 +24,8 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
     public ARPGPlayerStatusGUI(InventoryContentAccessor inventory, int currentItemId, float healthPoint) {
         this.healthPoint = healthPoint;
         this.inventory = inventory;
-        this.itemSpriteName = inventory != null && currentItemId != -1 ?
-                ResourcePath.getSprite(inventory.getItem(currentItemId).getSpriteName()) :
+        this.currentItem = inventory != null && currentItemId != -1 ?
+                inventory.getItem(currentItemId) :
                 null;
     }
 
@@ -42,7 +43,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
 
     @Override
     public void setCurrentItem(int itemId) {
-        this.itemSpriteName = ResourcePath.getSprite(inventory.getItem(itemId).getSpriteName());
+        this.currentItem = this.inventory.getItem(itemId);
     }
 
     @Override
@@ -71,10 +72,10 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
     private void drawCurrentEquipment(Canvas canvas, float width, float height) {
         Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(width / 2, height / 2));
         ImageGraphics currentEquipment = new ImageGraphics(
-                this.itemSpriteName,
+                ResourcePath.getSprite(this.currentItem.getSpriteName()),
                 1f,
                 1f,
-                new RegionOfInterest(0, 0, 32, 32),
+                this.currentItem.getTextureRoi(),
                 anchor.add(new Vector(1.075f, height - 2f)),
                 1,
                 DEPTH * 2);

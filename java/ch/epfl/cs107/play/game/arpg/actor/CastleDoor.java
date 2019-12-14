@@ -6,6 +6,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
+import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.signal.logic.Logic;
@@ -15,7 +16,7 @@ public class CastleDoor extends Door {
     private static final String CLOSE_SPRITE = "zelda/castleDoor.close";
     private static final String OPEN_SPRITE = "zelda/castleDoor.open";
 
-    private Sprite sprite;
+    private RPGSprite sprite;
 
     public CastleDoor(String destination, DiscreteCoordinates otherSideCoordinates, Logic signal, Area area, Orientation orientation, DiscreteCoordinates position) {
         super(destination, otherSideCoordinates, signal, area, orientation, position);
@@ -27,25 +28,29 @@ public class CastleDoor extends Door {
         this.sprite = this.getSprite();
     }
 
-    private Sprite getSprite() {
-        return new Sprite(
+    private RPGSprite getSprite() {
+        return new RPGSprite(
                 this.isOpen() ? OPEN_SPRITE : CLOSE_SPRITE,
-                1,
-                1,
+                2,
+                2,
                 this,
-                new RegionOfInterest(0, 0, 32, 32),
-                this.getPosition()
+                new RegionOfInterest(0, 0, 32, 32)
         );
     }
 
     protected void close() {
-        this.sprite = this.getSprite();
         this.setSignal(Logic.FALSE);
+        this.sprite = this.getSprite();
     }
 
     protected void open() {
-        this.sprite = this.getSprite();
         this.setSignal(Logic.TRUE);
+        this.sprite = this.getSprite();
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
     }
 
     @Override

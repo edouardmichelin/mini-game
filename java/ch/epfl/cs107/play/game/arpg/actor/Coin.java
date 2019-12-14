@@ -8,6 +8,7 @@ import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.RegionOfInterest;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 public class Coin extends CollectibleAreaEntity {
@@ -35,14 +36,16 @@ public class Coin extends CollectibleAreaEntity {
         super(area, orientation, position);
 
         int random = RandomGenerator.getInstance().nextInt(10);
-        float coefficient = random > 8 ? 2 : random > 4 ? 1 : 0.5f;
+        float coefficient = random > 8 ? 2 : random > 5 ? 1 : 0.5f;
+        Vector anchor = coefficient == 2 ? new Vector(-0.4f, 0) : coefficient == 1 ?
+                new Vector(0.1f, 0.1f) : new Vector(0.3f, 0.2f);
 
         this.value = Math.round(DEFAULT_VALUE * coefficient);
 
         Sprite sprites[] = new Sprite[4];
         for (int frame = 0; frame < 4; frame++) {
-            sprites[frame] = new RPGSprite("zelda/coin", 1, 1, this,
-                    new RegionOfInterest(frame * 16, 0, 16, 16));
+            sprites[frame] = new RPGSprite("zelda/coin", coefficient, coefficient, this,
+                    new RegionOfInterest(frame * 16, 0, 16, 16), anchor);
         }
         this.animation = new Animation(
                 10,

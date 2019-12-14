@@ -5,6 +5,7 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.arpg.ARPG;
 import ch.epfl.cs107.play.game.rpg.equipment.Inventory;
+import ch.epfl.cs107.play.math.RegionOfInterest;
 import com.sun.jdi.VoidType;
 import com.sun.jdi.VoidValue;
 
@@ -112,7 +113,7 @@ public class ARPGInventory implements Inventory {
         BOW("Bow", 0, 15, "zelda/bow.icon"),
         SWORD("Sword", 0, 20, "zelda/sword.icon"),
         STAFF("Staff", 0, 200, "zelda/staff_water.icon"),
-        BOMB("Bomb", 0, 50, "zelda/bomb", Bomb::consume),
+        BOMB("Bomb", 0, 50, "zelda/bomb", Bomb::consume, new RegionOfInterest(0,0,16,16)),
         CASTLE_KEY("CastleKey", 0, 100, "zelda/key")
         ;
 
@@ -121,6 +122,7 @@ public class ARPGInventory implements Inventory {
         private int price;
         private String spriteName;
         private BiConsumer<AreaEntity, Area> consumeMethod;
+        private RegionOfInterest roi;
 
         ARPGItem(String title, float weight, int price, String spriteName) {
             this.title = title;
@@ -128,12 +130,19 @@ public class ARPGInventory implements Inventory {
             this.price = price;
             this.spriteName = spriteName;
             this.consumeMethod = null;
+            this.roi = new RegionOfInterest(0,0,32,32);
         }
 
-        ARPGItem(String title, float weight, int price, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod) {
+        ARPGItem(String title, float weight, int price, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod ) {
             this(title, weight, price, spriteName);
             this.consumeMethod = consumeMethod;
         }
+
+        ARPGItem(String title, float weight, int price, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod, RegionOfInterest roi) {
+            this(title, weight, price, spriteName, consumeMethod);
+            this.roi = roi;
+        }
+
 
         @Override
         public String getTitle() {
@@ -156,6 +165,11 @@ public class ARPGInventory implements Inventory {
 
         public BiConsumer<AreaEntity, Area> getConsumeMethod() {
             return this.consumeMethod;
+        }
+
+        @Override
+        public RegionOfInterest getTextureRoi() {
+            return this.roi;
         }
     }
 }

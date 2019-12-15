@@ -20,8 +20,8 @@ import java.util.Random;
 
 public class DarkLord extends Monster {
     private static final int ACTION_RADIUS = 3;
-    private static final int MIN_SPELL_WAIT_DURATION = 100;
-    private static final int MAX_SPELL_WAIT_DURATION = 300;
+    private static final int MIN_SPELL_WAIT_DURATION = 200;
+    private static final int MAX_SPELL_WAIT_DURATION = 500;
     private static final int TELEPORTATION_RADIUS = 3;
 
     private Animation[] idleAnimations;
@@ -40,11 +40,6 @@ public class DarkLord extends Monster {
         this.state = State.IDLE;
         this.interactionHandler = new ARPGDarkLordHandler();
         this.simulationCyle = Math.round((RandomGenerator.getInstance().nextFloat() * (MAX_SPELL_WAIT_DURATION - MIN_SPELL_WAIT_DURATION))) + MIN_SPELL_WAIT_DURATION;
-    }
-
-    @Override
-    protected boolean isMoving() {
-        return !this.state.equals(State.IDLE);
     }
 
     private Sprite[][] getSprites(String spriteName) {
@@ -81,7 +76,36 @@ public class DarkLord extends Monster {
     }
 
     private void act() {
+        switch (this.state) {
+            case ATTACKING: {
+                this.state = State.IDLE;
+            } break;
+            case INVOKING: {
+                Bomb.consume(this, this.getOwnerArea());
+                this.state = State.IDLE;
+            } break;
+            case PREPARING_TELEPORTATION: {
+                this.state = State.TELEPORTING;
+            } break;
+            case TELEPORTING: {
+                DiscreteCoordinates position = null;
+                Random prng = RandomGenerator.getInstance();
+                List<DiscreteCoordinates> v = this.getFieldOfViewCells();
+                int attemptsLimit = 30;
+                int attempt = 0;
 
+                do {
+                    position = v.get(prng.nextInt(v.size()));
+                    attempt++;
+                } while(
+                        attempt < attemptsLimit &&
+                        !this.getOwnerArea().canEnterAreaCells(this, List.of(position))
+                );
+
+                if (position != null) this.setCurrentPosition(position.toVector());
+                this.state = State.IDLE;
+            }
+        }
     }
 
     @Override
@@ -98,8 +122,9 @@ public class DarkLord extends Monster {
             double random = RandomGenerator.getInstance().nextDouble();
             this.state = random > 0.7 ? State.ATTACKING : State.INVOKING;
             this.orientate(this.whereToThrowFireSpell());
-            this.act();
         }
+
+        this.act();
 
         super.update(deltaTime);
     }
@@ -120,6 +145,11 @@ public class DarkLord extends Monster {
     @Override
     protected List<DamageType> getWeaknesses() {
         return List.of(DamageType.MAGICAL);
+    }
+
+    @Override
+    protected boolean isMoving() {
+        return !this.state.equals(State.IDLE);
     }
 
     @Override

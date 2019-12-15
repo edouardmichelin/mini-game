@@ -116,7 +116,7 @@ public class ARPGPlayer extends Player {
         if (this.keyboard.get(Keys.MOVE_LEFT).isDown()) this.move(Orientation.LEFT);
         if (this.keyboard.get(Keys.MOVE_RIGHT).isDown()) this.move(Orientation.RIGHT);
 
-        if (this.keyboard.get(Keys.CONSUME_ITEM).isPressed() && !this.isDisplacementOccurs()) this.consumeCurrentItem();
+        if (this.keyboard.get(Keys.CONSUME_ITEM).isPressed()) this.consumeCurrentItem();
         if (this.keyboard.get(Keys.SWITCH_ITEM).isPressed()) this.switchItem();
         if (this.keyboard.get(Keys.SWITCH_COINS_DISPLAY).isPressed()) this.GUI.switchCoinsDisplay();
 

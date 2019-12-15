@@ -17,11 +17,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+
+/**
+ * TODO - On ne voit jamais la seconde animation
+ * TODO - Problème des blocs invisibles
+ */
 public class DarkLord extends Monster {
     private static final int ACTION_RADIUS = 3;
+    private static final int TELEPORTATION_RADIUS = 2;
     private static final int MIN_SPELL_WAIT_DURATION = 200;
     private static final int MAX_SPELL_WAIT_DURATION = 500;
-    private static final int TELEPORTATION_RADIUS = 3;
 
     private Animation[] idleAnimations;
     private Animation[] spellAnimations;
@@ -52,6 +57,17 @@ public class DarkLord extends Monster {
                 32,
                 new Orientation[] {Orientation.UP, Orientation.LEFT, Orientation.DOWN, Orientation.RIGHT}
         );
+    }
+
+    private List<DiscreteCoordinates> getCellsInRadius(int radius) {
+        DiscreteCoordinates dc = this.getCurrentMainCellCoordinates();
+
+        List<DiscreteCoordinates> cir = new ArrayList<>();
+        for (int x = -radius; x < radius + 1; x++)
+            for (int y = -radius; y < radius + 1; y++)
+                cir.add(dc.jump(x, y));
+
+        return cir;
     }
 
     private Orientation whereToThrowFireSpell() {
@@ -87,9 +103,10 @@ public class DarkLord extends Monster {
                 this.state = State.TELEPORTING;
             } break;
             case TELEPORTING: {
+                if (!this.isTargetReached()) return;
                 DiscreteCoordinates position;
                 Random prng = RandomGenerator.getInstance();
-                List<DiscreteCoordinates> v = this.getFieldOfViewCells();
+                List<DiscreteCoordinates> v = this.getCellsInRadius(TELEPORTATION_RADIUS);
                 int attemptsLimit = 30;
                 int attempt = 0;
 
@@ -101,7 +118,6 @@ public class DarkLord extends Monster {
                         !this.getOwnerArea().canEnterAreaCells(this, List.of(position))
                 );
 
-                this.abortCurrentMove();
                 if (position != null) this.setCurrentPosition(position.toVector());
                 this.state = State.IDLE;
             }
@@ -112,18 +128,19 @@ public class DarkLord extends Monster {
     public void update(float deltaTime) {
         this.simulationStep++;
 
-        this.move(30);
+        this.act();
 
-        if (!this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells()))
-            this.whereToThrowFireSpell();
+        if (!this.state.equals(State.PREPARING_TELEPORTATION) && !this.state.equals(State.IDLE))
+            this.move(30);
+
+        if (this.isTargetReached() && !this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells()))
+            this.orientate(this.whereToThrowFireSpell());
 
         if (this.simulationStep % this.simulationCyle == 0) {
             double random = RandomGenerator.getInstance().nextDouble();
             this.state = random > 0.7 ? State.ATTACKING : State.INVOKING;
             this.orientate(this.whereToThrowFireSpell());
         }
-
-        this.act();
 
         super.update(deltaTime);
     }
@@ -178,14 +195,7 @@ public class DarkLord extends Monster {
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        DiscreteCoordinates dc = this.getCurrentMainCellCoordinates();
-
-        List<DiscreteCoordinates> fowc = new ArrayList<>();
-        for (int x = -ACTION_RADIUS; x < ACTION_RADIUS + 1; x++)
-            for (int y = -ACTION_RADIUS; y < ACTION_RADIUS + 1; y++)
-                fowc.add(dc.jump(x, y));
-
-        return fowc;
+        return getCellsInRadius(ACTION_RADIUS);
     }
 
     @Override
@@ -201,7 +211,9 @@ public class DarkLord extends Monster {
 
         @Override
         public void interactWith(ARPGPlayer player){
-            DarkLord.this.state = State.PREPARING_TELEPORTATION;
+            if (!DarkLord.this.state.equals(State.TELEPORTING)) {
+                DarkLord.this.state = State.PREPARING_TELEPORTATION;
+            }
         }
 
     }

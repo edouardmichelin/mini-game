@@ -20,8 +20,7 @@ public class Ferme extends ARPGArea {
         this.registerDoors();
 
         this.registerActor(new CastleKey(this, Orientation.DOWN, new DiscreteCoordinates(6, 6)));
-        this.registerActor(new DarkLord(this, Orientation.RIGHT, new DiscreteCoordinates(6, 6)));
-        this.registerActor(new FlameSkull(this, Orientation.DOWN, new DiscreteCoordinates(6, 7)));
+        this.registerActor(new DarkLord(this, Orientation.RIGHT, new DiscreteCoordinates(9, 9)));
     }
 
     private void registerDoors() {

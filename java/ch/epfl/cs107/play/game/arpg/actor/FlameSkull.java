@@ -34,12 +34,6 @@ public class FlameSkull extends Monster {
         this.animations = RPGSprite.createAnimations(4, this.getSprites("zelda/flameSkull"));
     }
 
-    @Override
-    protected boolean isMoving() {
-        return true;
-    }
-
-
     private Orientation randomDirection() {
         int random = RandomGenerator.getInstance().nextInt(100);
         if (random >= 60) {

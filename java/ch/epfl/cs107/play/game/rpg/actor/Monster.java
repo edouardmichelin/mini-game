@@ -34,8 +34,6 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
         );
     }
 
-    protected abstract boolean isMoving();
-
     protected abstract Animation[] getCharacterAnimations();
 
     protected abstract List<DamageType> getWeaknesses();
@@ -69,7 +67,7 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
     }
 
     @Override
-    public float damage(int damage, DamageType type) {
+    public float damage(float damage, DamageType type) {
         if (this.getWeaknesses().contains(type))
             this.hp -= damage;
 
@@ -93,7 +91,7 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
 
     @Override
     public void update(float deltaTime) {
-        if (this.isMoving())
+        if (this.isDisplacementOccurs())
             this.getAnimation().update(deltaTime);
 
         if (!this.isAlive()) {

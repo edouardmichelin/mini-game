@@ -164,11 +164,6 @@ public class DarkLord extends Monster {
     }
 
     @Override
-    protected boolean isMoving() {
-        return this.isDisplacementOccurs();
-    }
-
-    @Override
     public float getMaxHp() {
         return 10f;
     }

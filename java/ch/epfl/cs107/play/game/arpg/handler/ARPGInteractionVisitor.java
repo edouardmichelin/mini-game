@@ -39,6 +39,14 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a bomb
+     * @param bomb (Bomb), not null
+     */
+    default void interactWith(Bomb bomb){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a castle key
      * @param castleKey (CastleKey), not null
      */

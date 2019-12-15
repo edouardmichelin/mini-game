@@ -3,10 +3,7 @@ package ch.epfl.cs107.play.game.arpg.area;
 import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.game.areagame.actor.Foreground;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.arpg.actor.CastleKey;
-import ch.epfl.cs107.play.game.arpg.actor.Coin;
-import ch.epfl.cs107.play.game.arpg.actor.DarkLord;
-import ch.epfl.cs107.play.game.arpg.actor.FlameSkull;
+import ch.epfl.cs107.play.game.arpg.actor.*;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
@@ -20,7 +17,8 @@ public class Ferme extends ARPGArea {
         this.registerDoors();
 
         this.registerActor(new CastleKey(this, Orientation.DOWN, new DiscreteCoordinates(6, 6)));
-        this.registerActor(new DarkLord(this, Orientation.RIGHT, new DiscreteCoordinates(9, 9)));
+        this.registerActor(new DarkLord(this, Orientation.RIGHT, new DiscreteCoordinates(9, 15)));
+        this.registerActor(new FireSpell(this, Orientation.DOWN, new DiscreteCoordinates(10, 6)));
     }
 
     private void registerDoors() {

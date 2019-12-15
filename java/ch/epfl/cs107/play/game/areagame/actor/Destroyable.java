@@ -27,7 +27,7 @@ public interface Destroyable {
      * @param type (DamageType) : The type of the damage
      * @return (int): the remaining health points of the entity
      */
-    float damage(int damage, DamageType type);
+    float damage(float damage, DamageType type);
 
     /**
      * Destroys the entity

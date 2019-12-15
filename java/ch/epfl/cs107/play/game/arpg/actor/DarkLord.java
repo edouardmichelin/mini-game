@@ -12,7 +12,6 @@ import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
-import ch.epfl.cs107.play.math.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +87,7 @@ public class DarkLord extends Monster {
                 this.state = State.TELEPORTING;
             } break;
             case TELEPORTING: {
-                DiscreteCoordinates position = null;
+                DiscreteCoordinates position;
                 Random prng = RandomGenerator.getInstance();
                 List<DiscreteCoordinates> v = this.getFieldOfViewCells();
                 int attemptsLimit = 30;
@@ -102,6 +101,7 @@ public class DarkLord extends Monster {
                         !this.getOwnerArea().canEnterAreaCells(this, List.of(position))
                 );
 
+                this.abortCurrentMove();
                 if (position != null) this.setCurrentPosition(position.toVector());
                 this.state = State.IDLE;
             }
@@ -112,8 +112,7 @@ public class DarkLord extends Monster {
     public void update(float deltaTime) {
         this.simulationStep++;
 
-        if (this.isMoving())
-            this.move(30);
+        this.move(30);
 
         if (!this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells()))
             this.whereToThrowFireSpell();
@@ -149,7 +148,7 @@ public class DarkLord extends Monster {
 
     @Override
     protected boolean isMoving() {
-        return !this.state.equals(State.IDLE);
+        return this.isDisplacementOccurs();
     }
 
     @Override

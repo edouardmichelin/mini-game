@@ -93,8 +93,6 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
 
     @Override
     public void update(float deltaTime) {
-        super.update(deltaTime);
-
         if (this.isMoving())
             this.getAnimation().update(deltaTime);
 
@@ -106,6 +104,8 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
             this.despawnTime -= 1;
             if (this.despawnTime <= 0) this.getOwnerArea().unregisterActor(this);
         }
+
+        super.update(deltaTime);
     }
 
     @Override

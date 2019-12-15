@@ -16,6 +16,7 @@ import ch.epfl.cs107.play.math.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class DarkLord extends Monster {
     private static final int ACTION_RADIUS = 3;
@@ -59,14 +60,21 @@ public class DarkLord extends Monster {
         );
     }
 
-    // WIP
     private Orientation whereToThrowFireSpell() {
         DiscreteCoordinates position = this.getCurrentMainCellCoordinates();
         Area area = this.getOwnerArea();
-        for (Orientation orientation : Orientation.values()) {
-            if (area.canEnterAreaCells(this, List.of(position.jump(orientation.toVector())))) {
-                return orientation;
+        Random prng = RandomGenerator.getInstance();
+        int maxAttemptAmount = 50;
+        int attempt = 0;
+
+        while(attempt < maxAttemptAmount) {
+            int random = prng.nextInt(Orientation.values().length);
+            for (Orientation orientation : Orientation.values()) {
+                if (orientation.ordinal() == random && area.canEnterAreaCells(this, List.of(position.jump(orientation.toVector())))) {
+                    return orientation;
+                }
             }
+            attempt++;
         }
 
         return this.getOrientation();
@@ -74,16 +82,21 @@ public class DarkLord extends Monster {
 
     @Override
     public void update(float deltaTime) {
-        super.update(deltaTime);
         this.simulationStep++;
 
         if (this.isMoving())
-            this.move(20);
+            this.move(30);
+
+        if (!this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells()))
+            this.whereToThrowFireSpell();
 
         if (this.simulationStep % this.simulationCyle == 0) {
             double random = RandomGenerator.getInstance().nextDouble();
             this.state = random > 0.7 ? State.ATTACKING : State.INVOKING;
+            this.orientate(this.whereToThrowFireSpell());
         }
+
+        super.update(deltaTime);
     }
 
     @Override
@@ -155,7 +168,6 @@ public class DarkLord extends Monster {
         @Override
         public void interactWith(ARPGPlayer player){
             DarkLord.this.state = State.PREPARING_TELEPORTATION;
-            System.out.println("Interaction");
         }
 
     }

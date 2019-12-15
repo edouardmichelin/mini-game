@@ -36,8 +36,6 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
 
     protected abstract Animation[] getCharacterAnimations();
 
-    protected abstract List<DamageType> getWeaknesses();
-
     public float getHp() {
         return this.hp;
     }

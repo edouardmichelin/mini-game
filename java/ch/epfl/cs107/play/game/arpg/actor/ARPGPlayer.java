@@ -2,10 +2,7 @@ package ch.epfl.cs107.play.game.arpg.actor;
 
 import ch.epfl.cs107.play.game.actor.TextGraphics;
 import ch.epfl.cs107.play.game.areagame.Area;
-import ch.epfl.cs107.play.game.areagame.actor.Animation;
-import ch.epfl.cs107.play.game.areagame.actor.Interactable;
-import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.areagame.actor.Sprite;
+import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior;
 import ch.epfl.cs107.play.game.arpg.config.Keys;
@@ -13,6 +10,7 @@ import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
+import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
@@ -22,7 +20,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
-public class ARPGPlayer extends Player {
+public class ARPGPlayer extends Player implements Destroyable {
     private final static int ANIMATION_DURATION = 8;
     private final static float DEFAULT_HEALTH_POINTS = 5f;
 
@@ -100,13 +98,51 @@ public class ARPGPlayer extends Player {
             this.orientate(orientation);
     }
 
-    void damage(float damageAmount) {
-        if (this.hp > damageAmount)
-            this.hp -= damageAmount;
+    @Override
+    public float getHp() {
+        return this.hp;
+    }
+
+    @Override
+    public float getMaxHp() {
+        return DEFAULT_HEALTH_POINTS;
+    }
+
+    @Override
+    public boolean isWeak() {
+        return this.hp <= 2;
+    }
+
+    @Override
+    public void strengthen() {
+        this.hp = DEFAULT_HEALTH_POINTS;
+    }
+
+    @Override
+    public List<DamageType> getWeaknesses() {
+        return List.of(DamageType.values());
+    }
+
+    @Override
+    public float damage(float damage, DamageType dt) {
+        if (this.hp > damage)
+            this.hp -= damage;
         else
             this.hp = 0;
 
         this.GUI.setHealthPoints(this.hp);
+
+        return this.hp;
+    }
+
+    @Override
+    public void destroy() {
+        this.hp = 0;
+    }
+
+    @Override
+    public void onDying() {
+        //
     }
 
     @Override
@@ -202,17 +238,9 @@ public class ARPGPlayer extends Player {
         }
 
         @Override
-        public void interactWith(ARPGBehavior.ARPGCell cell){
-        }
-
-        @Override
-        public void interactWith(ARPGPlayer player){
-        }
-
-        @Override
         public void interactWith(Grass grass) {
             if (isInteractionKeyPressed())
-                grass.cut();
+                grass.destroy();
         }
 
         @Override

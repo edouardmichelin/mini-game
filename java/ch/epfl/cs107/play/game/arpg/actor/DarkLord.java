@@ -1,10 +1,7 @@
 package ch.epfl.cs107.play.game.arpg.actor;
 
 import ch.epfl.cs107.play.game.areagame.Area;
-import ch.epfl.cs107.play.game.areagame.actor.Animation;
-import ch.epfl.cs107.play.game.areagame.actor.Interactable;
-import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.areagame.actor.Sprite;
+import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Monster;
@@ -130,7 +127,7 @@ public class DarkLord extends Monster {
 
         this.act();
 
-        if (!this.state.equals(State.PREPARING_TELEPORTATION) && !this.state.equals(State.IDLE))
+        if (!this.state.equals(State.TELEPORTING))
             this.move(30);
 
         if (this.isTargetReached() && !this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells()))
@@ -159,7 +156,7 @@ public class DarkLord extends Monster {
     }
 
     @Override
-    protected List<DamageType> getWeaknesses() {
+    public List<DamageType> getWeaknesses() {
         return List.of(DamageType.MAGICAL);
     }
 
@@ -205,7 +202,7 @@ public class DarkLord extends Monster {
         }
 
         @Override
-        public void interactWith(ARPGPlayer player){
+        public void interactWith(ARPGPlayer player) {
             if (!DarkLord.this.state.equals(State.TELEPORTING)) {
                 DarkLord.this.state = State.PREPARING_TELEPORTATION;
             }

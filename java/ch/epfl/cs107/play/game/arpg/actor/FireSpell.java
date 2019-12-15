@@ -8,6 +8,7 @@ import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
+import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.RegionOfInterest;
@@ -22,6 +23,7 @@ public class FireSpell extends AreaEntity implements Interactor {
     private final static int MAX_LIFE_TIME = 300;
     private final static int PROPAGATION_TIME_FIRE_CYCLE = 150;
     private final static float STRENGTH_UNIT = 0.1f;
+    private final static DamageType DAMAGE_TYPE = DamageType.FIRE;
 
     private Animation animation;
     private int lifeTime;
@@ -150,16 +152,20 @@ public class FireSpell extends AreaEntity implements Interactor {
 
     }
 
+    private void inflictDamage(Destroyable destroyable) {
+        destroyable.damage(0.5f / Settings.FRAME_RATE, DAMAGE_TYPE);
+    }
+
     private class ARPGFireSpellHandler implements ARPGInteractionVisitor {
 
         @Override
-        public void interactWith(ARPGPlayer player){
-            player.damage(0.5f / Settings.FRAME_RATE);
+        public void interactWith(ARPGPlayer player) {
+            inflictDamage(player);
         }
 
         @Override
         public void interactWith(Grass grass) {
-            grass.cut();
+            inflictDamage(grass);
         }
 
         @Override

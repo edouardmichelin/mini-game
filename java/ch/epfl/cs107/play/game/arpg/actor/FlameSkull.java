@@ -74,10 +74,9 @@ public class FlameSkull extends Monster {
     }
 
     @Override
-    protected List<DamageType> getWeaknesses() {
+    public List<DamageType> getWeaknesses() {
         return List.of(DamageType.MAGICAL, DamageType.PHYSICAL);
     }
-
 
     @Override
     public float getMaxHp() {

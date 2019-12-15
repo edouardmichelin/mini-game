@@ -1,5 +1,6 @@
 package ch.epfl.cs107.play.game.arpg.handler;
 
+import ch.epfl.cs107.play.game.areagame.actor.Destroyable;
 import ch.epfl.cs107.play.game.arpg.actor.*;
 import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior.ARPGCell;
 import ch.epfl.cs107.play.game.rpg.handler.RPGInteractionVisitor;
@@ -71,10 +72,18 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
-     * Simulate and interaction between RPG Interactor and a dark lord
+     * Simulate and interaction between RPG Interactor and a darkLord
      * @param darkLord (DarkLord), not null
      */
     default void interactWith(DarkLord darkLord){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a destroyable
+     * @param destroyable (Destroyable), not null
+     */
+    default void interactWith(Destroyable destroyable){
         // by default the interaction is empty
     }
 

@@ -1,14 +1,12 @@
 package ch.epfl.cs107.play.game.arpg.actor;
 
 import ch.epfl.cs107.play.game.areagame.Area;
-import ch.epfl.cs107.play.game.areagame.actor.Animation;
-import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
-import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.areagame.actor.Sprite;
+import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
+import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.RegionOfInterest;
@@ -18,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class Grass extends AreaEntity {
+public class Grass extends AreaEntity implements Destroyable {
     private static final double PROBABILITY_TO_DROP_ITEM = 0.3;
     private static final double PROBABILITY_TO_DROP_HEART = 0.15;
     private static final String TEX = "zelda/Grass";
@@ -64,29 +62,17 @@ public class Grass extends AreaEntity {
         return s;
     }
 
-    void cut() {
-        this.isSliced = true;
-
-        Random prng = RandomGenerator.getInstance();
-
-        if (prng.nextDouble() < PROBABILITY_TO_DROP_ITEM)
-            if (prng.nextDouble() < PROBABILITY_TO_DROP_HEART)
-                Heart.drop(this, this.getOwnerArea());
-            else
-                Coin.drop(this, this.getOwnerArea());
-    }
-
     @Override
     public void draw(Canvas canvas) {
-        if (this.isSliced)
-            this.animation.draw(canvas);
-        else
+        if (this.isAlive())
             this.sprite.draw(canvas);
+        else
+            this.animation.draw(canvas);
     }
 
     @Override
     public void update(float deltaTime) {
-        if (this.isSliced)
+        if (!this.isAlive())
             this.animation.update(deltaTime);
 
         super.update(deltaTime);
@@ -99,21 +85,77 @@ public class Grass extends AreaEntity {
 
     @Override
     public boolean takeCellSpace() {
-        return !this.isSliced;
+        return this.isAlive();
     }
 
     @Override
     public boolean isCellInteractable() {
-        return !this.isSliced;
+        return this.isAlive();
     }
 
     @Override
     public boolean isViewInteractable() {
-        return !this.isSliced;
+        return this.isAlive();
     }
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((ARPGInteractionVisitor) v).interactWith(this);
+    }
+
+    @Override
+    public float getHp() {
+        return 0;
+    }
+
+    @Override
+    public float getMaxHp() {
+        return 0;
+    }
+
+    @Override
+    public boolean isWeak() {
+        return false;
+    }
+
+    @Override
+    public void strengthen() {
+
+    }
+
+    @Override
+    public List<DamageType> getWeaknesses() {
+        return List.of(DamageType.FIRE, DamageType.PHYSICAL);
+    }
+
+    @Override
+    public float damage(float damage, DamageType type) {
+        if (this.getWeaknesses().contains(type))
+            this.onDying();
+
+        return 0;
+    }
+
+    @Override
+    public void destroy() {
+        this.onDying();
+    }
+
+    @Override
+    public boolean isAlive() {
+        return !this.isSliced;
+    }
+
+    @Override
+    public void onDying() {
+        this.isSliced = true;
+
+        Random prng = RandomGenerator.getInstance();
+
+        if (prng.nextDouble() < PROBABILITY_TO_DROP_ITEM)
+            if (prng.nextDouble() < PROBABILITY_TO_DROP_HEART)
+                Heart.drop(this, this.getOwnerArea());
+            else
+                Coin.drop(this, this.getOwnerArea());
     }
 }

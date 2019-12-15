@@ -2,6 +2,8 @@ package ch.epfl.cs107.play.game.areagame.actor;
 
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 
+import java.util.List;
+
 public interface Destroyable {
     float getHp();
 
@@ -20,6 +22,13 @@ public interface Destroyable {
 
     /** Gives health points to the entity */
     void strengthen();
+
+
+    /**
+     *
+     * @return The list of the weaknesses
+     */
+    List<DamageType> getWeaknesses();
 
     /**
      * Damages the entity by subtracting the specified amounts to its health points

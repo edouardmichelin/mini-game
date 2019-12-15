@@ -80,6 +80,10 @@ public class DarkLord extends Monster {
         return this.getOrientation();
     }
 
+    private void act() {
+
+    }
+
     @Override
     public void update(float deltaTime) {
         this.simulationStep++;
@@ -94,6 +98,7 @@ public class DarkLord extends Monster {
             double random = RandomGenerator.getInstance().nextDouble();
             this.state = random > 0.7 ? State.ATTACKING : State.INVOKING;
             this.orientate(this.whereToThrowFireSpell());
+            this.act();
         }
 
         super.update(deltaTime);

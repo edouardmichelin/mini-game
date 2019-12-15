@@ -34,11 +34,16 @@ public class DarkLord extends Monster {
     public DarkLord(Area area, Orientation orientation, DiscreteCoordinates coordinates) {
         super(area, orientation, coordinates);
 
-        this.idleAnimations = RPGSprite.createAnimations(4, this.getSprites("zelda/darkLord"));
-        this.spellAnimations = RPGSprite.createAnimations(4, this.getSprites("zelda/darkLord.spell"));
+        this.idleAnimations = RPGSprite.createAnimations(8, this.getSprites("zelda/darkLord"));
+        this.spellAnimations = RPGSprite.createAnimations(8, this.getSprites("zelda/darkLord.spell"));
         this.state = State.IDLE;
         this.interactionHandler = new ARPGDarkLordHandler();
         this.simulationCyle = Math.round((RandomGenerator.getInstance().nextFloat() * (MAX_SPELL_WAIT_DURATION - MIN_SPELL_WAIT_DURATION))) + MIN_SPELL_WAIT_DURATION;
+    }
+
+    @Override
+    protected boolean isMoving() {
+        return !this.state.equals(State.IDLE);
     }
 
     private Sprite[][] getSprites(String spriteName) {
@@ -72,7 +77,7 @@ public class DarkLord extends Monster {
         super.update(deltaTime);
         this.simulationStep++;
 
-        if (!this.state.equals(State.IDLE))
+        if (this.isMoving())
             this.move(20);
 
         if (this.simulationStep % this.simulationCyle == 0) {
@@ -150,6 +155,7 @@ public class DarkLord extends Monster {
         @Override
         public void interactWith(ARPGPlayer player){
             DarkLord.this.state = State.PREPARING_TELEPORTATION;
+            System.out.println("Interaction");
         }
 
     }

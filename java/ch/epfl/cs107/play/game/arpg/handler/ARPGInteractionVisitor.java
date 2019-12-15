@@ -32,7 +32,7 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
 
     /**
      * Simulate and interaction between RPG Interactor and a coin
-     * @param coin (ARPGPlayer), not null
+     * @param coin (Coin), not null
      */
     default void interactWith(Coin coin){
         // by default the interaction is empty
@@ -40,7 +40,7 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
 
     /**
      * Simulate and interaction between RPG Interactor and a castle key
-     * @param castleKey (ARPGPlayer), not null
+     * @param castleKey (CastleKey), not null
      */
     default void interactWith(CastleKey castleKey){
         // by default the interaction is empty
@@ -48,7 +48,7 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
 
     /**
      * Simulate and interaction between RPG Interactor and a heart
-     * @param heart (ARPGPlayer), not null
+     * @param heart (Heart), not null
      */
     default void interactWith(Heart heart){
         // by default the interaction is empty
@@ -56,9 +56,17 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
 
     /**
      * Simulate and interaction between RPG Interactor and a castle door
-     * @param castleDoor (ARPGPlayer), not null
+     * @param castleDoor (CastleDoor), not null
      */
     default void interactWith(CastleDoor castleDoor){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a dark lord
+     * @param darkLord (DarkLord), not null
+     */
+    default void interactWith(DarkLord darkLord){
         // by default the interaction is empty
     }
 

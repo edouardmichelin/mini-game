@@ -237,7 +237,6 @@ public class ARPGPlayer extends Player {
             ARPGPlayer.this.inventory.addSingleItem(castleKey.collect());
         }
 
-
         @Override
         public void interactWith(CastleDoor castleDoor) {
             if (

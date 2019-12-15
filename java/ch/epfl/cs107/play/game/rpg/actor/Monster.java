@@ -34,6 +34,8 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
         );
     }
 
+    protected abstract boolean isMoving();
+
     protected abstract Animation[] getCharacterAnimations();
 
     protected abstract List<DamageType> getWeaknesses();
@@ -93,7 +95,8 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        this.getAnimation().update(deltaTime);
+        if (this.isMoving())
+            this.getAnimation().update(deltaTime);
 
         if (!this.isAlive()) {
             if (!this.onDyingExecuted) {

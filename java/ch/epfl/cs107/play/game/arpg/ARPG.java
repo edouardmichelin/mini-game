@@ -16,8 +16,7 @@ public class ARPG extends RPG {
         this.initPlayer(new ARPGPlayer(
                 (this.getCurrentArea()),
                 Orientation.DOWN,
-                new DiscreteCoordinates(6, 10),
-                "zelda/player"
+                new DiscreteCoordinates(6, 10)
         ));
     }
 

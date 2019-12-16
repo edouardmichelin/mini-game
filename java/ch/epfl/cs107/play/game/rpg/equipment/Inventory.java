@@ -22,6 +22,8 @@ public interface Inventory extends InventoryContentAccessor {
 
         int getPrice();
 
+        boolean getRequiresAnimations();
+
         String getSpriteName();
 
         BiConsumer<AreaEntity, Area> getConsumeMethod();

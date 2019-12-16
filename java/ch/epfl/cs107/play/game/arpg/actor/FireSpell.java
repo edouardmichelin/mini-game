@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class FireSpell extends AreaEntity implements Interactor, Dropable {
+public class FireSpell extends AreaEntity implements Interactor, Dropable, Destroyable {
     private final static int MIN_LIFE_TIME = 150;
     private final static int MAX_LIFE_TIME = 300;
     private final static int PROPAGATION_TIME_FIRE_CYCLE = 150;
@@ -139,7 +139,7 @@ public class FireSpell extends AreaEntity implements Interactor, Dropable {
 
     @Override
     public boolean isCellInteractable() {
-        return false;
+        return true;
     }
 
     @Override
@@ -149,11 +149,54 @@ public class FireSpell extends AreaEntity implements Interactor, Dropable {
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
-
+        ((ARPGInteractionVisitor) v).interactWith(this);
     }
 
     private void inflictDamage(Destroyable destroyable) {
         destroyable.damage(0.5f / Settings.FRAME_RATE, DAMAGE_TYPE);
+    }
+
+    @Override
+    public float getHp() {
+        return 0;
+    }
+
+    @Override
+    public float getMaxHp() {
+        return 0;
+    }
+
+    @Override
+    public boolean isWeak() {
+        return false;
+    }
+
+    @Override
+    public void strengthen() {
+
+    }
+
+    @Override
+    public List<DamageType> getWeaknesses() {
+        return List.of(DamageType.MAGICAL, DamageType.PHYSICAL);
+    }
+
+    @Override
+    public float damage(float damage, DamageType type) {
+        if (this.getWeaknesses().contains(type))
+            this.destroy();
+
+        return 0;
+    }
+
+    @Override
+    public void destroy() {
+        this.onDying();
+    }
+
+    @Override
+    public void onDying() {
+        this.getOwnerArea().unregisterActor(this);
     }
 
     private class ARPGFireSpellHandler implements ARPGInteractionVisitor {

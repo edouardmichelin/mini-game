@@ -76,6 +76,8 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
     }
 
     void explode() {
+        if (this.countdown <= 0) return;
+
         this.countdown = 0;
     }
 
@@ -83,12 +85,14 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
     public void update(float deltaTime) {
         if (this.countdown < -(Settings.FRAME_RATE / 4)) {
             this.getOwnerArea().unregisterActor(this);
+            super.update(deltaTime);
             return;
         }
 
-        this.countdown = this.countdown - 1;
         this.animation.update(deltaTime);
         super.update(deltaTime);
+
+        this.countdown--;
     }
 
     @Override
@@ -139,7 +143,7 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
-
+        ((ARPGInteractionVisitor) v).interactWith(this);
     }
 
     private void inflictDamage(Destroyable destroyable) {
@@ -151,6 +155,11 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
         @Override
         public void interactWith(ARPGPlayer player) {
             Bomb.this.inflictDamage(player);
+        }
+
+        @Override
+        public void interactWith(FlameSkull flameSkull) {
+            Bomb.this.inflictDamage(flameSkull);
         }
 
         @Override

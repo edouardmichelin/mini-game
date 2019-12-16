@@ -109,37 +109,39 @@ public class ARPGInventory implements Inventory {
     }
 
     public enum ARPGItem implements Inventory.InventoryItem {
-        ARROW("Arrow", 0, 5, "zelda/arrow.icon"),
-        BOW("Bow", 0, 15, "zelda/bow.icon"),
-        SWORD("Sword", 0, 20, "zelda/sword.icon"),
-        STAFF("Staff", 0, 200, "zelda/staff_water.icon"),
-        BOMB("Bomb", 0, 50, "zelda/bomb", Bomb::consume, new RegionOfInterest(0,0,16,16)),
-        CASTLE_KEY("CastleKey", 0, 100, "zelda/key")
+        ARROW("arrow", 0, 5, false, "zelda/arrow.icon"),
+        BOW("bow", 0, 15, true, "zelda/bow.icon", Arrow::consume),
+        SWORD("sword", 0, 20, true, "zelda/sword.icon"),
+        STAFF("staff_water", 0, 200, true, "zelda/staff_water.icon"),
+        BOMB("bomb", 0, 50, false, "zelda/bomb", Bomb::consume, new RegionOfInterest(0,0,16,16)),
+        CASTLE_KEY("castle_key", 0, 100, false, "zelda/key")
         ;
 
         private String title;
         private float weight;
         private int price;
+        private boolean requiresAnimations;
         private String spriteName;
         private BiConsumer<AreaEntity, Area> consumeMethod;
         private RegionOfInterest roi;
 
-        ARPGItem(String title, float weight, int price, String spriteName) {
+        ARPGItem(String title, float weight, int price, boolean requiresAnimations, String spriteName) {
             this.title = title;
             this.weight = weight;
             this.price = price;
+            this.requiresAnimations = requiresAnimations;
             this.spriteName = spriteName;
             this.consumeMethod = null;
             this.roi = new RegionOfInterest(0,0,32,32);
         }
 
-        ARPGItem(String title, float weight, int price, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod) {
-            this(title, weight, price, spriteName);
+        ARPGItem(String title, float weight, int price, boolean requiresAnimations, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod) {
+            this(title, weight, price, requiresAnimations, spriteName);
             this.consumeMethod = consumeMethod;
         }
 
-        ARPGItem(String title, float weight, int price, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod, RegionOfInterest roi) {
-            this(title, weight, price, spriteName, consumeMethod);
+        ARPGItem(String title, float weight, int price, boolean requiresAnimations, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod, RegionOfInterest roi) {
+            this(title, weight, price, requiresAnimations, spriteName, consumeMethod);
             this.roi = roi;
         }
 
@@ -157,6 +159,11 @@ public class ARPGInventory implements Inventory {
         @Override
         public int getPrice() {
             return this.price;
+        }
+
+        @Override
+        public boolean getRequiresAnimations() {
+            return this.requiresAnimations;
         }
 
         public String getSpriteName() {

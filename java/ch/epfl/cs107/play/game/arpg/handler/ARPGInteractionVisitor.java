@@ -104,6 +104,22 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a arrow
+     * @param arrow (Arrow), not null
+     */
+    default void interactWith(Arrow arrow){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a arrow
+     * @param magicWaterProjectile (MagicWaterProjectile), not null
+     */
+    default void interactWith(MagicWaterProjectile magicWaterProjectile){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a destroyable
      * @param destroyable (Destroyable), not null
      */

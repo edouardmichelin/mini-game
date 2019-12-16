@@ -6,6 +6,7 @@ import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior;
 import ch.epfl.cs107.play.game.arpg.config.Keys;
+import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
@@ -23,16 +24,19 @@ import java.util.List;
 public class ARPGPlayer extends Player implements Destroyable {
     private final static int ANIMATION_DURATION = 8;
     private final static float DEFAULT_HEALTH_POINTS = 5f;
+    private final static int CONSUMING_TIME = Settings.FRAME_RATE / 4;
 
     private float maxHp;
     private float hp;
     private int currentItemId = 0;
+    private int timeSpentConsuming = 0;
 
     private Keyboard keyboard;
     private Animation[] animations;
     private ARPGInventory inventory;
     private ARPGPlayerHandler interactionHandler;
     private ARPGPlayerStatusGUI GUI;
+    private ARPGPlayerState state;
 
     /**
      * Default MovableAreaEntity constructor
@@ -41,30 +45,20 @@ public class ARPGPlayer extends Player implements Destroyable {
      * @param orientation (Orientation): Initial orientation of the entity. Not null
      * @param position    (Coordinate): Initial position of the entity. Not null
      */
-    public ARPGPlayer(Area area, Orientation orientation, DiscreteCoordinates position, String spriteName) {
+    public ARPGPlayer(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
         this.keyboard = area.getKeyboard();
         this.maxHp = DEFAULT_HEALTH_POINTS;
         this.hp = this.maxHp;
+        this.state = ARPGPlayerState.NORMAL;
 
-        Sprite[][] sprites = RPGSprite.extractSprites(
-                spriteName,
-                4,
-                1,
-                2,
-                this,
-                16,
-                32,
-                new Orientation[] {Orientation.DOWN, Orientation.RIGHT, Orientation.UP, Orientation.LEFT}
-        );
-
-        this.animations = RPGSprite.createAnimations(ANIMATION_DURATION / 2, sprites);
+        this.animations = this.getDefaultAnimations();
         this.interactionHandler = new ARPGPlayerHandler();
         this.inventory = new ARPGInventory(30, this);
 
         this.inventory.addItem(ARPGInventory.ARPGItem.BOMB, 5);
-        this.inventory.addItem(ARPGInventory.ARPGItem.BOW, 1);
+        this.inventory.addItem(ARPGInventory.ARPGItem.BOW, 15);
         this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 5);
         this.inventory.addItem(ARPGInventory.ARPGItem.STAFF, 1);
         this.inventory.addItem(ARPGInventory.ARPGItem.SWORD, 1);
@@ -76,6 +70,43 @@ public class ARPGPlayer extends Player implements Destroyable {
 
     private Animation getAnimation() {
         return this.animations[this.getOrientation().ordinal()];
+    }
+
+    private Animation[] getDefaultAnimations() {
+        return RPGSprite.createAnimations(ANIMATION_DURATION / 2, RPGSprite.extractSprites(
+                "zelda/player",
+                4,
+                1,
+                2,
+                this,
+                16,
+                32,
+                new Orientation[]{Orientation.DOWN, Orientation.RIGHT, Orientation.UP, Orientation.LEFT}
+        ));
+    }
+
+    private Animation[] getAnimations() {
+        ARPGInventory.ARPGItem currentItem = this.inventory.getItem(this.currentItemId);
+        if (this.state.equals(ARPGPlayerState.NORMAL))
+            return this.getDefaultAnimations();
+
+        String spriteName = String.format("zelda/player.%s", currentItem.getTitle());
+
+        return RPGSprite.createAnimations(CONSUMING_TIME / 3, RPGSprite.extractSprites(
+                spriteName,
+                4,
+                2,
+                2,
+                this,
+                32,
+                32,
+                new Orientation[]{Orientation.DOWN, Orientation.UP, Orientation.RIGHT, Orientation.LEFT}
+        ));
+    }
+
+    private void switchState(ARPGPlayerState state) {
+        this.state = state;
+        this.animations = this.getAnimations();
     }
 
     private void switchItem() {
@@ -147,14 +178,25 @@ public class ARPGPlayer extends Player implements Destroyable {
 
     @Override
     public void update(float deltaTime) {
-        if (this.keyboard.get(Keys.MOVE_UP).isDown()) this.move(Orientation.UP);
-        if (this.keyboard.get(Keys.MOVE_DOWN).isDown()) this.move(Orientation.DOWN);
-        if (this.keyboard.get(Keys.MOVE_LEFT).isDown()) this.move(Orientation.LEFT);
-        if (this.keyboard.get(Keys.MOVE_RIGHT).isDown()) this.move(Orientation.RIGHT);
+        // en fonction de letat on fait quelque chose
+        // petite aide : on ne bouge pas dans un etat "occupé"
+        // petite aide : après un certain temps (Settings.FRAME_RATE = 1s dans le update) on repasse dans letat de base
 
-        if (this.keyboard.get(Keys.CONSUME_ITEM).isPressed()) this.consumeCurrentItem();
-        if (this.keyboard.get(Keys.SWITCH_ITEM).isPressed()) this.switchItem();
-        if (this.keyboard.get(Keys.SWITCH_COINS_DISPLAY).isPressed()) this.GUI.switchCoinsDisplay();
+        if (!this.state.equals(ARPGPlayerState.CONSUMING_ITEM)) {
+            if (this.keyboard.get(Keys.MOVE_UP).isDown()) this.move(Orientation.UP);
+            if (this.keyboard.get(Keys.MOVE_DOWN).isDown()) this.move(Orientation.DOWN);
+            if (this.keyboard.get(Keys.MOVE_LEFT).isDown()) this.move(Orientation.LEFT);
+            if (this.keyboard.get(Keys.MOVE_RIGHT).isDown()) this.move(Orientation.RIGHT);
+
+            if (this.keyboard.get(Keys.CONSUME_ITEM).isPressed()) this.consumeCurrentItem();
+            if (this.keyboard.get(Keys.SWITCH_ITEM).isPressed()) this.switchItem();
+            if (this.keyboard.get(Keys.SWITCH_COINS_DISPLAY).isPressed()) this.GUI.switchCoinsDisplay();
+        } else {
+            this.timeSpentConsuming++;
+
+            if (this.timeSpentConsuming % CONSUMING_TIME == 0)
+                this.switchState(ARPGPlayerState.NORMAL);
+        }
 
         this.getAnimation().update(deltaTime);
 
@@ -166,7 +208,7 @@ public class ARPGPlayer extends Player implements Destroyable {
         Animation currentAnimation = this.getAnimation();
         this.GUI.draw(canvas);
 
-        if (this.isDisplacementOccurs()) {
+        if (this.isDisplacementOccurs() || this.state == ARPGPlayerState.CONSUMING_ITEM) {
             currentAnimation.draw(canvas);
         } else {
             currentAnimation.reset();
@@ -181,7 +223,7 @@ public class ARPGPlayer extends Player implements Destroyable {
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        return Collections.singletonList (getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
+        return Collections.singletonList(getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
     }
 
     @Override
@@ -221,13 +263,23 @@ public class ARPGPlayer extends Player implements Destroyable {
 
     private void consumeCurrentItem() {
         ARPGInventory.ARPGItem item = this.inventory.getItem(this.currentItemId);
+
+        if (item.getRequiresAnimations())
+            this.switchState(ARPGPlayerState.CONSUMING_ITEM);
+
         if (item.getConsumeMethod() == null) return;
 
+        // TODO - Retirer l'item qui est retourné par la méthode de consommation
         item.getConsumeMethod().accept(this, this.getOwnerArea());
         this.inventory.removeSingleItem(item);
 
         ARPGInventory.ARPGItem newItem = this.inventory.getItem(this.currentItemId);
         if (newItem == null || !newItem.equals(item)) this.switchItem();
+    }
+
+    private enum ARPGPlayerState {
+        CONSUMING_ITEM,
+        NORMAL
     }
 
     private class ARPGPlayerHandler implements ARPGInteractionVisitor {
@@ -269,7 +321,7 @@ public class ARPGPlayer extends Player implements Destroyable {
         public void interactWith(CastleDoor castleDoor) {
             if (
                     isInteractionKeyPressed() &&
-                    ARPGPlayer.this.inventory.contains(ARPGInventory.ARPGItem.CASTLE_KEY)
+                            ARPGPlayer.this.inventory.contains(ARPGInventory.ARPGItem.CASTLE_KEY)
             )
                 castleDoor.open();
             else if (castleDoor.isOpen()) {

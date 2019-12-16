@@ -61,7 +61,7 @@ public class ARPGPlayer extends Player implements Destroyable {
         this.inventory.addItem(ARPGInventory.ARPGItem.BOW, 30);
         this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 5);
         this.inventory.addItem(ARPGInventory.ARPGItem.STAFF, 30);
-        this.inventory.addItem(ARPGInventory.ARPGItem.SWORD, 1);
+        this.inventory.addItem(ARPGInventory.ARPGItem.SWORD, 30);
 
         this.inventory.addMoney(19);
 
@@ -178,9 +178,6 @@ public class ARPGPlayer extends Player implements Destroyable {
 
     @Override
     public void update(float deltaTime) {
-        // en fonction de letat on fait quelque chose
-        // petite aide : on ne bouge pas dans un etat "occupé"
-        // petite aide : après un certain temps (Settings.FRAME_RATE = 1s dans le update) on repasse dans letat de base
 
         if (!this.state.equals(ARPGPlayerState.CONSUMING_ITEM)) {
             if (this.keyboard.get(Keys.MOVE_UP).isDown()) this.move(Orientation.UP);
@@ -287,12 +284,6 @@ public class ARPGPlayer extends Player implements Destroyable {
         @Override
         public void interactWith(Door door) {
             setIsPassingADoor(door);
-        }
-
-        @Override
-        public void interactWith(Grass grass) {
-            if (isInteractionKeyPressed())
-                grass.destroy();
         }
 
         @Override

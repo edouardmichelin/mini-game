@@ -121,6 +121,14 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a arrow
+     * @param swordSlash (SwordSlash), not null
+     */
+    default void interactWith(SwordSlash swordSlash){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a destroyable
      * @param destroyable (Destroyable), not null
      */

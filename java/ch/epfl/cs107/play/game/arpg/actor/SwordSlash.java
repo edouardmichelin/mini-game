@@ -2,19 +2,21 @@ package ch.epfl.cs107.play.game.arpg.actor;
 
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
+import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Projectile;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.window.Canvas;
 
+import java.util.Collections;
 import java.util.List;
 
-public class SwordSlash extends Projectile {
+public class SwordSlash extends AreaEntity implements Interactor, FlyableEntity {
     private final static DamageType DAMAGE_TYPE = DamageType.PHYSICAL;
     private final static float DEFAULT_DAMAGE = 0.5f;
 
     private ARPGSwordSlashHandler interactionHandler;
-    private Animation animations;
 
     static void consume(AreaEntity consumer, Area area) {
         DiscreteCoordinates position = consumer
@@ -28,25 +30,22 @@ public class SwordSlash extends Projectile {
     public SwordSlash(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
-        Sprite[] sprite = {new Sprite("transparent", 1, 1, this)};
-        this.animations = new Animation(1, sprite, false);
-
         this.interactionHandler = new ARPGSwordSlashHandler();
     }
 
     @Override
-    protected Animation getAnimation() {
-        return this.animations;
+    public void update(float deltaTime) {
+        this.getOwnerArea().unregisterActor(this);
     }
 
     @Override
-    protected int getRange() {
-        return 0;
+    public void draw(Canvas canvas) {
+
     }
 
     @Override
-    protected int getSpeed() {
-        return 1;
+    public List<DiscreteCoordinates> getCurrentCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 
     @Override
@@ -67,6 +66,27 @@ public class SwordSlash extends Projectile {
     @Override
     public void interactWith(Interactable other) {
         other.acceptInteraction(this.interactionHandler);
+    }
+
+
+    @Override
+    public boolean takeCellSpace() {
+        return false;
+    }
+
+    @Override
+    public boolean isCellInteractable() {
+        return true;
+    }
+
+    @Override
+    public boolean isViewInteractable() {
+        return false;
+    }
+
+    @Override
+    public void acceptInteraction(AreaInteractionVisitor v) {
+        ((ARPGInteractionVisitor) v).interactWith(this);
     }
 
     private void inflictDamage(Destroyable destroyable) {

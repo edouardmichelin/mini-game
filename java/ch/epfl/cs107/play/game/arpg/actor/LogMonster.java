@@ -19,14 +19,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class LogMonster extends Monster {
+    private final static DamageType DAMAGE_TYPE = DamageType.PHYSICAL;
+    private final static float DAMAGE_AMOUNT = 1.5f;
     private final static int FIELD_OF_VIEW_RANGE = 8;
     private final static int MIN_SLEEPING_DURATION = 3 * Settings.FRAME_RATE;
     private final static int MAX_SLEEPING_DURATION = 10 * Settings.FRAME_RATE;
+    private final static int SIMULATION_CYLE = Settings.FRAME_RATE;
 
     private State state;
     private Animation[] animations;
     private ARPGLogMonsterHandler interactionHandler;
     private int sleepingDuration;
+    private int simulationStep;
 
     public LogMonster(Area area, Orientation orientation, DiscreteCoordinates coordinates) {
         super(area, orientation, coordinates);
@@ -34,6 +38,7 @@ public class LogMonster extends Monster {
         this.state = State.IDLE;
         this.animations = this.getAnimations();
         this.interactionHandler = new ARPGLogMonsterHandler();
+        this.simulationStep = SIMULATION_CYLE;
     }
 
     private List<DiscreteCoordinates> getCellsInRange(int range) {
@@ -61,6 +66,15 @@ public class LogMonster extends Monster {
                 32,
                 new Orientation[] {Orientation.DOWN, Orientation.UP, Orientation.RIGHT, Orientation.LEFT}
         ));
+    }
+
+    private void switchOrientation() {
+        int randomIndex = RandomGenerator.getInstance().nextInt(Orientation.values().length);
+        this.orientate(Orientation.values()[randomIndex]);
+    }
+
+    private boolean shouldSwitchOrientation() {
+        return RandomGenerator.getInstance().nextDouble() < 0.4f;
     }
 
     private void act() {
@@ -91,7 +105,22 @@ public class LogMonster extends Monster {
 
     @Override
     public void update(float deltaTime) {
-        this.act();
+        if (this.isAlive()) {
+            this.simulationStep++;
+
+            if (this.simulationStep % SIMULATION_CYLE != 0)
+                if (this.shouldSwitchOrientation() && this.isTargetReached())
+                    this.switchOrientation();
+                else
+                    this.move(40);
+
+            if (this.isTargetReached())
+                if (!this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells()))
+                    this.switchOrientation();
+
+            this.act();
+        }
+
         super.update(deltaTime);
     }
 

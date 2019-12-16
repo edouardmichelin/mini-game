@@ -80,6 +80,30 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a logMonster
+     * @param logMonster (LogMonster), not null
+     */
+    default void interactWith(LogMonster logMonster){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a fireSpell
+     * @param fireSpell (FireSpell), not null
+     */
+    default void interactWith(FireSpell fireSpell){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a flameSkull
+     * @param flameSkull (FlameSkull), not null
+     */
+    default void interactWith(FlameSkull flameSkull){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a destroyable
      * @param destroyable (Destroyable), not null
      */

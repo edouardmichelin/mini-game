@@ -9,7 +9,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.window.Canvas;
 
-public class Heart extends CollectibleAreaEntity {
+public class Heart extends CollectibleAreaEntity implements Dropable {
     private Animation animation;
 
     public static void drop(AreaEntity source, Area area) {

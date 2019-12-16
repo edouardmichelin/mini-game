@@ -131,7 +131,7 @@ public class Grass extends AreaEntity implements Destroyable {
     @Override
     public float damage(float damage, DamageType type) {
         if (this.getWeaknesses().contains(type))
-            this.onDying();
+            this.destroy();
 
         return 0;
     }

@@ -41,9 +41,8 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
     }
 
     private Animation getAnimation() {
-        if(this.isAlive()) {
+        if (this.isAlive())
             return this.getCharacterAnimations()[this.getOrientation().ordinal()];
-        }
 
         return this.deathAnimation;
     }

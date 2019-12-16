@@ -1,6 +1,8 @@
 package ch.epfl.cs107.play.game.arpg.area;
 
 import ch.epfl.cs107.play.game.areagame.AreaBehavior;
+import ch.epfl.cs107.play.game.areagame.actor.Dropable;
+import ch.epfl.cs107.play.game.areagame.actor.FlyableEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -25,19 +27,21 @@ public class ARPGBehavior extends AreaBehavior {
     }
 
     public enum ARPGCellType {
-        NULL(0, false),
-        WALL(-16777216, false),
-        IMPASSABLE(-8750470, false),
-        INTERACT(-256, true),
-        DOOR(-195580, true),
-        WALKABLE(-1, true);
+        NULL(0, false, false),
+        WALL(-16777216, false, false),
+        IMPASSABLE(-8750470, false, true),
+        INTERACT(-256, true, true),
+        DOOR(-195580, true, true),
+        WALKABLE(-1, true, true);
 
         final int type;
         final boolean isWalkable;
+        final boolean isFlyable;
 
-        ARPGCellType(int type, boolean isWalkable) {
+        ARPGCellType(int type, boolean isWalkable, boolean isFlyable) {
             this.type = type;
             this.isWalkable = isWalkable;
+            this.isFlyable = isFlyable;
         }
 
         public static ARPGCellType toType(int type){
@@ -70,7 +74,8 @@ public class ARPGBehavior extends AreaBehavior {
 
         @Override
         protected boolean canEnter(Interactable entity) {
-            if (!entity.takeCellSpace()) return this.type.isWalkable;
+            if (entity instanceof FlyableEntity || entity instanceof Dropable)
+                return this.type.isFlyable;
 
             return this.type.isWalkable && !this.hasNonTraversableContent();
         }

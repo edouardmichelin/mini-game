@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
+import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Monster;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
@@ -11,16 +12,21 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.Vector;
 
+import javax.swing.*;
 import java.util.List;
+import java.util.Random;
 
-public class FlameSkull extends Monster {
-    private static final int ANIMATION_DURATION = Settings.FRAME_RATE / 2;
-    private static final int MAX_LIFE_TIME = 350;
-    private static final int MIN_LIFE_TIME = 100;
+public class FlameSkull extends Monster implements FlyableEntity {
+    private final static int MIN_LIFE_TIME = 150;
+    private final static int MAX_LIFE_TIME = 300;
+    private final static DamageType DAMAGE_TYPE = DamageType.FIRE;
 
     private Animation[] animations;
+    private int lifeTime;
+    private int simulationStep;
+    private ARPGFlameSkullHandler interactionHandler;
 
-    public static void consume(AreaEntity consumer, Area area) {
+    private static void consume(AreaEntity consumer, Area area) {
         DiscreteCoordinates position = consumer
                 .getCurrentCells()
                 .get(0)
@@ -29,24 +35,18 @@ public class FlameSkull extends Monster {
         area.registerActor(new FlameSkull(area, consumer.getOrientation(), position));
     }
 
-    public FlameSkull(Area area, Orientation orientation, DiscreteCoordinates coordinates) {
-        super(area, orientation, coordinates);
-        this.animations = RPGSprite.createAnimations(4, this.getSprites("zelda/flameSkull"));
+    public FlameSkull(Area area, Orientation orientation, DiscreteCoordinates position) {
+        super(area, orientation, position);
+
+        Random prng = RandomGenerator.getInstance();
+
+        this.animations = RPGSprite.createAnimations(8, getSprites());
+        this.lifeTime = Math.round((prng.nextFloat() * (MAX_LIFE_TIME - MIN_LIFE_TIME))) + MIN_LIFE_TIME;
+        this.interactionHandler = new ARPGFlameSkullHandler();
     }
 
-    private Orientation randomDirection() {
-        int random = RandomGenerator.getInstance().nextInt(100);
-        if (random >= 60) {
-            random = RandomGenerator.getInstance().nextInt(4);
-            Orientation orientation = random == 4 ? Orientation.UP : random == 3 ? Orientation.LEFT : random == 2 ?
-                    Orientation.RIGHT : Orientation.DOWN;
-            return orientation;
-        }
-        return this.getOrientation();
-    }
-
-    private Sprite[][] getSprites(String spriteName) {
-        Sprite[][] sprites = RPGSprite.extractSprites(
+    private Sprite[][] getSprites() {
+        return RPGSprite.extractSprites(
                 "zelda/flameSkull",
                 3,
                 1.8f,
@@ -55,16 +55,36 @@ public class FlameSkull extends Monster {
                 32,
                 32,
                 new Vector(-0.45f, 0.2f),
-                new Orientation[]{Orientation.UP, Orientation.LEFT, Orientation.DOWN, Orientation.RIGHT}
+                new Orientation[] {Orientation.UP, Orientation.LEFT, Orientation.DOWN, Orientation.RIGHT}
         );
-        return sprites;
+    }
+
+    private void switchOrientation() {
+        int randomIndex = RandomGenerator.getInstance().nextInt(Orientation.values().length);
+        this.orientate(Orientation.values()[randomIndex]);
+    }
+
+    private boolean shouldSwitchOrientation() {
+        return RandomGenerator.getInstance().nextDouble() < 0.4f;
     }
 
     @Override
     public void update(float deltaTime) {
-        this.damage(1, DamageType.MAGICAL);
-        this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells());
-        this.move(ANIMATION_DURATION);
+        this.simulationStep++;
+
+        if (this.simulationStep == this.lifeTime)
+            this.destroy();
+
+        if (this.shouldSwitchOrientation() && this.isTargetReached())
+            this.switchOrientation();
+        else
+            this.move(25);
+
+        if (this.isAlive() && this.isTargetReached())
+            if (!this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells()))
+                this.switchOrientation();
+
+
         super.update(deltaTime);
     }
 
@@ -74,19 +94,18 @@ public class FlameSkull extends Monster {
     }
 
     @Override
+    public float getMaxHp() {
+        return 1;
+    }
+
+    @Override
     public List<DamageType> getWeaknesses() {
         return List.of(DamageType.MAGICAL, DamageType.PHYSICAL);
     }
 
     @Override
-    public float getMaxHp() {
-        return RandomGenerator.getInstance().nextInt(MAX_LIFE_TIME - MIN_LIFE_TIME) + MIN_LIFE_TIME;
-    }
-
-    @Override
     public void onDying() {
-        // TODO add condition
-        Coin.drop(this, this.getOwnerArea());
+
     }
 
     @Override
@@ -96,12 +115,12 @@ public class FlameSkull extends Monster {
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
-
+        // v.interactWith(this);
     }
 
     @Override
     public boolean wantsCellInteraction() {
-        return false;
+        return true;
     }
 
     @Override
@@ -111,6 +130,29 @@ public class FlameSkull extends Monster {
 
     @Override
     public void interactWith(Interactable other) {
+        other.acceptInteraction(this.interactionHandler);
+    }
+
+    private void inflictDamage(Destroyable destroyable) {
+        destroyable.damage(5f / Settings.FRAME_RATE, DAMAGE_TYPE);
+    }
+
+    private class ARPGFlameSkullHandler implements ARPGInteractionVisitor {
+
+        @Override
+        public void interactWith(ARPGPlayer player) {
+            inflictDamage(player);
+        }
+
+        @Override
+        public void interactWith(Grass grass) {
+            inflictDamage(grass);
+        }
+
+        @Override
+        public void interactWith(Bomb bomb) {
+            bomb.explode();
+        }
 
     }
 }

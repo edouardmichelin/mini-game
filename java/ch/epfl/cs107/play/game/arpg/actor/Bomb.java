@@ -16,7 +16,7 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
-public class Bomb extends AreaEntity implements Interactor {
+public class Bomb extends AreaEntity implements Interactor, Dropable {
     private final static DamageType DAMAGE_TYPE = DamageType.FIRE;
     private final static int DEFAULT_COUNTDOWN = 5 * Settings.FRAME_RATE;
     private final static float DEFAULT_DAMAGE = 2.5f;

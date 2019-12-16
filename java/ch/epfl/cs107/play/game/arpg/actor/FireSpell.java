@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class FireSpell extends AreaEntity implements Interactor {
+public class FireSpell extends AreaEntity implements Interactor, Dropable {
     private final static int MIN_LIFE_TIME = 150;
     private final static int MAX_LIFE_TIME = 300;
     private final static int PROPAGATION_TIME_FIRE_CYCLE = 150;

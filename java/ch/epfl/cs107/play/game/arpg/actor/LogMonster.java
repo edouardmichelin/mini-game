@@ -22,15 +22,21 @@ public class LogMonster extends Monster {
     private final static DamageType DAMAGE_TYPE = DamageType.PHYSICAL;
     private final static float DAMAGE_AMOUNT = 1.5f;
     private final static int FIELD_OF_VIEW_RANGE = 8;
+    private final static int MIN_INACTIVITY_DURATION = 2 * Settings.FRAME_RATE;
+    private final static int MAX_INACTIVITY_DURATION = 8 * Settings.FRAME_RATE;
     private final static int MIN_SLEEPING_DURATION = 3 * Settings.FRAME_RATE;
     private final static int MAX_SLEEPING_DURATION = 10 * Settings.FRAME_RATE;
-    private final static int SIMULATION_CYLE = Settings.FRAME_RATE;
+    private final static int SIMULATION_CYLE = 12 * Settings.FRAME_RATE;
+    private final static int ANIMATION_DURATION = 8;
 
     private State state;
     private Animation[] animations;
     private ARPGLogMonsterHandler interactionHandler;
     private int sleepingDuration;
     private int simulationStep;
+    private boolean isAlreadyWakingUp;
+    private boolean isInactive;
+    private int inactivityDuration;
 
     public LogMonster(Area area, Orientation orientation, DiscreteCoordinates coordinates) {
         super(area, orientation, coordinates);
@@ -56,11 +62,11 @@ public class LogMonster extends Monster {
     private Animation[] getAnimations() {
         String spriteName = this.state.associatedSpriteName;
 
-        return RPGSprite.createAnimations(8, RPGSprite.extractSprites(
+        return RPGSprite.createAnimations(ANIMATION_DURATION, RPGSprite.extractSprites(
                 spriteName,
-                3,
-                1f,
-                1f,
+                4,
+                2,
+                2,
                 this,
                 32,
                 32,
@@ -78,6 +84,20 @@ public class LogMonster extends Monster {
     }
 
     private void act() {
+        this.inactivityDuration--;
+
+        if (this.inactivityDuration == 0)
+            this.isInactive = false;
+
+        if (this.simulationStep % SIMULATION_CYLE == 0) {
+            this.isInactive = true;
+            this.inactivityDuration = RandomGenerator
+                    .getInstance()
+                    .nextInt(MAX_INACTIVITY_DURATION - MIN_INACTIVITY_DURATION) + MIN_INACTIVITY_DURATION;
+        }
+
+        if (this.isInactive) return;
+
         switch (this.state) {
             case IDLE: ;
             break;
@@ -93,14 +113,26 @@ public class LogMonster extends Monster {
             } break;
             case SLEEPING: {
                 this.sleepingDuration--;
-                if (this.sleepingDuration == 0)
+                if (this.sleepingDuration == 0) {
                     this.state = State.WAKING_UP;
+                    this.animations = this.getAnimations();
+                }
             } break;
             case WAKING_UP: {
-                this.state = State.IDLE;
-                this.animations = this.getAnimations();
-            }
+                if (!this.isAlreadyWakingUp) this.animations = this.getAnimations();
+
+                this.isAlreadyWakingUp = true;
+
+                if (this.animations[this.getOrientation().ordinal()].isCompleted()) {
+                    this.state = State.IDLE;
+                    this.isAlreadyWakingUp = false;
+                }
+            } break;
         }
+    }
+
+    private int getFramesForMove() {
+        return this.state.equals(State.ATTACKING) ? 20 : 40;
     }
 
     @Override
@@ -108,15 +140,18 @@ public class LogMonster extends Monster {
         if (this.isAlive()) {
             this.simulationStep++;
 
-            if (this.simulationStep % SIMULATION_CYLE != 0)
-                if (this.shouldSwitchOrientation() && this.isTargetReached())
+            if (!this.isInactive)
+                if (this.shouldSwitchOrientation() && this.isTargetReached() && !this.state.equals(State.ATTACKING))
                     this.switchOrientation();
-                else
-                    this.move(40);
+                else if (!this.state.equals(State.SLEEPING))
+                    this.move(this.getFramesForMove());
 
             if (this.isTargetReached())
                 if (!this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells()))
-                    this.switchOrientation();
+                    if (this.state.equals(State.ATTACKING))
+                        this.state = State.FALLING_ASLEEP;
+                    else
+                        this.switchOrientation();
 
             this.act();
         }
@@ -164,7 +199,7 @@ public class LogMonster extends Monster {
 
     @Override
     public boolean wantsViewInteraction() {
-        return true;
+        return !this.state.equals(State.SLEEPING);
     }
 
     @Override
@@ -198,7 +233,8 @@ public class LogMonster extends Monster {
             if (LogMonster.this.state.equals(State.IDLE)) {
                 LogMonster.this.state = State.ATTACKING;
             } else if (LogMonster.this.state.equals(State.ATTACKING)) {
-
+                player.damage(DAMAGE_AMOUNT, DAMAGE_TYPE);
+                LogMonster.this.state = State.FALLING_ASLEEP;
             }
         }
 

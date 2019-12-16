@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Animation;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
@@ -12,6 +13,7 @@ import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
+import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.math.Vector;
 
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ public class LogMonster extends Monster {
     private final static int MAX_INACTIVITY_DURATION = 8 * Settings.FRAME_RATE;
     private final static int MIN_SLEEPING_DURATION = 3 * Settings.FRAME_RATE;
     private final static int MAX_SLEEPING_DURATION = 10 * Settings.FRAME_RATE;
-    private final static int SIMULATION_CYLE = 12 * Settings.FRAME_RATE;
+    private final static int SIMULATION_CYCLE = 12 * Settings.FRAME_RATE;
     private final static int ANIMATION_DURATION = 8;
 
     private State state;
@@ -44,7 +46,7 @@ public class LogMonster extends Monster {
         this.state = State.IDLE;
         this.animations = this.getAnimations();
         this.interactionHandler = new ARPGLogMonsterHandler();
-        this.simulationStep = SIMULATION_CYLE;
+        this.simulationStep = SIMULATION_CYCLE;
     }
 
     private List<DiscreteCoordinates> getCellsInRange(int range) {
@@ -61,10 +63,13 @@ public class LogMonster extends Monster {
 
     private Animation[] getAnimations() {
         String spriteName = this.state.associatedSpriteName;
+        int nbFrames = this.state.numberOfFrames;
 
-        return RPGSprite.createAnimations(ANIMATION_DURATION, RPGSprite.extractSprites(
+        return this.state.hasSingleOrientation ?
+                this.getSingleOrientationAnimations(spriteName, nbFrames) :
+                RPGSprite.createAnimations(ANIMATION_DURATION, RPGSprite.extractSprites(
                 spriteName,
-                4,
+                nbFrames,
                 2,
                 2,
                 this,
@@ -72,6 +77,30 @@ public class LogMonster extends Monster {
                 32,
                 new Orientation[] {Orientation.DOWN, Orientation.UP, Orientation.RIGHT, Orientation.LEFT}
         ));
+    }
+
+    private Animation[] getSingleOrientationAnimations(String spriteName, int nbFrames) {
+        int nbOrientation = Orientation.values().length;
+
+        Sprite[] s = new Sprite[nbFrames];
+        Animation anim;
+        Animation[] anims = new Animation[nbOrientation];
+
+        for (int i = 0; i < nbFrames; i++) {
+            s[i] = new Sprite(
+                    spriteName,
+                    2,
+                    2,
+                    this,
+                    new RegionOfInterest(0, i * 32, 32, 32));
+        }
+
+        anim = new Animation(ANIMATION_DURATION, s, this.state.isLooping);
+
+        for (int i = 0; i < nbOrientation; i++)
+            anims[i] = anim;
+
+        return anims;
     }
 
     private void switchOrientation() {
@@ -89,7 +118,7 @@ public class LogMonster extends Monster {
         if (this.inactivityDuration == 0)
             this.isInactive = false;
 
-        if (this.simulationStep % SIMULATION_CYLE == 0) {
+        if (this.simulationStep % SIMULATION_CYCLE == 0) {
             this.isInactive = true;
             this.inactivityDuration = RandomGenerator
                     .getInstance()
@@ -126,6 +155,7 @@ public class LogMonster extends Monster {
                 if (this.animations[this.getOrientation().ordinal()].isCompleted()) {
                     this.state = State.IDLE;
                     this.isAlreadyWakingUp = false;
+                    this.animations = this.getAnimations();
                 }
             } break;
         }
@@ -136,11 +166,16 @@ public class LogMonster extends Monster {
     }
 
     @Override
+    protected boolean isAnimationPaused() {
+        return this.isInactive && !this.state.equals(State.SLEEPING);
+    }
+
+    @Override
     public void update(float deltaTime) {
         if (this.isAlive()) {
             this.simulationStep++;
 
-            if (!this.isInactive)
+            if (!this.isInactive && !this.state.equals(State.WAKING_UP))
                 if (this.shouldSwitchOrientation() && this.isTargetReached() && !this.state.equals(State.ATTACKING))
                     this.switchOrientation();
                 else if (!this.state.equals(State.SLEEPING))
@@ -181,7 +216,7 @@ public class LogMonster extends Monster {
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        if (LogMonster.this.state.equals(State.ATTACKING))
+        if (this.state.equals(State.ATTACKING))
             return Collections.singletonList(getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
         else
             return this.getCellsInRange(FIELD_OF_VIEW_RANGE);
@@ -208,17 +243,23 @@ public class LogMonster extends Monster {
     }
 
     private enum State {
-        IDLE("zelda/logMonster"),
-        ATTACKING("zelda/logMonster"),
-        FALLING_ASLEEP("zelda/logMonster"),
-        SLEEPING("zelda/logMonster.sleeping"),
-        WAKING_UP("zelda/logMonster.wakingUp")
+        IDLE("zelda/logMonster", false, true, 4),
+        ATTACKING("zelda/logMonster", false, true, 4),
+        FALLING_ASLEEP("zelda/logMonster", false, true, 4),
+        SLEEPING("zelda/logMonster.sleeping", true, true, 4),
+        WAKING_UP("zelda/logMonster.wakingUp", true, false, 3)
         ;
 
         final String associatedSpriteName;
+        final boolean hasSingleOrientation;
+        final boolean isLooping;
+        final int numberOfFrames;
 
-        State(String associatedSpriteName) {
+        State(String associatedSpriteName, boolean hasSingleOrientation, boolean isLooping, int numberOfFrames) {
             this.associatedSpriteName = associatedSpriteName;
+            this.hasSingleOrientation = hasSingleOrientation;
+            this.isLooping = isLooping;
+            this.numberOfFrames = numberOfFrames;
         }
     }
 

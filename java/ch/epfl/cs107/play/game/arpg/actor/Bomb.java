@@ -3,10 +3,8 @@ package ch.epfl.cs107.play.game.arpg.actor;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
-import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -17,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Bomb extends AreaEntity implements Interactor, Dropable {
-    private final static DamageType DAMAGE_TYPE = DamageType.FIRE;
+    private final static DamageType DAMAGE_TYPE = DamageType.PHYSICAL;
     private final static int DEFAULT_COUNTDOWN = 5 * Settings.FRAME_RATE;
     private final static float DEFAULT_DAMAGE = 2.5f;
     private final static String TEX = "zelda/bomb";

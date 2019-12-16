@@ -12,7 +12,6 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.Vector;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.Random;
 

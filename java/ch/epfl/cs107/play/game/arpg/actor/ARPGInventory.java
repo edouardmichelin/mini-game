@@ -112,7 +112,7 @@ public class ARPGInventory implements Inventory {
         ARROW("arrow", 0, 5, false, "zelda/arrow.icon"),
         BOW("bow", 0, 15, true, "zelda/bow.icon", Arrow::consume),
         SWORD("sword", 0, 20, true, "zelda/sword.icon"),
-        STAFF("staff_water", 0, 200, true, "zelda/staff_water.icon"),
+        STAFF("staff_water", 0, 200, true, "zelda/staff_water.icon", MagicWaterProjectile::consume),
         BOMB("bomb", 0, 50, false, "zelda/bomb", Bomb::consume, new RegionOfInterest(0,0,16,16)),
         CASTLE_KEY("castle_key", 0, 100, false, "zelda/key")
         ;

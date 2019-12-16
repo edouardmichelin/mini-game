@@ -37,6 +37,7 @@ public abstract class Projectile extends MovableAreaEntity implements FlyableEnt
     @Override
     public void update(float deltaTime) {
 
+        this.getAnimation().update(deltaTime);
         this.move(SPEED_SCALE / this.getSpeed());
         super.update(deltaTime);
 

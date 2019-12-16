@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.arpg.actor;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
+import ch.epfl.cs107.play.game.rpg.actor.Monster;
 import ch.epfl.cs107.play.game.rpg.actor.Projectile;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
@@ -34,7 +35,7 @@ public class Arrow extends Projectile {
         this.interactionHandler = new ARPGArrowHandler();
 
         for (Orientation direction : Orientation.values()) {
-            this.animations[direction.ordinal()] = new Animation(this.getMovingFrameDuration(), new RPGSprite[]{
+            this.animations[direction.ordinal()] = new Animation(1, new RPGSprite[]{
                     new RPGSprite(
                             "zelda/arrow",
                             1,
@@ -50,10 +51,6 @@ public class Arrow extends Projectile {
         return animations[this.getOrientation().ordinal()];
     }
 
-
-    protected int getMovingFrameDuration() {
-        return 6;
-    }
 
     @Override
     public void update(float deltaTime) {
@@ -113,6 +110,23 @@ public class Arrow extends Projectile {
             Arrow.this.getOwnerArea().unregisterActor(Arrow.this);
         }
 
+        @Override
+        public void interactWith(DarkLord darkLord) {
+            Arrow.this.inflictDamage(darkLord);
+            Arrow.this.getOwnerArea().unregisterActor(Arrow.this);
+        }
+
+        @Override
+        public void interactWith(FlameSkull flameSkull) {
+            Arrow.this.inflictDamage(flameSkull);
+            Arrow.this.getOwnerArea().unregisterActor(Arrow.this);
+        }
+
+        @Override
+        public void interactWith(LogMonster logMonster) {
+            Arrow.this.inflictDamage(logMonster);
+            Arrow.this.getOwnerArea().unregisterActor(Arrow.this);
+        }
     }
 
 }

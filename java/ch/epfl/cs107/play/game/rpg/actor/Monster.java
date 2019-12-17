@@ -15,7 +15,6 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
     private final static int DEATH_ANIMATION_DURATION = Settings.FRAME_RATE / 3;
     private final static int DEATH_ANIMATION_FRAMES = 7;
 
-    private float despawnTime;
     private boolean onDyingExecuted;
     private float hp;
     private float maxHp;
@@ -24,7 +23,6 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
     public Monster(Area area, Orientation orientation, DiscreteCoordinates coordinates) {
         super(area, orientation, coordinates);
 
-        this.despawnTime = Settings.FRAME_RATE / 2f;
         this.maxHp = this.getMaxHp();
         this.hp = this.maxHp;
         this.deathAnimation = new Animation(
@@ -92,18 +90,18 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
 
     @Override
     public void update(float deltaTime) {
-        if (!this.isAnimationPaused())
-            this.getAnimation().update(deltaTime);
-        else
+        if (this.isAnimationPaused())
             this.getAnimation().reset();
+        else
+            this.getAnimation().update(deltaTime);
 
         if (!this.isAlive()) {
             if (!this.onDyingExecuted) {
                 this.onDying();
                 this.onDyingExecuted = true;
             }
-            this.despawnTime -= 1;
-            if (this.despawnTime <= 0) this.getOwnerArea().unregisterActor(this);
+            if (this.getAnimation().isCompleted())
+                this.getOwnerArea().unregisterActor(this);
         }
 
         super.update(deltaTime);

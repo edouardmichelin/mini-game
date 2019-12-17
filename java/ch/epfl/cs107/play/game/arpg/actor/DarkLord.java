@@ -5,8 +5,8 @@ import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
-import ch.epfl.cs107.play.game.arpg.items.BombItem;
 import ch.epfl.cs107.play.game.arpg.items.CastleKeyItem;
+import ch.epfl.cs107.play.game.arpg.items.FlameSkullItem;
 import ch.epfl.cs107.play.game.rpg.actor.Monster;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
@@ -25,7 +25,7 @@ import java.util.Random;
 public class DarkLord extends Monster {
     private static final int ANIMATION_DURATION = 8;
     private static final int ACTION_RADIUS = 3;
-    private static final int TELEPORTATION_RADIUS = 2;
+    private static final int TELEPORTATION_RADIUS = 3;
     private static final int MIN_SPELL_WAIT_DURATION = 200;
     private static final int MAX_SPELL_WAIT_DURATION = 500;
 
@@ -41,7 +41,7 @@ public class DarkLord extends Monster {
         super(area, orientation, coordinates);
 
         this.idleAnimations = RPGSprite.createAnimations(ANIMATION_DURATION, this.getSprites(SpriteNames.DARK_LORD));
-        this.spellAnimations = RPGSprite.createAnimations(ANIMATION_DURATION, this.getSprites(SpriteNames.DARK_LORD_SPELL));
+        this.spellAnimations = RPGSprite.createAnimations(ANIMATION_DURATION, this.getSprites(SpriteNames.DARK_LORD_SPELL), false);
         this.state = State.IDLE;
         this.interactionHandler = new ARPGDarkLordHandler();
         this.simulationCyle = Math.round((
@@ -95,17 +95,34 @@ public class DarkLord extends Monster {
         return this.getOrientation();
     }
 
+    private void switchOrientation() {
+        int randomIndex = RandomGenerator.getInstance().nextInt(Orientation.values().length);
+        this.orientate(Orientation.values()[randomIndex]);
+    }
+
+    private boolean shouldSwitchOrientation() {
+        return RandomGenerator.getInstance().nextDouble() < 0.4f;
+    }
+
     private void act() {
         switch (this.state) {
             case ATTACKING: {
                 this.state = State.IDLE;
             } break;
             case INVOKING: {
-                BombItem.consume(this, this.getOwnerArea());
-                this.state = State.IDLE;
+                Animation currentAnim = this.getCharacterAnimations()[this.getOrientation().ordinal()];
+                if (currentAnim.isCompleted()) {
+                    currentAnim.reset();
+                    FlameSkullItem.consume(this, this.getOwnerArea());
+                    this.state = State.IDLE;
+                }
             } break;
             case PREPARING_TELEPORTATION: {
-                this.state = State.TELEPORTING;
+                Animation currentAnim = this.getCharacterAnimations()[this.getOrientation().ordinal()];
+                if (currentAnim.isCompleted()) {
+                    currentAnim.reset();
+                    this.state = State.TELEPORTING;
+                }
             } break;
             case TELEPORTING: {
                 if (!this.isTargetReached()) return;
@@ -131,20 +148,27 @@ public class DarkLord extends Monster {
 
     @Override
     public void update(float deltaTime) {
-        this.simulationStep++;
+        if (this.isAlive()) {
+            this.simulationStep++;
 
-        this.act();
+            this.act();
 
-        if (!this.state.equals(State.TELEPORTING))
-            this.move(30);
+            if (!this.state.equals(State.TELEPORTING))
+                this.move(35);
 
-        if (this.isTargetReached() && !this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells()))
-            this.orientate(this.whereToThrowFireSpell());
+            if (this.isTargetReached()) {
+                if (!this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells()))
+                    this.orientate(this.whereToThrowFireSpell());
 
-        if (this.simulationStep % this.simulationCyle == 0) {
-            double random = RandomGenerator.getInstance().nextDouble();
-            this.state = random > 0.7 ? State.ATTACKING : State.INVOKING;
-            this.orientate(this.whereToThrowFireSpell());
+                if (this.shouldSwitchOrientation() && !this.state.equals(State.PREPARING_TELEPORTATION))
+                    this.switchOrientation();
+            }
+
+            if (this.simulationStep % this.simulationCyle == 0) {
+                double random = RandomGenerator.getInstance().nextDouble();
+                this.state = random > 0.7 ? State.ATTACKING : State.INVOKING;
+                this.orientate(this.whereToThrowFireSpell());
+            }
         }
 
         super.update(deltaTime);

@@ -168,7 +168,7 @@ public class LogMonster extends Monster {
 
     @Override
     protected boolean isAnimationPaused() {
-        return !this.isAlive() || this.isInactive && !this.state.equals(State.SLEEPING);
+        return this.isInactive && !this.state.equals(State.SLEEPING);
     }
 
     @Override

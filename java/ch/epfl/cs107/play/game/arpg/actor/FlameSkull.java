@@ -26,15 +26,6 @@ public class FlameSkull extends Monster implements FlyableEntity {
     private int simulationStep;
     private ARPGFlameSkullHandler interactionHandler;
 
-    private static void consume(AreaEntity consumer, Area area) {
-        DiscreteCoordinates position = consumer
-                .getCurrentCells()
-                .get(0)
-                .jump(consumer.getOrientation().toVector());
-
-        area.registerActor(new FlameSkull(area, consumer.getOrientation(), position));
-    }
-
     public FlameSkull(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
@@ -70,20 +61,21 @@ public class FlameSkull extends Monster implements FlyableEntity {
 
     @Override
     public void update(float deltaTime) {
-        this.simulationStep++;
+        if (this.isAlive()) {
+            this.simulationStep++;
 
-        if (this.simulationStep == this.lifeTime)
-            this.destroy();
+            if (this.simulationStep == this.lifeTime)
+                this.destroy();
 
-        if (this.shouldSwitchOrientation() && this.isTargetReached())
-            this.switchOrientation();
-        else
-            this.move(25);
-
-        if (this.isAlive() && this.isTargetReached())
-            if (!this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells()))
+            if (this.shouldSwitchOrientation() && this.isTargetReached())
                 this.switchOrientation();
+            else
+                this.move(25);
 
+            if (this.isTargetReached())
+                if (!this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells()))
+                    this.switchOrientation();
+        }
 
         super.update(deltaTime);
     }

@@ -25,15 +25,6 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
     private ARPGBombHandler interactionHandler;
     private Animation animation;
 
-    static void consume(AreaEntity consumer, Area area) {
-        DiscreteCoordinates position = consumer
-                .getCurrentCells()
-                .get(0)
-                .jump(consumer.getOrientation().toVector());
-
-        area.registerActor(new Bomb(area, Orientation.DOWN, position));
-    }
-
     /**
      * Default AreaEntity constructor
      *

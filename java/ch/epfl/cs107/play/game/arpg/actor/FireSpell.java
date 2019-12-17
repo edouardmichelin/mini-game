@@ -6,6 +6,7 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
+import ch.epfl.cs107.play.game.arpg.items.FireSpellItem;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
@@ -31,19 +32,6 @@ public class FireSpell extends AreaEntity implements Interactor, Dropable, Destr
     private float strength;
     private ARPGFireSpellHandler interactionHandler;
 
-    static void consume(AreaEntity consumer, Area area) {
-        consume(consumer, area, -1);
-    }
-
-    private static void consume(AreaEntity consumer, Area area, float strength) {
-        DiscreteCoordinates position = consumer
-                .getCurrentCells()
-                .get(0)
-                .jump(consumer.getOrientation().toVector());
-
-        area.registerActor(new FireSpell(area, consumer.getOrientation(), position, strength));
-    }
-
     /**
      * Default AreaEntity constructor
      *
@@ -62,7 +50,7 @@ public class FireSpell extends AreaEntity implements Interactor, Dropable, Destr
         this.interactionHandler = new ARPGFireSpellHandler();
     }
 
-    private FireSpell(Area area, Orientation orientation, DiscreteCoordinates position, float strength) {
+    public FireSpell(Area area, Orientation orientation, DiscreteCoordinates position, float strength) {
         this(area, orientation, position);
 
         if (strength != -1) this.strength = strength;
@@ -96,7 +84,7 @@ public class FireSpell extends AreaEntity implements Interactor, Dropable, Destr
                             List.of(this.getCurrentMainCellCoordinates().jump(this.getOrientation().toVector()))
                     )
             )
-                FireSpell.consume(this, this.getOwnerArea(), this.strength - STRENGTH_UNIT);
+                FireSpellItem.consume(this, this.getOwnerArea(), this.strength - STRENGTH_UNIT);
 
         this.animation.update(deltaTime);
         super.update(deltaTime);

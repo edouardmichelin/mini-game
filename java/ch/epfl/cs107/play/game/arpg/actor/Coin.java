@@ -17,14 +17,6 @@ public class Coin extends CollectibleAreaEntity {
     private Animation animation;
     private int value;
 
-    public static void drop(AreaEntity source, Area area) {
-        DiscreteCoordinates position = source
-                .getCurrentCells()
-                .get(0);
-
-        area.registerActor(new Coin(area, Orientation.DOWN, position));
-    }
-
     /**
      * Default AreaEntity constructor
      *

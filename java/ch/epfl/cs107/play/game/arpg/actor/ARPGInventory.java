@@ -4,6 +4,8 @@ import ch.epfl.cs107.play.game.actor.Entity;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.arpg.ARPG;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
+import ch.epfl.cs107.play.game.arpg.items.*;
 import ch.epfl.cs107.play.game.rpg.equipment.Inventory;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import com.sun.jdi.VoidType;
@@ -109,12 +111,12 @@ public class ARPGInventory implements Inventory {
     }
 
     public enum ARPGItem implements Inventory.InventoryItem {
-        ARROW("arrow", 0, 5, false, "zelda/arrow.icon"),
-        BOW("bow", 0, 15, true, "zelda/bow.icon", Arrow::consume),
-        SWORD("sword", 0, 20, true, "zelda/sword.icon", SwordSlash::consume),
-        STAFF("staff_water", 0, 200, true, "zelda/staff_water.icon", MagicWaterProjectile::consume),
-        BOMB("bomb", 0, 50, false, "zelda/bomb", Bomb::consume, new RegionOfInterest(0,0,16,16)),
-        CASTLE_KEY("castle_key", 0, 100, false, "zelda/key")
+        ARROW(ArrowItem.TITLE, ArrowItem.WEIGHT, ArrowItem.PRICE, false, SpriteNames.ARROW_ITEM),
+        BOW(BowItem.TITLE, BowItem.WEIGHT, BowItem.PRICE, true, SpriteNames.BOW_ITEM, ArrowItem::consume),
+        SWORD(SwordItem.TITLE, SwordItem.WEIGHT, SwordItem.PRICE, true, SpriteNames.SWORD_ITEM, SwordItem::consume),
+        STAFF(StaffItem.TITLE, StaffItem.WEIGHT, StaffItem.PRICE, true, SpriteNames.STAFF_ITEM, StaffItem::consume),
+        BOMB(BombItem.TITLE, BombItem.WEIGHT, BombItem.PRICE, false, SpriteNames.BOMB_ITEM, BombItem::consume, new RegionOfInterest(0,0,16,16)),
+        CASTLE_KEY(CastleKeyItem.TITLE, CastleKeyItem.WEIGHT, CastleKeyItem.PRICE, false, SpriteNames.CASTLE_KEY_ITEM)
         ;
 
         private String title;

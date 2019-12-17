@@ -19,15 +19,6 @@ public class Arrow extends Projectile {
     private Animation[] animations;
     private ARPGArrowHandler interactionHandler;
 
-    static void consume(AreaEntity consumer, Area area) {
-        DiscreteCoordinates position = consumer
-                .getCurrentCells()
-                .get(0)
-                .jump(consumer.getOrientation().toVector());
-
-        area.registerActor(new Arrow(area, consumer.getOrientation(), position));
-    }
-
     public Arrow(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 

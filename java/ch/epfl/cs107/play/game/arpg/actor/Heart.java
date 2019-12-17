@@ -12,14 +12,6 @@ import ch.epfl.cs107.play.window.Canvas;
 public class Heart extends CollectibleAreaEntity implements Dropable {
     private Animation animation;
 
-    public static void drop(AreaEntity source, Area area) {
-        DiscreteCoordinates position = source
-                .getCurrentCells()
-                .get(0);
-
-        area.registerActor(new Heart(area, Orientation.DOWN, position));
-    }
-
     /**
      * Default AreaEntity constructor
      *

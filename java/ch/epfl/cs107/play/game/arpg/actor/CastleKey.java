@@ -14,14 +14,6 @@ import ch.epfl.cs107.play.window.Canvas;
 public class CastleKey extends CollectibleAreaEntity {
     private RPGSprite sprite;
 
-    public static void drop(AreaEntity source, Area area) {
-        DiscreteCoordinates position = source
-                .getCurrentCells()
-                .get(0);
-
-        area.registerActor(new CastleKey(area, Orientation.DOWN, position));
-    }
-
     /**
      * Default AreaEntity constructor
      *

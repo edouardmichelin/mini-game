@@ -20,15 +20,6 @@ public class MagicWaterProjectile extends Projectile {
     private ARPGMagicWaterProjectileHandler interactionHandler;
     private Animation animations;
 
-    static void consume(AreaEntity consumer, Area area) {
-        DiscreteCoordinates position = consumer
-                .getCurrentCells()
-                .get(0)
-                .jump(consumer.getOrientation().toVector());
-
-        area.registerActor(new MagicWaterProjectile(area, consumer.getOrientation(), position));
-    }
-
     public MagicWaterProjectile(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 

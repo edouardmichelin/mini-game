@@ -18,14 +18,6 @@ public class SwordSlash extends AreaEntity implements Interactor, FlyableEntity 
     private ARPGSwordSlashHandler interactionHandler;
     private boolean consumed;
 
-    static void consume(AreaEntity consumer, Area area) {
-        DiscreteCoordinates position = consumer
-                .getCurrentCells()
-                .get(0);
-
-        area.registerActor(new SwordSlash(area, consumer.getOrientation(), position));
-    }
-
     public SwordSlash(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 

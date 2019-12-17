@@ -4,7 +4,6 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
-import ch.epfl.cs107.play.game.rpg.actor.Projectile;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
@@ -17,12 +16,12 @@ public class SwordSlash extends AreaEntity implements Interactor, FlyableEntity 
     private final static float DEFAULT_DAMAGE = 0.5f;
 
     private ARPGSwordSlashHandler interactionHandler;
+    private boolean consumed;
 
     static void consume(AreaEntity consumer, Area area) {
         DiscreteCoordinates position = consumer
                 .getCurrentCells()
-                .get(0)
-                .jump(consumer.getOrientation().toVector());
+                .get(0);
 
         area.registerActor(new SwordSlash(area, consumer.getOrientation(), position));
     }
@@ -35,7 +34,9 @@ public class SwordSlash extends AreaEntity implements Interactor, FlyableEntity 
 
     @Override
     public void update(float deltaTime) {
-        this.getOwnerArea().unregisterActor(this);
+        if (this.consumed) this.getOwnerArea().unregisterActor(this);
+
+        super.update(deltaTime);
     }
 
     @Override
@@ -50,17 +51,17 @@ public class SwordSlash extends AreaEntity implements Interactor, FlyableEntity 
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        return null;
+        return List.of(this.getCurrentMainCellCoordinates().jump(this.getOrientation().toVector()));
     }
 
     @Override
     public boolean wantsCellInteraction() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean wantsViewInteraction() {
-        return false;
+        return !this.consumed;
     }
 
     @Override
@@ -98,31 +99,31 @@ public class SwordSlash extends AreaEntity implements Interactor, FlyableEntity 
         @Override
         public void interactWith(Grass grass) {
             SwordSlash.this.inflictDamage(grass);
-            SwordSlash.this.getOwnerArea().unregisterActor(SwordSlash.this);
+            SwordSlash.this.consumed = true;
         }
 
         @Override
         public void interactWith(DarkLord darkLord) {
             SwordSlash.this.inflictDamage(darkLord);
-            SwordSlash.this.getOwnerArea().unregisterActor(SwordSlash.this);
+            SwordSlash.this.consumed = true;
         }
 
         @Override
         public void interactWith(LogMonster logMonster) {
             SwordSlash.this.inflictDamage(logMonster);
-            SwordSlash.this.getOwnerArea().unregisterActor(SwordSlash.this);
+            SwordSlash.this.consumed = true;
         }
 
         @Override
         public void interactWith(FlameSkull flameSkull) {
             SwordSlash.this.inflictDamage(flameSkull);
-            SwordSlash.this.getOwnerArea().unregisterActor(SwordSlash.this);
+            SwordSlash.this.consumed = true;
         }
 
         @Override
         public void interactWith(Bomb bomb) {
             bomb.explode();
-            SwordSlash.this.getOwnerArea().unregisterActor(SwordSlash.this);
+            SwordSlash.this.consumed = true;
         }
     }
 }

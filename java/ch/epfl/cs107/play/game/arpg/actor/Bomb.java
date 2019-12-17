@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
@@ -18,8 +19,6 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
     private final static DamageType DAMAGE_TYPE = DamageType.PHYSICAL;
     private final static int DEFAULT_COUNTDOWN = 5 * Settings.FRAME_RATE;
     private final static float DEFAULT_DAMAGE = 2.5f;
-    private final static String TEX = "zelda/bomb";
-    private final static String EXPL_TEX = "zelda/explosion";
 
     private int countdown;
     private ARPGBombHandler interactionHandler;
@@ -42,8 +41,8 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
 
     private Sprite[] getDefaultSprites() {
         return new Sprite[] {
-                new RPGSprite(TEX, 1, 1, this, new RegionOfInterest(0, 0, 16, 16)),
-                new RPGSprite(TEX, 1, 1, this, new RegionOfInterest(16, 0, 16, 16))
+                new RPGSprite(SpriteNames.BOMB, 1, 1, this, new RegionOfInterest(0, 0, 16, 16)),
+                new RPGSprite(SpriteNames.BOMB, 1, 1, this, new RegionOfInterest(16, 0, 16, 16))
         };
     }
 
@@ -51,7 +50,7 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
         Sprite[] s = new Sprite[7];
         for (int frame = 0; frame < 7; frame++)
             s[frame] = new RPGSprite(
-                    EXPL_TEX,
+                    SpriteNames.EXPLOSION,
                     1,
                     1,
                     this,

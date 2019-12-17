@@ -7,6 +7,7 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior;
 import ch.epfl.cs107.play.game.arpg.config.Keys;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
@@ -74,7 +75,7 @@ public class ARPGPlayer extends Player implements Destroyable {
 
     private Animation[] getDefaultAnimations() {
         return RPGSprite.createAnimations(ANIMATION_DURATION / 2, RPGSprite.extractSprites(
-                "zelda/player",
+                SpriteNames.PLAYER,
                 4,
                 1,
                 2,
@@ -90,7 +91,7 @@ public class ARPGPlayer extends Player implements Destroyable {
         if (this.state.equals(ARPGPlayerState.NORMAL))
             return this.getDefaultAnimations();
 
-        String spriteName = String.format("zelda/player.%s", currentItem.getTitle());
+        String spriteName = String.format("%S.%s", SpriteNames.PLAYER, currentItem.getTitle());
 
         return RPGSprite.createAnimations(CONSUMING_TIME / 3, RPGSprite.extractSprites(
                 spriteName,

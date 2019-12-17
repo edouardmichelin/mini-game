@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.arpg.actor;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Projectile;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
@@ -28,7 +29,7 @@ public class MagicWaterProjectile extends Projectile {
         Sprite[] sprites = new Sprite[4];
         for (int frame = 0; frame < 4; frame++) {
             sprites[frame] = new RPGSprite(
-                    "zelda/magicWaterProjectile",
+                    SpriteNames.MAGIC_WATER,
                     1,
                     1,
                     this,

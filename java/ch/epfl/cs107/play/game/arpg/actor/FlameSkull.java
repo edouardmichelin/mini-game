@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Monster;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
@@ -46,7 +47,7 @@ public class FlameSkull extends Monster implements FlyableEntity {
 
     private Sprite[][] getSprites() {
         return RPGSprite.extractSprites(
-                "zelda/flameSkull",
+                SpriteNames.FLAME_SKULL,
                 3,
                 1.8f,
                 1.8f,

@@ -2,6 +2,7 @@ package ch.epfl.cs107.play.game.arpg.actor;
 
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Monster;
 import ch.epfl.cs107.play.game.rpg.actor.Projectile;
@@ -28,7 +29,7 @@ public class Arrow extends Projectile {
         for (Orientation direction : Orientation.values()) {
             this.animations[direction.ordinal()] = new Animation(1, new RPGSprite[]{
                     new RPGSprite(
-                            "zelda/arrow",
+                            SpriteNames.ARROW,
                             1,
                             1,
                             this,

@@ -5,6 +5,7 @@ import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.items.FireSpellItem;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
@@ -60,7 +61,7 @@ public class FireSpell extends AreaEntity implements Interactor, Dropable, Destr
         Sprite[] s = new Sprite[7];
         for (int frame = 0; frame < 7; frame++)
             s[frame] = new RPGSprite(
-                    "zelda/fire",
+                    SpriteNames.FIRE_SPELL,
                     1,
                     1,
                     this,

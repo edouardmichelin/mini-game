@@ -3,7 +3,10 @@ package ch.epfl.cs107.play.game.arpg.actor;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
+import ch.epfl.cs107.play.game.arpg.items.BombItem;
+import ch.epfl.cs107.play.game.arpg.items.CastleKeyItem;
 import ch.epfl.cs107.play.game.rpg.actor.Monster;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
@@ -20,6 +23,7 @@ import java.util.Random;
  * TODO - Problème des blocs invisibles
  */
 public class DarkLord extends Monster {
+    private static final int ANIMATION_DURATION = 8;
     private static final int ACTION_RADIUS = 3;
     private static final int TELEPORTATION_RADIUS = 2;
     private static final int MIN_SPELL_WAIT_DURATION = 200;
@@ -36,11 +40,15 @@ public class DarkLord extends Monster {
     public DarkLord(Area area, Orientation orientation, DiscreteCoordinates coordinates) {
         super(area, orientation, coordinates);
 
-        this.idleAnimations = RPGSprite.createAnimations(8, this.getSprites("zelda/darkLord"));
-        this.spellAnimations = RPGSprite.createAnimations(8, this.getSprites("zelda/darkLord.spell"));
+        this.idleAnimations = RPGSprite.createAnimations(ANIMATION_DURATION, this.getSprites(SpriteNames.DARK_LORD));
+        this.spellAnimations = RPGSprite.createAnimations(ANIMATION_DURATION, this.getSprites(SpriteNames.DARK_LORD_SPELL));
         this.state = State.IDLE;
         this.interactionHandler = new ARPGDarkLordHandler();
-        this.simulationCyle = Math.round((RandomGenerator.getInstance().nextFloat() * (MAX_SPELL_WAIT_DURATION - MIN_SPELL_WAIT_DURATION))) + MIN_SPELL_WAIT_DURATION;
+        this.simulationCyle = Math.round((
+                RandomGenerator
+                        .getInstance()
+                        .nextFloat() * (MAX_SPELL_WAIT_DURATION - MIN_SPELL_WAIT_DURATION)
+        )) + MIN_SPELL_WAIT_DURATION;
     }
 
     private Sprite[][] getSprites(String spriteName) {
@@ -93,7 +101,7 @@ public class DarkLord extends Monster {
                 this.state = State.IDLE;
             } break;
             case INVOKING: {
-                Bomb.consume(this, this.getOwnerArea());
+                BombItem.consume(this, this.getOwnerArea());
                 this.state = State.IDLE;
             } break;
             case PREPARING_TELEPORTATION: {
@@ -167,7 +175,7 @@ public class DarkLord extends Monster {
 
     @Override
     public void onDying() {
-        CastleKey.drop(this, this.getOwnerArea());
+        CastleKeyItem.drop(this, this.getOwnerArea());
     }
 
     @Override

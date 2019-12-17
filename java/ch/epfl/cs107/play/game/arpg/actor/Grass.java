@@ -4,7 +4,10 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
+import ch.epfl.cs107.play.game.arpg.items.CoinItem;
+import ch.epfl.cs107.play.game.arpg.items.HeartItem;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -19,9 +22,6 @@ import java.util.Random;
 public class Grass extends AreaEntity implements Destroyable {
     private static final double PROBABILITY_TO_DROP_ITEM = 0.3;
     private static final double PROBABILITY_TO_DROP_HEART = 0.15;
-    private static final String TEX = "zelda/Grass";
-    private static final String CUT_TEX = "zelda/grass.sliced";
-
 
     private RPGSprite sprite;
     private Animation animation;
@@ -38,7 +38,7 @@ public class Grass extends AreaEntity implements Destroyable {
         super(area, orientation, position);
 
         this.sprite = new RPGSprite(
-                TEX,
+                SpriteNames.GRASS,
                 1,
                 1,
                 this,
@@ -52,7 +52,7 @@ public class Grass extends AreaEntity implements Destroyable {
         Sprite[] s = new Sprite[4];
         for (int frame = 0; frame < 4; frame++)
             s[frame] = new RPGSprite(
-                    CUT_TEX,
+                    SpriteNames.GRASS_SLICED,
                     1,
                     1,
                     this,
@@ -154,8 +154,8 @@ public class Grass extends AreaEntity implements Destroyable {
 
         if (prng.nextDouble() < PROBABILITY_TO_DROP_ITEM)
             if (prng.nextDouble() < PROBABILITY_TO_DROP_HEART)
-                Heart.drop(this, this.getOwnerArea());
+                HeartItem.drop(this, this.getOwnerArea());
             else
-                Coin.drop(this, this.getOwnerArea());
+                CoinItem.drop(this, this.getOwnerArea());
     }
 }

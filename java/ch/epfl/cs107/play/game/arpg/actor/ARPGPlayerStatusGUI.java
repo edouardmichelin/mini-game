@@ -2,6 +2,7 @@ package ch.epfl.cs107.play.game.arpg.actor;
 
 import ch.epfl.cs107.play.game.actor.ImageGraphics;
 import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.gui.ARPGStatusGUI;
 import ch.epfl.cs107.play.game.rpg.equipment.Inventory;
 import ch.epfl.cs107.play.game.rpg.equipment.InventoryContentAccessor;
@@ -58,7 +59,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
     private void drawGearDisplay(Canvas canvas, float width, float height) {
         Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(width / 2, height / 2));
         ImageGraphics gearDisplay = new ImageGraphics(
-                ResourcePath.getSprite("zelda/gearDisplay"),
+                ResourcePath.getSprite(SpriteNames.GEAR_DISPLAY),
                 3f,
                 3f,
                 new RegionOfInterest(0, 0, 32, 32),
@@ -86,7 +87,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
     private void drawCoinsDisplay(Canvas canvas, float width, float height) {
         Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(width / 2, height / 2));
         ImageGraphics coinsDisplay = new ImageGraphics(
-                ResourcePath.getSprite("zelda/coinsDisplay"),
+                ResourcePath.getSprite(SpriteNames.COINS_DISPLAY),
                 5f,
                 2.5f,
                 new RegionOfInterest(0, 0, 64, 64),
@@ -113,7 +114,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
         for (int i = 2; i >= 0; i--) {
             int digit = i < data.length ? Integer.parseInt(data[data.length - (i + 1)]) : 0;
             new ImageGraphics(
-                    ResourcePath.getSprite("zelda/digits"),
+                    ResourcePath.getSprite(SpriteNames.DIGITS),
                     SIZE,
                     SIZE,
                     DigitsRegionOfInterest.fromInt(digit).getROI(),
@@ -138,7 +139,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
             float data = (this.healthPoint - i) > 0f ? this.healthPoint - i > 0.5f ? 1f : 0.5f : 0f;
 
             new ImageGraphics(
-                    ResourcePath.getSprite("zelda/heartDisplay"),
+                    ResourcePath.getSprite(SpriteNames.HEART_DISPLAY),
                     SIZE,
                     SIZE,
                     HeartsRegionOfInterest.fromFloat(data).getROI(),

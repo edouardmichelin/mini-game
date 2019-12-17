@@ -7,6 +7,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Monster;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
@@ -243,11 +244,11 @@ public class LogMonster extends Monster {
     }
 
     private enum State {
-        IDLE("zelda/logMonster", false, true, 4),
-        ATTACKING("zelda/logMonster", false, true, 4),
-        FALLING_ASLEEP("zelda/logMonster", false, true, 4),
-        SLEEPING("zelda/logMonster.sleeping", true, true, 4),
-        WAKING_UP("zelda/logMonster.wakingUp", true, false, 3)
+        IDLE(SpriteNames.LOG_MONSTER, false, true, 4),
+        ATTACKING(SpriteNames.LOG_MONSTER, false, true, 4),
+        FALLING_ASLEEP(SpriteNames.LOG_MONSTER, false, true, 4),
+        SLEEPING(SpriteNames.LOG_MONSTER_SLEEPING, true, true, 4),
+        WAKING_UP(SpriteNames.LOG_MONSTER_WAKING_UP, true, false, 3)
         ;
 
         final String associatedSpriteName;

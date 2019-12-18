@@ -94,10 +94,6 @@ public class DarkLord extends Monster {
         return RandomGenerator.getInstance().nextDouble() < 0.4f;
     }
 
-    protected boolean isAnimationPaused() {
-        return false;
-    }
-
     private void act() {
         switch (this.state) {
             case ATTACKING: {

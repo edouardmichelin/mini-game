@@ -36,7 +36,7 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
     protected abstract Animation[] getCharacterAnimations();
 
     protected boolean isAnimationPaused() {
-        return !this.isDisplacementOccurs() && this.isAlive();
+        return false;
     }
 
     public float getHp() {

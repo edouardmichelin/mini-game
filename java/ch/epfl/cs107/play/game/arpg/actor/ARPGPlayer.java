@@ -263,15 +263,20 @@ public class ARPGPlayer extends Player implements Destroyable {
     private void consumeCurrentItem() {
         ARPGInventory.ARPGItem item = this.inventory.getItem(this.currentItemId);
 
+
         if (item.getRequiresAnimations())
             this.switchState(ARPGPlayerState.CONSUMING_ITEM);
 
-        // if (this.isTargetReached() && !this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells())) return;
         if (item.getConsumeMethod() == null) return;
 
-        // TODO - Retirer l'item qui est retourné par la méthode de consommation
-        ARPGInventory.ARPGItem itemToRemove = item.getConsumeMethod().apply(this, this.getOwnerArea());
-        this.inventory.removeSingleItem(itemToRemove);
+        if (this.inventory.contains(item.itemToConsume ) || item.itemToConsume == null) {
+            item.getConsumeMethod().apply(this, this.getOwnerArea());
+            if(item.selfConsumable) {
+                this.inventory.removeSingleItem(item);
+            } else {
+                this.inventory.removeSingleItem(item.itemToConsume);
+            }
+        }
 
         ARPGInventory.ARPGItem newItem = this.inventory.getItem(this.currentItemId);
         if (newItem == null || !newItem.equals(item)) this.switchItem();

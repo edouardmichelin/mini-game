@@ -29,6 +29,10 @@ public interface Inventory extends InventoryContentAccessor {
 
         BiFunction<AreaEntity, Area, ARPGInventory.ARPGItem> getConsumeMethod();
 
+        ARPGInventory.ARPGItem getItemToConsume();
+
+        boolean getSelfConsumable();
+
         RegionOfInterest getTextureRoi();
     }
 }

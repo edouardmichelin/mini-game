@@ -12,7 +12,8 @@ public class CoinItem {
     public static final String TITLE = "coin";
     public static final int PRICE = 20;
     public static final int WEIGHT = 0;
-    public static final ARPGInventory.ARPGItem ITEM = ARPGInventory.ARPGItem.ARROW;
+    public static final ARPGInventory.ARPGItem ITEM = null;
+    public static final ARPGInventory.ARPGItem ITEM_TO_CONSUME = null;
 
     public static void drop(AreaEntity source, Area area) {
         DiscreteCoordinates position = source

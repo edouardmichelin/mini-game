@@ -12,6 +12,7 @@ public class MagicWaterProjectileItem {
     public static final int PRICE = 20;
     public static final int WEIGHT = 0;
     public static final ARPGItem ITEM = null;
+    public static final ARPGItem ITEM_TO_CONSUME = null;
 
     public static ARPGItem consume(AreaEntity consumer, Area area) {
         DiscreteCoordinates position = consumer

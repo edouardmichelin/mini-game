@@ -12,4 +12,5 @@ public class StaffItem {
     public static final int PRICE = 20;
     public static final int WEIGHT = 0;
     public static final ARPGItem ITEM = ARPGItem.STAFF;
+    public static final ARPGItem ITEM_TO_CONSUME = null;
 }

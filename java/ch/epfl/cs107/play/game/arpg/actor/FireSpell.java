@@ -19,12 +19,11 @@ import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class FireSpell extends AreaEntity implements Interactor, Dropable, Destroyable {
-    private final static int MIN_LIFE_TIME = 150;
-    private final static int MAX_LIFE_TIME = 300;
-    private final static int PROPAGATION_TIME_FIRE_CYCLE = 150;
+    private final static int MIN_LIFE_TIME = 100;
+    private final static int MAX_LIFE_TIME = 200;
+    private final static int PROPAGATION_TIME_FIRE_CYCLE = Settings.FRAME_RATE / 2;
     private final static float STRENGTH_UNIT = 0.1f;
     private final static DamageType DAMAGE_TYPE = DamageType.FIRE;
 
@@ -33,6 +32,7 @@ public class FireSpell extends AreaEntity implements Interactor, Dropable, Destr
     private int simulationStep;
     private float strength;
     private ARPGFireSpellHandler interactionHandler;
+    private boolean isSpread;
 
     /**
      * Default AreaEntity constructor
@@ -77,14 +77,16 @@ public class FireSpell extends AreaEntity implements Interactor, Dropable, Destr
         if (this.simulationStep == this.lifeTime)
             this.getOwnerArea().unregisterActor(this);
 
-        if (this.simulationStep % PROPAGATION_TIME_FIRE_CYCLE == 0 && this.strength > 0)
+        if (this.simulationStep % PROPAGATION_TIME_FIRE_CYCLE == 0 && this.strength > 0 && !this.isSpread)
             if (
                     this.getOwnerArea().canEnterAreaCells(
                             this,
                             List.of(this.getCurrentMainCellCoordinates().jump(this.getOrientation().toVector()))
                     )
-            )
+            ) {
                 FireSpellItem.consume(this, this.getOwnerArea(), this.strength - STRENGTH_UNIT);
+                this.isSpread = true;
+            }
 
         this.animation.update(deltaTime);
         super.update(deltaTime);
@@ -141,7 +143,7 @@ public class FireSpell extends AreaEntity implements Interactor, Dropable, Destr
     }
 
     private void inflictDamage(Destroyable destroyable) {
-        destroyable.damage(0.5f / Settings.FRAME_RATE, DAMAGE_TYPE);
+        destroyable.damage(0.5f / (Settings.FRAME_RATE * 2), DAMAGE_TYPE);
     }
 
     @Override

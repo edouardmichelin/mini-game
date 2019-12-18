@@ -117,7 +117,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
                     ResourcePath.getSprite(SpriteNames.DIGITS),
                     SIZE,
                     SIZE,
-                    DigitsRegionOfInterest.fromInt(digit).getROI(),
+                    DigitsRegionOfInterest.fromInt(digit).regionOfInterest,
                     anchor.add(new Vector(X + (2 - i) * OFFSET, Y)),
                     1,
                     DEPTH * 2
@@ -142,7 +142,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
                     ResourcePath.getSprite(SpriteNames.HEART_DISPLAY),
                     SIZE,
                     SIZE,
-                    HeartsRegionOfInterest.fromFloat(data).getROI(),
+                    HeartsRegionOfInterest.fromFloat(data).regionOfInterest,
                     anchor.add(new Vector(X + i * OFFSET, Y)),
                     1,
                     DEPTH * 2
@@ -163,16 +163,12 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
         NIL(0,16, 32)
         ;
 
-        private int value;
-        private RegionOfInterest roi;
+        private final float value;
+        public final RegionOfInterest regionOfInterest;
 
         DigitsRegionOfInterest(int value, int x, int y) {
             this.value = value;
-            this.roi = new RegionOfInterest(x, y, 16, 16);
-        }
-
-        public RegionOfInterest getROI() {
-            return this.roi;
+            this.regionOfInterest = new RegionOfInterest(x, y, 16, 16);
         }
 
         public static DigitsRegionOfInterest fromInt(int value) {
@@ -190,16 +186,12 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
         FULL(1f, 32, 0)
         ;
 
-        private float value;
-        private RegionOfInterest roi;
+        private final float value;
+        public final RegionOfInterest regionOfInterest;
 
         HeartsRegionOfInterest(float value, int x, int y) {
             this.value = value;
-            this.roi = new RegionOfInterest(x, y, 16, 16);
-        }
-
-        public RegionOfInterest getROI() {
-            return this.roi;
+            this.regionOfInterest = new RegionOfInterest(x, y, 16, 16);
         }
 
         public static HeartsRegionOfInterest fromFloat(float value) {

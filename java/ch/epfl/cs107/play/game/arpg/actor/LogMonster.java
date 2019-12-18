@@ -236,10 +236,10 @@ public class LogMonster extends Monster {
         WAKING_UP(SpriteNames.LOG_MONSTER_WAKING_UP, true, false, 3)
         ;
 
-        final String associatedSpriteName;
-        final boolean hasSingleOrientation;
-        final boolean isLooping;
-        final int numberOfFrames;
+        public final String associatedSpriteName;
+        public final boolean hasSingleOrientation;
+        public final boolean isLooping;
+        public final int numberOfFrames;
 
         State(String associatedSpriteName, boolean hasSingleOrientation, boolean isLooping, int numberOfFrames) {
             this.associatedSpriteName = associatedSpriteName;

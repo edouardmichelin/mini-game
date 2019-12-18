@@ -7,6 +7,7 @@ import ch.epfl.cs107.play.game.arpg.actor.Bomb;
 import ch.epfl.cs107.play.game.arpg.actor.FlameSkull;
 import ch.epfl.cs107.play.game.arpg.actor.Grass;
 import ch.epfl.cs107.play.game.arpg.actor.WaterFall;
+import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
@@ -26,7 +27,7 @@ public class Route extends ARPGArea {
 
     private void registerDoors() {
         this.registerActor(new Door(
-                Areas.FERME.getTitle(),
+                AreaNames.FERME,
                 new DiscreteCoordinates(18, 15),
                 Logic.TRUE,
                 this,
@@ -34,7 +35,7 @@ public class Route extends ARPGArea {
                 new DiscreteCoordinates(0, 15),
                 new DiscreteCoordinates(0, 16)));
         this.registerActor(new Door(
-                Areas.VILLAGE.getTitle(),
+                AreaNames.VILLAGE,
                 new DiscreteCoordinates(29, 18),
                 Logic.TRUE,
                 this,
@@ -42,7 +43,7 @@ public class Route extends ARPGArea {
                 new DiscreteCoordinates(9, 0),
                 new DiscreteCoordinates(10, 0)));
         this.registerActor(new Door(
-                Areas.ROUTE_CHATEAU.getTitle(),
+                AreaNames.ROUTE_CHATEAU,
                 new DiscreteCoordinates(9, 1),
                 Logic.TRUE,
                 this,
@@ -63,7 +64,7 @@ public class Route extends ARPGArea {
 
     @Override
     public String getTitle() {
-        return Areas.ROUTE.getTitle();
+        return AreaNames.ROUTE;
     }
 
 }

@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.arpg;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.arpg.actor.ARPGPlayer;
 import ch.epfl.cs107.play.game.arpg.area.*;
+import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.rpg.RPG;
 import ch.epfl.cs107.play.io.FileSystem;
@@ -12,7 +13,7 @@ import ch.epfl.cs107.play.window.Window;
 public class ARPG extends RPG {
     private void init() {
         this.createAreas();
-        this.setCurrentArea(Areas.FERME.getTitle(), true);
+        this.setCurrentArea(AreaNames.FERME, true);
         this.initPlayer(new ARPGPlayer(
                 (this.getCurrentArea()),
                 Orientation.DOWN,

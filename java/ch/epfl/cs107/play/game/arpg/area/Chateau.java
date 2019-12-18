@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.game.areagame.actor.Foreground;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.arpg.actor.CastleDoor;
+import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
@@ -19,7 +20,7 @@ public class Chateau extends ARPGArea {
 
     private void registerDoors() {
         this.registerActor(new Door(
-                Areas.ROUTE_CHATEAU.getTitle(),
+                AreaNames.ROUTE_CHATEAU,
                 new DiscreteCoordinates(9, 12),
                 Logic.TRUE,
                 this,
@@ -30,7 +31,7 @@ public class Chateau extends ARPGArea {
 
     @Override
     public String getTitle() {
-        return Areas.CHATEAU.getTitle();
+        return AreaNames.CHATEAU;
     }
 
 }

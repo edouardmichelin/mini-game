@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.game.areagame.actor.Foreground;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.arpg.actor.*;
+import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
@@ -25,7 +26,7 @@ public class Ferme extends ARPGArea {
 
     private void registerDoors() {
         this.registerActor(new Door(
-                Areas.ROUTE.getTitle(),
+                AreaNames.ROUTE,
                 new DiscreteCoordinates(1, 15),
                 Logic.TRUE,
                 this,
@@ -33,7 +34,7 @@ public class Ferme extends ARPGArea {
                 new DiscreteCoordinates(19, 15),
                 new DiscreteCoordinates(19, 16)));
         this.registerActor(new Door(
-                Areas.VILLAGE.getTitle(),
+                AreaNames.VILLAGE,
                 new DiscreteCoordinates(4, 18),
                 Logic.TRUE,
                 this,
@@ -41,7 +42,7 @@ public class Ferme extends ARPGArea {
                 new DiscreteCoordinates(4, 0),
                 new DiscreteCoordinates(5, 0)));
         this.registerActor(new Door(
-                Areas.VILLAGE.getTitle(),
+                AreaNames.VILLAGE,
                 new DiscreteCoordinates(14, 18),
                 Logic.TRUE,
                 this,
@@ -52,7 +53,7 @@ public class Ferme extends ARPGArea {
 
     @Override
     public String getTitle() {
-        return Areas.FERME.getTitle();
+        return AreaNames.FERME;
     }
 
 }

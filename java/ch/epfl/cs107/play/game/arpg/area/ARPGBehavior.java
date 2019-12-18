@@ -22,10 +22,6 @@ public class ARPGBehavior extends AreaBehavior {
                 this.setCell(x, y, new ARPGCell(x, y, ARPGCellType.toType(getRGB((getHeight() - 1 - y), x))));
     }
 
-    public ARPGCell getCell(DiscreteCoordinates coordinates) {
-        return ((ARPGCell) this.getCell(coordinates.x, coordinates.y));
-    }
-
     public enum ARPGCellType {
         NULL(0, false, false),
         WALL(-16777216, false, false),
@@ -63,10 +59,6 @@ public class ARPGBehavior extends AreaBehavior {
             this.type = type;
         }
 
-        public ARPGCellType getType() {
-            return this.type;
-        }
-
         @Override
         protected boolean canLeave(Interactable entity) {
             return true;
@@ -74,8 +66,11 @@ public class ARPGBehavior extends AreaBehavior {
 
         @Override
         protected boolean canEnter(Interactable entity) {
-            if (entity instanceof FlyableEntity || entity instanceof Dropable)
+            if (entity instanceof FlyableEntity)
                 return this.type.isFlyable;
+
+            if (entity instanceof Dropable)
+                return this.type.isWalkable;
 
             return this.type.isWalkable && !this.hasNonTraversableContent();
         }

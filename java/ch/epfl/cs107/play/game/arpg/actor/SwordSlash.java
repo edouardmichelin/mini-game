@@ -11,7 +11,7 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
-public class SwordSlash extends AreaEntity implements Interactor, FlyableEntity {
+public class SwordSlash extends AreaEntity implements Interactor, NotClipable {
     private final static DamageType DAMAGE_TYPE = DamageType.PHYSICAL;
     private final static float DEFAULT_DAMAGE = 0.5f;
 
@@ -48,12 +48,12 @@ public class SwordSlash extends AreaEntity implements Interactor, FlyableEntity 
 
     @Override
     public boolean wantsCellInteraction() {
-        return false;
+        return !this.consumed;
     }
 
     @Override
     public boolean wantsViewInteraction() {
-        return !this.consumed;
+        return false;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class SwordSlash extends AreaEntity implements Interactor, FlyableEntity 
 
     @Override
     public boolean isCellInteractable() {
-        return true;
+        return false;
     }
 
     @Override
@@ -114,6 +114,7 @@ public class SwordSlash extends AreaEntity implements Interactor, FlyableEntity 
 
         @Override
         public void interactWith(Bomb bomb) {
+            System.out.println("top");
             bomb.explode();
             SwordSlash.this.consumed = true;
         }

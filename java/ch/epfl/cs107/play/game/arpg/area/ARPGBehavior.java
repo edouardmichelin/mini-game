@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.AreaBehavior;
 import ch.epfl.cs107.play.game.areagame.actor.Dropable;
 import ch.epfl.cs107.play.game.areagame.actor.FlyableEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
+import ch.epfl.cs107.play.game.areagame.actor.NotClipable;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
@@ -71,6 +72,9 @@ public class ARPGBehavior extends AreaBehavior {
 
             if (entity instanceof Dropable)
                 return this.type.isWalkable;
+
+            if (entity instanceof NotClipable)
+                return true;
 
             return this.type.isWalkable && !this.hasNonTraversableContent();
         }

@@ -266,6 +266,7 @@ public class ARPGPlayer extends Player implements Destroyable {
         if (item.getRequiresAnimations())
             this.switchState(ARPGPlayerState.CONSUMING_ITEM);
 
+        // if (this.isTargetReached() && !this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells())) return;
         if (item.getConsumeMethod() == null) return;
 
         // TODO - Retirer l'item qui est retourné par la méthode de consommation

@@ -15,7 +15,8 @@ public class SwordSlashItem {
     public static ARPGItem consume(AreaEntity consumer, Area area) {
         DiscreteCoordinates position = consumer
                 .getCurrentCells()
-                .get(0);
+                .get(0)
+                .jump(consumer.getOrientation().toVector());
 
         area.registerActor(new SwordSlash(area, consumer.getOrientation(), position));
 

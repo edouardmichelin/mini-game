@@ -12,14 +12,4 @@ public class SwordItem {
     public static final int PRICE = 20;
     public static final int WEIGHT = 0;
     public static final ARPGItem ITEM = ARPGItem.SWORD;
-
-    public static ARPGItem consume(AreaEntity consumer, Area area) {
-        DiscreteCoordinates position = consumer
-                .getCurrentCells()
-                .get(0);
-
-        area.registerActor(new SwordSlash(area, consumer.getOrientation(), position));
-
-        return ITEM;
-    }
 }

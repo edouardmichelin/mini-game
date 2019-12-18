@@ -115,7 +115,7 @@ public class ARPGInventory implements Inventory {
     public enum ARPGItem implements Inventory.InventoryItem {
         ARROW(ArrowItem.TITLE, ArrowItem.WEIGHT, ArrowItem.PRICE, false, SpriteNames.ARROW_ITEM, null, null),
         BOW(BowItem.TITLE, BowItem.WEIGHT, BowItem.PRICE, true, SpriteNames.BOW_ITEM, ArrowItem::consume, null),
-        SWORD(SwordItem.TITLE, SwordItem.WEIGHT, SwordItem.PRICE, true, SpriteNames.SWORD_ITEM, SwordItem::consume, null),
+        SWORD(SwordItem.TITLE, SwordItem.WEIGHT, SwordItem.PRICE, true, SpriteNames.SWORD_ITEM, SwordSlashItem::consume, null),
         STAFF(StaffItem.TITLE, StaffItem.WEIGHT, StaffItem.PRICE, true, SpriteNames.STAFF_ITEM, MagicWaterProjectileItem::consume, null),
         BOMB(BombItem.TITLE, BombItem.WEIGHT, BombItem.PRICE, false, SpriteNames.BOMB_ITEM, BombItem::consume, new RegionOfInterest(0,0,16,16)),
         CASTLE_KEY(CastleKeyItem.TITLE, CastleKeyItem.WEIGHT, CastleKeyItem.PRICE, false, SpriteNames.CASTLE_KEY_ITEM, null, null)

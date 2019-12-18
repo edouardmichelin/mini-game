@@ -45,10 +45,10 @@ public class Grass extends AreaEntity implements Destroyable {
                 new RegionOfInterest(0, 0, 16, 16)
         );
 
-        this.animation = new Animation(Settings.FRAME_RATE / 12, this.getCutSprites(), false);
+        this.animation = new Animation(Settings.FRAME_RATE / 12, this.getSlicedSprites(), false);
     }
 
-    private Sprite[] getCutSprites() {
+    private Sprite[] getSlicedSprites() {
         Sprite[] s = new Sprite[4];
         for (int frame = 0; frame < 4; frame++)
             s[frame] = new RPGSprite(

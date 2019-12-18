@@ -131,8 +131,7 @@ public class DarkLord extends Monster {
                                 !this.getOwnerArea().canEnterAreaCells(this, List.of(position))
                 );
 
-                // TODO - position will never be null
-                if (position != null) this.setCurrentPosition(position.toVector());
+                if (attempt < attemptsLimit) this.setCurrentPosition(position.toVector());
                 this.state = State.IDLE;
             }
         }

@@ -30,11 +30,9 @@ public class FlameSkull extends Monster implements FlyableEntity {
     public FlameSkull(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
-        Random prng = RandomGenerator.getInstance();
-
-        this.animations = RPGSprite.createAnimations(8, getSprites());
-        this.lifeTime = Helpers.random(MIN_LIFE_TIME, MAX_LIFE_TIME);
         this.interactionHandler = new ARPGFlameSkullHandler();
+        this.lifeTime = Helpers.random(MIN_LIFE_TIME, MAX_LIFE_TIME);
+        this.animations = RPGSprite.createAnimations(8, getSprites());
     }
 
     private Sprite[][] getSprites() {

@@ -11,6 +11,7 @@ import ch.epfl.cs107.play.game.arpg.items.FireSpellItem;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
+import ch.epfl.cs107.play.game.rpg.misc.Helpers;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.RegionOfInterest;
@@ -43,12 +44,10 @@ public class FireSpell extends AreaEntity implements Interactor, Dropable, Destr
     public FireSpell(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
-        Random prng = RandomGenerator.getInstance();
-
-        this.animation = new Animation(Settings.FRAME_RATE / 8, getDefaultSprites(), true);
-        this.lifeTime = Math.round((prng.nextFloat() * (MAX_LIFE_TIME - MIN_LIFE_TIME))) + MIN_LIFE_TIME;
-        this.strength = prng.nextFloat() + STRENGTH_UNIT;
         this.interactionHandler = new ARPGFireSpellHandler();
+        this.lifeTime = Helpers.random(MIN_LIFE_TIME, MAX_LIFE_TIME);
+        this.strength = RandomGenerator.getInstance().nextFloat() + STRENGTH_UNIT;
+        this.animation = new Animation(Settings.FRAME_RATE / 8, getDefaultSprites(), true);
     }
 
     public FireSpell(Area area, Orientation orientation, DiscreteCoordinates position, float strength) {

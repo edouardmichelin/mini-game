@@ -16,6 +16,7 @@ import ch.epfl.cs107.play.game.rpg.misc.Helpers;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.RegionOfInterest;
+import ch.epfl.cs107.play.math.Vector;
 
 import java.util.Collections;
 import java.util.List;
@@ -56,31 +57,35 @@ public class LogMonster extends Monster {
         return this.state.hasSingleOrientation ?
                 this.getSingleOrientationAnimations(spriteName, nbFrames) :
                 RPGSprite.createAnimations(ANIMATION_DURATION, RPGSprite.extractSprites(
-                spriteName,
-                nbFrames,
-                2,
-                2,
-                this,
-                32,
-                32,
-                new Orientation[] {Orientation.DOWN, Orientation.UP, Orientation.RIGHT, Orientation.LEFT}
-        ));
+                        spriteName,
+                        nbFrames,
+                        2,
+                        2,
+                        this,
+                        32,
+                        32,
+                        new Vector(-0.5f, 0),
+                        new Orientation[]{Orientation.DOWN, Orientation.UP, Orientation.RIGHT, Orientation.LEFT
+                        }
+                ));
     }
 
     private Animation[] getSingleOrientationAnimations(String spriteName, int nbFrames) {
         int nbOrientation = Orientation.values().length;
 
-        Sprite[] s = new Sprite[nbFrames];
+        Sprite[] s = new RPGSprite[nbFrames];
         Animation anim;
         Animation[] anims = new Animation[nbOrientation];
 
         for (int i = 0; i < nbFrames; i++) {
-            s[i] = new Sprite(
+            s[i] = new RPGSprite(
                     spriteName,
                     2,
                     2,
                     this,
-                    new RegionOfInterest(0, i * 32, 32, 32));
+                    new RegionOfInterest(0, i * 32, 32, 32),
+                    new Vector(-0.5f, 0)
+            );
         }
 
         anim = new Animation(ANIMATION_DURATION, s, this.state.isLooping);
@@ -114,23 +119,27 @@ public class LogMonster extends Monster {
         if (this.isInactive) return;
 
         switch (this.state) {
-            case IDLE: ;
-            break;
-            case ATTACKING: ;
-            break;
+            case IDLE:
+                ;
+                break;
+            case ATTACKING:
+                ;
+                break;
             case FALLING_ASLEEP: {
                 this.sleepingDuration = Helpers.random(MIN_SLEEPING_DURATION, MAX_SLEEPING_DURATION);
 
                 this.state = State.SLEEPING;
                 this.animations = this.getAnimations();
-            } break;
+            }
+            break;
             case SLEEPING: {
                 this.sleepingDuration--;
                 if (this.sleepingDuration == 0) {
                     this.state = State.WAKING_UP;
                     this.animations = this.getAnimations();
                 }
-            } break;
+            }
+            break;
             case WAKING_UP: {
                 if (!this.isAlreadyWakingUp) this.animations = this.getAnimations();
 
@@ -141,7 +150,8 @@ public class LogMonster extends Monster {
                     this.isAlreadyWakingUp = false;
                     this.animations = this.getAnimations();
                 }
-            } break;
+            }
+            break;
         }
     }
 
@@ -233,8 +243,7 @@ public class LogMonster extends Monster {
         ATTACKING(SpriteNames.LOG_MONSTER, false, true, 4),
         FALLING_ASLEEP(SpriteNames.LOG_MONSTER, false, true, 4),
         SLEEPING(SpriteNames.LOG_MONSTER_SLEEPING, true, true, 4),
-        WAKING_UP(SpriteNames.LOG_MONSTER_WAKING_UP, true, false, 3)
-        ;
+        WAKING_UP(SpriteNames.LOG_MONSTER_WAKING_UP, true, false, 3);
 
         final String associatedSpriteName;
         final boolean hasSingleOrientation;

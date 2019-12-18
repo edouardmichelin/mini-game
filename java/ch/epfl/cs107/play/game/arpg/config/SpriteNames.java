@@ -1,6 +1,6 @@
 package ch.epfl.cs107.play.game.arpg.config;
 
-public class SpriteNames {
+public abstract class SpriteNames {
     // ACTORS
     public static final String PLAYER = "zelda/player";
 

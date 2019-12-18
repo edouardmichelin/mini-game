@@ -79,6 +79,7 @@ public class ARPGInventory implements Inventory {
     }
 
     public boolean addItem(InventoryItem item, int quantity) {
+        if (item == null) return false;
         if (this.remainingCapacity < quantity) return false;
 
         int qt = this.getItemQuantity(item);
@@ -94,6 +95,7 @@ public class ARPGInventory implements Inventory {
     }
 
     public boolean removeItem(InventoryItem item, int quantity) {
+        if (item == null) return false;
         int qt = this.getItemQuantity(item) - quantity;
 
         if (qt < 0) return false;
@@ -111,40 +113,30 @@ public class ARPGInventory implements Inventory {
     }
 
     public enum ARPGItem implements Inventory.InventoryItem {
-        ARROW(ArrowItem.TITLE, ArrowItem.WEIGHT, ArrowItem.PRICE, false, SpriteNames.ARROW_ITEM),
-        BOW(BowItem.TITLE, BowItem.WEIGHT, BowItem.PRICE, true, SpriteNames.BOW_ITEM, ArrowItem::consume),
-        SWORD(SwordItem.TITLE, SwordItem.WEIGHT, SwordItem.PRICE, true, SpriteNames.SWORD_ITEM, SwordItem::consume),
-        STAFF(StaffItem.TITLE, StaffItem.WEIGHT, StaffItem.PRICE, true, SpriteNames.STAFF_ITEM, StaffItem::consume),
+        ARROW(ArrowItem.TITLE, ArrowItem.WEIGHT, ArrowItem.PRICE, false, SpriteNames.ARROW_ITEM, null, null),
+        BOW(BowItem.TITLE, BowItem.WEIGHT, BowItem.PRICE, true, SpriteNames.BOW_ITEM, ArrowItem::consume, null),
+        SWORD(SwordItem.TITLE, SwordItem.WEIGHT, SwordItem.PRICE, true, SpriteNames.SWORD_ITEM, SwordItem::consume, null),
+        STAFF(StaffItem.TITLE, StaffItem.WEIGHT, StaffItem.PRICE, true, SpriteNames.STAFF_ITEM, MagicWaterProjectileItem::consume, null),
         BOMB(BombItem.TITLE, BombItem.WEIGHT, BombItem.PRICE, false, SpriteNames.BOMB_ITEM, BombItem::consume, new RegionOfInterest(0,0,16,16)),
-        CASTLE_KEY(CastleKeyItem.TITLE, CastleKeyItem.WEIGHT, CastleKeyItem.PRICE, false, SpriteNames.CASTLE_KEY_ITEM)
+        CASTLE_KEY(CastleKeyItem.TITLE, CastleKeyItem.WEIGHT, CastleKeyItem.PRICE, false, SpriteNames.CASTLE_KEY_ITEM, null, null)
         ;
 
-        private String title;
-        private float weight;
-        private int price;
-        private boolean requiresAnimations;
-        private String spriteName;
-        private BiConsumer<AreaEntity, Area> consumeMethod;
-        private RegionOfInterest roi;
+        final String title;
+        final float weight;
+        final int price;
+        final boolean requiresAnimations;
+        final String spriteName;
+        final BiFunction<AreaEntity, Area, ARPGItem> consumeMethod;
+        final RegionOfInterest roi;
 
-        ARPGItem(String title, float weight, int price, boolean requiresAnimations, String spriteName) {
+        ARPGItem(String title, float weight, int price, boolean requiresAnimations, String spriteName, BiFunction<AreaEntity, Area, ARPGItem> consumeMethod, RegionOfInterest roi) {
             this.title = title;
             this.weight = weight;
             this.price = price;
             this.requiresAnimations = requiresAnimations;
             this.spriteName = spriteName;
-            this.consumeMethod = null;
-            this.roi = new RegionOfInterest(0,0,32,32);
-        }
-
-        ARPGItem(String title, float weight, int price, boolean requiresAnimations, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod) {
-            this(title, weight, price, requiresAnimations, spriteName);
             this.consumeMethod = consumeMethod;
-        }
-
-        ARPGItem(String title, float weight, int price, boolean requiresAnimations, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod, RegionOfInterest roi) {
-            this(title, weight, price, requiresAnimations, spriteName, consumeMethod);
-            this.roi = roi;
+            this.roi = roi == null ? new RegionOfInterest(0,0,32,32) : roi;
         }
 
 
@@ -172,7 +164,7 @@ public class ARPGInventory implements Inventory {
             return this.spriteName;
         }
 
-        public BiConsumer<AreaEntity, Area> getConsumeMethod() {
+        public BiFunction<AreaEntity, Area, ARPGItem> getConsumeMethod() {
             return this.consumeMethod;
         }
 

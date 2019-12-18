@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ARPGPlayer extends Player implements Destroyable {
     private final static int ANIMATION_DURATION = 8;
@@ -58,11 +59,11 @@ public class ARPGPlayer extends Player implements Destroyable {
         this.interactionHandler = new ARPGPlayerHandler();
         this.inventory = new ARPGInventory(30, this);
 
-        this.inventory.addItem(ARPGInventory.ARPGItem.BOMB, 5);
-        this.inventory.addItem(ARPGInventory.ARPGItem.BOW, 30);
+        this.inventory.addItem(ARPGInventory.ARPGItem.BOMB, 3);
+        this.inventory.addItem(ARPGInventory.ARPGItem.BOW, 1);
         this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 5);
-        this.inventory.addItem(ARPGInventory.ARPGItem.STAFF, 30);
-        this.inventory.addItem(ARPGInventory.ARPGItem.SWORD, 30);
+        this.inventory.addItem(ARPGInventory.ARPGItem.STAFF, 1);
+        this.inventory.addItem(ARPGInventory.ARPGItem.SWORD, 1);
 
         this.inventory.addMoney(19);
 
@@ -268,8 +269,8 @@ public class ARPGPlayer extends Player implements Destroyable {
         if (item.getConsumeMethod() == null) return;
 
         // TODO - Retirer l'item qui est retourné par la méthode de consommation
-        item.getConsumeMethod().accept(this, this.getOwnerArea());
-        this.inventory.removeSingleItem(item);
+        ARPGInventory.ARPGItem itemToRemove = item.getConsumeMethod().apply(this, this.getOwnerArea());
+        this.inventory.removeSingleItem(itemToRemove);
 
         ARPGInventory.ARPGItem newItem = this.inventory.getItem(this.currentItemId);
         if (newItem == null || !newItem.equals(item)) this.switchItem();

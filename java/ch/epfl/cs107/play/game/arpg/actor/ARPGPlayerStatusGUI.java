@@ -18,10 +18,6 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
     private Inventory.InventoryItem currentItem;
     private InventoryContentAccessor inventory;
 
-    public ARPGPlayerStatusGUI() {
-        this(null, -1, 0);
-    }
-
     public ARPGPlayerStatusGUI(InventoryContentAccessor inventory, int currentItemId, float healthPoint) {
         this.healthPoint = healthPoint;
         this.inventory = inventory;

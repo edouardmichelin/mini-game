@@ -42,7 +42,7 @@ public class DarkLord extends Monster {
         super(area, orientation, coordinates);
 
         this.idleAnimations = RPGSprite.createAnimations(ANIMATION_DURATION, this.getSprites(SpriteNames.DARK_LORD));
-        this.spellAnimations = RPGSprite.createAnimations(ANIMATION_DURATION, this.getSprites(SpriteNames.DARK_LORD_SPELL), false);
+        this.spellAnimations = RPGSprite.createAnimations(ANIMATION_DURATION / 2, this.getSprites(SpriteNames.DARK_LORD_SPELL), false);
         this.state = State.IDLE;
         this.interactionHandler = new ARPGDarkLordHandler();
         this.simulationCyle = Helpers.random(MIN_SPELL_WAIT_DURATION, MAX_SPELL_WAIT_DURATION);

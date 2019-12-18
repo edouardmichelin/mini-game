@@ -13,6 +13,7 @@ import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.game.rpg.misc.Helpers;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
+import ch.epfl.cs107.play.math.Vector;
 
 import java.util.List;
 import java.util.Random;
@@ -56,7 +57,8 @@ public class DarkLord extends Monster {
                 this,
                 32,
                 32,
-                new Orientation[] {Orientation.UP, Orientation.LEFT, Orientation.DOWN, Orientation.RIGHT}
+                new Vector(-0.5f, 0.3f),
+                new Orientation[]{Orientation.UP, Orientation.LEFT, Orientation.DOWN, Orientation.RIGHT}
         );
     }
 
@@ -67,7 +69,7 @@ public class DarkLord extends Monster {
         int maxAttemptAmount = 50;
         int attempt = 0;
 
-        while(attempt < maxAttemptAmount) {
+        while (attempt < maxAttemptAmount) {
             int random = prng.nextInt(Orientation.values().length);
             for (Orientation orientation : Orientation.values()) {
                 if (orientation.ordinal() == random && area.canEnterAreaCells(this, List.of(position.jump(orientation.toVector())))) {
@@ -93,7 +95,8 @@ public class DarkLord extends Monster {
         switch (this.state) {
             case ATTACKING: {
                 this.state = State.IDLE;
-            } break;
+            }
+            break;
             case INVOKING: {
                 Animation currentAnim = this.getCharacterAnimations()[this.getOrientation().ordinal()];
                 if (currentAnim.isCompleted()) {
@@ -101,14 +104,16 @@ public class DarkLord extends Monster {
                     FlameSkullItem.consume(this, this.getOwnerArea());
                     this.state = State.IDLE;
                 }
-            } break;
+            }
+            break;
             case PREPARING_TELEPORTATION: {
                 Animation currentAnim = this.getCharacterAnimations()[this.getOrientation().ordinal()];
                 if (currentAnim.isCompleted()) {
                     currentAnim.reset();
                     this.state = State.TELEPORTING;
                 }
-            } break;
+            }
+            break;
             case TELEPORTING: {
                 if (!this.isTargetReached()) return;
                 DiscreteCoordinates position;
@@ -121,9 +126,9 @@ public class DarkLord extends Monster {
                 do {
                     position = v.get(prng.nextInt(v.size()));
                     attempt++;
-                } while(
+                } while (
                         attempt < attemptsLimit &&
-                        !this.getOwnerArea().canEnterAreaCells(this, List.of(position))
+                                !this.getOwnerArea().canEnterAreaCells(this, List.of(position))
                 );
 
                 // TODO - position will never be null
@@ -165,10 +170,12 @@ public class DarkLord extends Monster {
     protected Animation[] getCharacterAnimations() {
         switch (this.state) {
             case IDLE:
-            case TELEPORTING: return this.idleAnimations;
+            case TELEPORTING:
+                return this.idleAnimations;
             case INVOKING:
             case ATTACKING:
-            case PREPARING_TELEPORTATION: return this.spellAnimations;
+            case PREPARING_TELEPORTATION:
+                return this.spellAnimations;
         }
 
         return this.idleAnimations;

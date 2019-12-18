@@ -12,6 +12,7 @@ import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Monster;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
+import ch.epfl.cs107.play.game.rpg.misc.Helpers;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.RegionOfInterest;
@@ -48,18 +49,6 @@ public class LogMonster extends Monster {
         this.animations = this.getAnimations();
         this.interactionHandler = new ARPGLogMonsterHandler();
         this.simulationStep = SIMULATION_CYCLE;
-    }
-
-    private List<DiscreteCoordinates> getCellsInRange(int range) {
-        List<DiscreteCoordinates> dc = new ArrayList<>();
-        Vector orientation = this.getOrientation().toVector();
-
-        dc.add(this.getCurrentMainCellCoordinates().jump(orientation));
-
-        for (int i = 1; i < range; i++)
-            dc.add(dc.get(i - 1).jump(orientation));
-
-        return dc;
     }
 
     private Animation[] getAnimations() {
@@ -218,9 +207,11 @@ public class LogMonster extends Monster {
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
         if (this.state.equals(State.ATTACKING))
-            return Collections.singletonList(getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
+            return Collections
+                    .singletonList(getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
         else
-            return this.getCellsInRange(FIELD_OF_VIEW_RANGE);
+            return Helpers
+                    .getCellsInRange(this.getCurrentMainCellCoordinates(), this.getOrientation(), FIELD_OF_VIEW_RANGE);
     }
 
     @Override

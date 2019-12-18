@@ -10,6 +10,7 @@ import ch.epfl.cs107.play.game.arpg.items.FlameSkullItem;
 import ch.epfl.cs107.play.game.rpg.actor.Monster;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
+import ch.epfl.cs107.play.game.rpg.misc.Helpers;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 
@@ -62,17 +63,6 @@ public class DarkLord extends Monster {
                 32,
                 new Orientation[] {Orientation.UP, Orientation.LEFT, Orientation.DOWN, Orientation.RIGHT}
         );
-    }
-
-    private List<DiscreteCoordinates> getCellsInRadius(int radius) {
-        DiscreteCoordinates dc = this.getCurrentMainCellCoordinates();
-
-        List<DiscreteCoordinates> cir = new ArrayList<>();
-        for (int x = -radius; x < radius + 1; x++)
-            for (int y = -radius; y < radius + 1; y++)
-                cir.add(dc.jump(x, y));
-
-        return cir;
     }
 
     private Orientation whereToThrowFireSpell() {
@@ -128,7 +118,8 @@ public class DarkLord extends Monster {
                 if (!this.isTargetReached()) return;
                 DiscreteCoordinates position;
                 Random prng = RandomGenerator.getInstance();
-                List<DiscreteCoordinates> v = this.getCellsInRadius(TELEPORTATION_RADIUS);
+                List<DiscreteCoordinates> v = Helpers
+                        .getCellsInRadius(this.getCurrentMainCellCoordinates(), TELEPORTATION_RADIUS);
                 int attemptsLimit = 30;
                 int attempt = 0;
 
@@ -220,7 +211,7 @@ public class DarkLord extends Monster {
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        return getCellsInRadius(ACTION_RADIUS);
+        return Helpers.getCellsInRadius(this.getCurrentMainCellCoordinates(), TELEPORTATION_RADIUS);
     }
 
     @Override

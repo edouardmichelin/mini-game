@@ -6,6 +6,8 @@ import ch.epfl.cs107.play.game.arpg.actor.ARPGInventory.ARPGItem;
 import ch.epfl.cs107.play.game.arpg.actor.Arrow;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
+import java.util.List;
+
 public class ArrowItem {
 
     public static final String TITLE = "arrow";
@@ -14,14 +16,15 @@ public class ArrowItem {
     public static final ARPGItem ITEM = ARPGItem.ARROW;
     public static final ARPGItem ITEM_TO_CONSUME = ARPGItem.ARROW;
 
-    public static ARPGItem consume(AreaEntity consumer, Area area) {
+    public static void consume(AreaEntity consumer, Area area) {
         DiscreteCoordinates position = consumer
                 .getCurrentCells()
                 .get(0)
                 .jump(consumer.getOrientation().toVector());
 
-        area.registerActor(new Arrow(area, consumer.getOrientation(), position));
+        Arrow arrow = new Arrow(area, consumer.getOrientation(), position);
 
-        return ITEM;
+        if (area.canEnterAreaCells(arrow, List.of(position)))
+            area.registerActor(arrow);
     }
 }

@@ -5,6 +5,7 @@ import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.arpg.actor.ARPGInventory;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 public interface Inventory extends InventoryContentAccessor {
@@ -27,7 +28,7 @@ public interface Inventory extends InventoryContentAccessor {
 
         String getSpriteName();
 
-        BiFunction<AreaEntity, Area, ARPGInventory.ARPGItem> getConsumeMethod();
+        BiConsumer<AreaEntity, Area> getConsumeMethod();
 
         ARPGInventory.ARPGItem getItemToConsume();
 

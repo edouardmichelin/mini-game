@@ -15,13 +15,11 @@ public class CastleKeyItem {
     public static final ARPGItem ITEM = ARPGItem.CASTLE_KEY;
     public static final ARPGItem ITEM_TO_CONSUME = null;
 
-    public static ARPGItem drop(AreaEntity source, Area area) {
+    public static void drop(AreaEntity source, Area area) {
         DiscreteCoordinates position = source
                 .getCurrentCells()
                 .get(0);
 
         area.registerActor(new CastleKey(area, Orientation.DOWN, position));
-
-        return ITEM;
     }
 }

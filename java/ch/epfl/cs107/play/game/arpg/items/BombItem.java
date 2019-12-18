@@ -7,6 +7,8 @@ import ch.epfl.cs107.play.game.arpg.actor.ARPGInventory.ARPGItem;
 import ch.epfl.cs107.play.game.arpg.actor.Bomb;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
+import java.util.List;
+
 public class BombItem {
 
     public static final String TITLE = "bomb";
@@ -15,14 +17,17 @@ public class BombItem {
     public static final ARPGItem ITEM = ARPGItem.BOMB;
     public static final ARPGItem ITEM_TO_CONSUME = null;
 
-    public static ARPGItem consume(AreaEntity consumer, Area area) {
+    public static void consume(AreaEntity consumer, Area area) {
         DiscreteCoordinates position = consumer
                 .getCurrentCells()
-                .get(0)
-                .jump(consumer.getOrientation().toVector());
+                .get(0);
 
-        area.registerActor(new Bomb(area, Orientation.DOWN, position));
+        Bomb bomb = new Bomb(area, Orientation.DOWN, position);
 
-        return ITEM;
+        if (area.canEnterAreaCells(bomb, List.of(position.jump(consumer.getOrientation().toVector()))))
+            area.registerActor(bomb);
+        else {
+            area.registerActor(new Bomb(area, Orientation.DOWN, position));
+        }
     }
 }

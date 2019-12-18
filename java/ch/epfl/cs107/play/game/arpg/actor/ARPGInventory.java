@@ -126,12 +126,12 @@ public class ARPGInventory implements Inventory {
         final int price;
         final boolean requiresAnimations;
         final String spriteName;
-        final BiFunction<AreaEntity, Area, ARPGItem> consumeMethod;
+        final BiConsumer<AreaEntity, Area> consumeMethod;
         final ARPGItem itemToConsume;
         final boolean selfConsumable;
         final RegionOfInterest roi;
 
-        ARPGItem(String title, float weight, int price, boolean requiresAnimations, String spriteName, BiFunction<AreaEntity, Area, ARPGItem> consumeMethod, ARPGItem itemToConsume, boolean selfConsumable, RegionOfInterest roi) {
+        ARPGItem(String title, float weight, int price, boolean requiresAnimations, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod, ARPGItem itemToConsume, boolean selfConsumable, RegionOfInterest roi) {
             this.title = title;
             this.weight = weight;
             this.price = price;
@@ -169,7 +169,7 @@ public class ARPGInventory implements Inventory {
         }
 
         @Override
-        public BiFunction<AreaEntity, Area, ARPGItem> getConsumeMethod() {
+        public BiConsumer<AreaEntity, Area> getConsumeMethod() {
             return this.consumeMethod;
         }
 

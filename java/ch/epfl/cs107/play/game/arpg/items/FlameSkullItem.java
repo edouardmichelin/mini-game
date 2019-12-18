@@ -3,8 +3,11 @@ package ch.epfl.cs107.play.game.arpg.items;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.arpg.actor.ARPGInventory.ARPGItem;
+import ch.epfl.cs107.play.game.arpg.actor.FireSpell;
 import ch.epfl.cs107.play.game.arpg.actor.FlameSkull;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+
+import java.util.List;
 
 public class FlameSkullItem {
 
@@ -14,14 +17,15 @@ public class FlameSkullItem {
     public static final ARPGItem ITEM = null;
     public static final ARPGItem ITEM_TO_CONSUME = null;
 
-    public static ARPGItem consume(AreaEntity consumer, Area area) {
+    public static void consume(AreaEntity consumer, Area area) {
         DiscreteCoordinates position = consumer
                 .getCurrentCells()
                 .get(0)
                 .jump(consumer.getOrientation().toVector());
 
-        area.registerActor(new FlameSkull(area, consumer.getOrientation(), position));
+        FlameSkull flameSkull = new FlameSkull(area, consumer.getOrientation(), position);
 
-        return ITEM;
+        if (area.canEnterAreaCells(flameSkull, List.of(position)))
+            area.registerActor(flameSkull);
     }
 }

@@ -270,7 +270,7 @@ public class ARPGPlayer extends Player implements Destroyable {
         if (item.getConsumeMethod() == null) return;
 
         if (this.inventory.contains(item.itemToConsume ) || item.itemToConsume == null) {
-            item.getConsumeMethod().apply(this, this.getOwnerArea());
+            item.getConsumeMethod().accept(this, this.getOwnerArea());
             if(item.selfConsumable) {
                 this.inventory.removeSingleItem(item);
             } else {

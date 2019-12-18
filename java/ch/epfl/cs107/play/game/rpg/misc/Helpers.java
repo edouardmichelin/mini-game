@@ -7,10 +7,13 @@ import ch.epfl.cs107.play.math.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public abstract class Helpers {
+    private static Random RANDOM = RandomGenerator.getInstance();
+
     public static int random(int lowerBound, int upperBound) {
-        return RandomGenerator.getInstance().nextInt(upperBound - lowerBound + 1) + lowerBound;
+        return RANDOM.nextInt(upperBound - lowerBound + 1) + lowerBound;
     }
 
     public static List<DiscreteCoordinates> getCellsInRadius(DiscreteCoordinates center, int radius) {
@@ -24,7 +27,7 @@ public abstract class Helpers {
 
     public static List<DiscreteCoordinates> getCellsInRange(DiscreteCoordinates startingPoint, Orientation orientation, int range) {
         List<DiscreteCoordinates> dc = new ArrayList<>();
-        Vector direction = startingPoint.toVector();
+        Vector direction = orientation.toVector();
 
         dc.add(startingPoint.jump(direction));
 

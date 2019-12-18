@@ -14,7 +14,6 @@ import ch.epfl.cs107.play.game.rpg.misc.Helpers;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -45,11 +44,7 @@ public class DarkLord extends Monster {
         this.spellAnimations = RPGSprite.createAnimations(ANIMATION_DURATION, this.getSprites(SpriteNames.DARK_LORD_SPELL), false);
         this.state = State.IDLE;
         this.interactionHandler = new ARPGDarkLordHandler();
-        this.simulationCyle = Math.round((
-                RandomGenerator
-                        .getInstance()
-                        .nextFloat() * (MAX_SPELL_WAIT_DURATION - MIN_SPELL_WAIT_DURATION)
-        )) + MIN_SPELL_WAIT_DURATION;
+        this.simulationCyle = Helpers.random(MIN_SPELL_WAIT_DURATION, MAX_SPELL_WAIT_DURATION);
     }
 
     private Sprite[][] getSprites(String spriteName) {

@@ -9,6 +9,7 @@ import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Monster;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
+import ch.epfl.cs107.play.game.rpg.misc.Helpers;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.Vector;
@@ -32,7 +33,7 @@ public class FlameSkull extends Monster implements FlyableEntity {
         Random prng = RandomGenerator.getInstance();
 
         this.animations = RPGSprite.createAnimations(8, getSprites());
-        this.lifeTime = Math.round((prng.nextFloat() * (MAX_LIFE_TIME - MIN_LIFE_TIME))) + MIN_LIFE_TIME;
+        this.lifeTime = Helpers.random(MIN_LIFE_TIME, MAX_LIFE_TIME);
         this.interactionHandler = new ARPGFlameSkullHandler();
     }
 

@@ -16,9 +16,7 @@ import ch.epfl.cs107.play.game.rpg.misc.Helpers;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.RegionOfInterest;
-import ch.epfl.cs107.play.math.Vector;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -110,9 +108,7 @@ public class LogMonster extends Monster {
 
         if (this.simulationStep % SIMULATION_CYCLE == 0) {
             this.isInactive = true;
-            this.inactivityDuration = RandomGenerator
-                    .getInstance()
-                    .nextInt(MAX_INACTIVITY_DURATION - MIN_INACTIVITY_DURATION) + MIN_INACTIVITY_DURATION;
+            this.inactivityDuration = Helpers.random(MIN_INACTIVITY_DURATION, MAX_INACTIVITY_DURATION);
         }
 
         if (this.isInactive) return;
@@ -123,9 +119,7 @@ public class LogMonster extends Monster {
             case ATTACKING: ;
             break;
             case FALLING_ASLEEP: {
-                this.sleepingDuration = RandomGenerator
-                        .getInstance()
-                        .nextInt(MAX_SLEEPING_DURATION - MIN_SLEEPING_DURATION) + MIN_SLEEPING_DURATION;
+                this.sleepingDuration = Helpers.random(MIN_SLEEPING_DURATION, MAX_SLEEPING_DURATION);
 
                 this.state = State.SLEEPING;
                 this.animations = this.getAnimations();

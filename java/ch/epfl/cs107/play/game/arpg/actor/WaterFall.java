@@ -16,14 +16,17 @@ public class WaterFall extends Entity {
 
     public WaterFall(Vector position) {
         super(position);
-        Sprite[] sprites = new Sprite[3];
+        RPGSprite[] sprites = new RPGSprite[3];
         for (int frame = 0; frame < 3; frame++)
             sprites[frame] = new RPGSprite(
                     SpriteNames.WATERFALL,
                     4,
                     4,
                     this,
-                    new RegionOfInterest(frame * 64, 0, 64, 64)
+                    new RegionOfInterest(frame * 64, 0, 64, 64),
+                    new Vector(0,0),
+                    1,
+                    -5
             );
         this.animation = new Animation(ANIMATION_DURATION, sprites, true);
     }

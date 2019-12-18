@@ -6,8 +6,10 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.arpg.actor.Bomb;
 import ch.epfl.cs107.play.game.arpg.actor.FlameSkull;
 import ch.epfl.cs107.play.game.arpg.actor.Grass;
+import ch.epfl.cs107.play.game.arpg.actor.WaterFall;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.signal.Signal;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
@@ -16,7 +18,8 @@ public class Route extends ARPGArea {
     protected void createArea() {
         this.registerActor(new Background(this));
         this.registerActor(new Foreground(this));
-        this.registerActor(new FlameSkull(this, Orientation.DOWN, new DiscreteCoordinates(5,8)));
+        this.registerActor(new FlameSkull(this, Orientation.DOWN, new DiscreteCoordinates(5, 8)));
+        this.registerActor(new WaterFall(new Vector(15, 3)));
         this.registerDoors();
         this.plantGrasses();
     }

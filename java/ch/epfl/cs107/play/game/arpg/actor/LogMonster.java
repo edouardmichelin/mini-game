@@ -40,6 +40,7 @@ public class LogMonster extends Monster {
     private boolean isAlreadyWakingUp;
     private boolean isInactive;
     private int inactivityDuration;
+    private boolean canAttack;
 
     public LogMonster(Area area, Orientation orientation, DiscreteCoordinates coordinates) {
         super(area, orientation, coordinates);
@@ -122,8 +123,7 @@ public class LogMonster extends Monster {
             case IDLE:
                 ;
                 break;
-            case ATTACKING:
-                ;
+            case ATTACKING: this.canAttack = true;
                 break;
             case FALLING_ASLEEP: {
                 this.sleepingDuration = Helpers.random(MIN_SLEEPING_DURATION, MAX_SLEEPING_DURATION);
@@ -268,8 +268,9 @@ public class LogMonster extends Monster {
         public void interactWith(ARPGPlayer player) {
             if (LogMonster.this.state.equals(State.IDLE)) {
                 LogMonster.this.state = State.ATTACKING;
-            } else if (LogMonster.this.state.equals(State.ATTACKING)) {
+            } else if (LogMonster.this.state.equals(State.ATTACKING) && LogMonster.this.canAttack) {
                 player.damage(DAMAGE_AMOUNT, DAMAGE_TYPE);
+                LogMonster.this.canAttack = false;
                 LogMonster.this.state = State.FALLING_ASLEEP;
             }
         }

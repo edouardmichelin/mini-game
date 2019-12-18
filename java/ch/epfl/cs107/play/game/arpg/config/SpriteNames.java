@@ -49,4 +49,5 @@ public abstract class SpriteNames {
     public static final String EXPLOSION = "zelda/explosion";
     public static final String DIGITS = "zelda/digits";
     public static final String VANISH = "zelda/vanish";
+    public static final String WATERFALL = "zelda/waterfall";
 }

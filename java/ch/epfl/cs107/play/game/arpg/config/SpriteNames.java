@@ -48,4 +48,5 @@ public abstract class SpriteNames {
     // MISC
     public static final String EXPLOSION = "zelda/explosion";
     public static final String DIGITS = "zelda/digits";
+    public static final String VANISH = "zelda/vanish";
 }

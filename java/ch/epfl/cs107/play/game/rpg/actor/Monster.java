@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.rpg.actor;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
@@ -54,7 +55,7 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
 
         for (int frame = 0; frame < DEATH_ANIMATION_FRAMES; frame++) {
             sprites[frame] = new RPGSprite(
-                    "zelda/vanish",
+                    SpriteNames.VANISH,
                     1,
                     1,
                     this,

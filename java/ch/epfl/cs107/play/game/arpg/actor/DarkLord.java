@@ -72,7 +72,10 @@ public class DarkLord extends Monster {
         while (attempt < maxAttemptAmount) {
             int random = prng.nextInt(Orientation.values().length);
             for (Orientation orientation : Orientation.values()) {
-                if (orientation.ordinal() == random && area.canEnterAreaCells(this, List.of(position.jump(orientation.toVector())))) {
+                if (
+                        orientation.ordinal() == random &&
+                        area.canEnterAreaCells(this, List.of(position.jump(orientation.toVector())))
+                ) {
                     return orientation;
                 }
             }
@@ -89,6 +92,10 @@ public class DarkLord extends Monster {
 
     private boolean shouldSwitchOrientation() {
         return RandomGenerator.getInstance().nextDouble() < 0.4f;
+    }
+
+    protected boolean isAnimationPaused() {
+        return false;
     }
 
     private void act() {
@@ -144,7 +151,11 @@ public class DarkLord extends Monster {
 
             this.act();
 
-            if (!this.state.equals(State.TELEPORTING))
+            if (
+                    !this.state.equals(State.TELEPORTING) &&
+                    !this.state.equals(State.PREPARING_TELEPORTATION) &&
+                    !this.state.equals(State.INVOKING)
+            )
                 this.move(35);
 
             if (this.isTargetReached()) {
@@ -212,7 +223,7 @@ public class DarkLord extends Monster {
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        return Helpers.getCellsInRadius(this.getCurrentMainCellCoordinates(), TELEPORTATION_RADIUS);
+        return Helpers.getCellsInRadius(this.getCurrentMainCellCoordinates(), ACTION_RADIUS);
     }
 
     @Override

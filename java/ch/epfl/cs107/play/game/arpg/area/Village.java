@@ -3,12 +3,10 @@ package ch.epfl.cs107.play.game.arpg.area;
 import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.game.areagame.actor.Foreground;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.arpg.actor.Arrow;
-import ch.epfl.cs107.play.game.arpg.actor.Sword;
-import ch.epfl.cs107.play.game.arpg.actor.CastleDoor;
-import ch.epfl.cs107.play.game.arpg.actor.CaveDoor;
+import ch.epfl.cs107.play.game.arpg.actor.*;
 import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
+import ch.epfl.cs107.play.game.rpg.misc.NPCProperties;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
@@ -19,6 +17,11 @@ public class Village extends ARPGArea {
         this.registerActor(new Background(this));
         this.registerActor(new Foreground(this));
         this.registerDoors();
+
+        NPCProperties prop1 = new NPCProperties("J'vendrais bien d'la limonade mais mes parents m'ont pas implémenté la fonction. Tu peux éventuellement sucer tes pièces d'or, ça a ", false);
+        NPCProperties prop2 = new NPCProperties("La légende", false);
+
+        this.registerActor(new NPC(this, Orientation.DOWN, new DiscreteCoordinates(17, 11), prop1));
 
         this.registerActor(new Sword(this, Orientation.DOWN, new DiscreteCoordinates(25, 5)));
     }

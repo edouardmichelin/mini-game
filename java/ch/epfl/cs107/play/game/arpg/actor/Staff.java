@@ -39,15 +39,16 @@ public class Staff extends CollectibleAreaEntity {
     }
 
     private Sprite[] getSprites() {
-        Sprite[] s = new Sprite[4];
+        Sprite[] s = new Sprite[8];
 
         for (int frame = 0; frame < 8; frame++) {
             s[frame] = new RPGSprite(
-                    SpriteNames.COIN,
+                    SpriteNames.STAFF,
                     1,
                     1,
                     this,
-                    new RegionOfInterest(frame * 32, 0, 32, 32)
+                    new RegionOfInterest(frame * 32, 0, 32, 32),
+                    new Vector(0,0.3f)
             );
         }
         

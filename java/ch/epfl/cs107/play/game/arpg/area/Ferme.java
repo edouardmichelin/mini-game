@@ -8,6 +8,7 @@ import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.misc.NPCProperties;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
 public class Ferme extends ARPGArea {
@@ -17,6 +18,7 @@ public class Ferme extends ARPGArea {
         this.registerActor(new Background(this));
         this.registerActor(new Foreground(this));
         this.registerDoors();
+        this.registerFlowers();
 
         NPCProperties npcProps = new NPCProperties();
         npcProps.canMove = false;
@@ -52,6 +54,11 @@ public class Ferme extends ARPGArea {
                 Orientation.DOWN,
                 new DiscreteCoordinates(13, 0),
                 new DiscreteCoordinates(14, 0)));
+    }
+
+    private void registerFlowers() {
+        this.registerActor(new FlowerBlue(new Vector(15, 3)));
+        this.registerActor(new FlowerRed(new Vector(6, 7)));
     }
 
     @Override

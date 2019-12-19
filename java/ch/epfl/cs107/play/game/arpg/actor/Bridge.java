@@ -5,28 +5,21 @@ import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
-import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
-import ch.epfl.cs107.play.game.arpg.items.CoinItem;
-import ch.epfl.cs107.play.game.arpg.items.HeartItem;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
-import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.math.Vector;
-import ch.epfl.cs107.play.signal.logic.Logic;
+import ch.epfl.cs107.play.signal.Signal;
 import ch.epfl.cs107.play.window.Canvas;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class Bridge extends AreaEntity {
     public static final int ANIMATION_DURATION = Settings.FRAME_RATE / 6;
     private RPGSprite sprite;
-    private Logic signal;
+    private Signal signal;
 
-    public Bridge(Area area, Orientation orientation, DiscreteCoordinates position, Logic signal) {
+    public Bridge(Area area, Orientation orientation, DiscreteCoordinates position, Signal signal) {
         super(area, orientation, position);
 
         this.signal = signal;
@@ -42,17 +35,9 @@ public class Bridge extends AreaEntity {
 
     }
 
-    public boolean isActivated() {
-        return this.signal.isOn();
-    }
-
-    public void activate() {
-        this.signal = Logic.TRUE;
-    }
-
     @Override
     public void draw(Canvas canvas) {
-        if (this.isActivated()) this.sprite.draw(canvas);
+        if (this.signal.getIntensity(0) == 1f) this.sprite.draw(canvas);
     }
 
     @Override
@@ -67,7 +52,7 @@ public class Bridge extends AreaEntity {
 
     @Override
     public boolean takeCellSpace() {
-        return !this.isActivated();
+        return this.signal.getIntensity(0) != 1f;
     }
 
     @Override

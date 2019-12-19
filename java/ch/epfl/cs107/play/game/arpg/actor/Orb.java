@@ -14,9 +14,9 @@ import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.List;
 
-public class Orb extends AreaEntity {
+public class Orb extends AreaEntity implements Signal {
     private Animation animation;
-    private Logic signal;
+    private boolean value;
 
 
     /**
@@ -26,10 +26,8 @@ public class Orb extends AreaEntity {
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
      */
-    public Orb(Area area, Orientation orientation, DiscreteCoordinates position, Logic signal) {
+    public Orb(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
-
-        this.signal = signal;
 
         this.animation = new Animation(10, this.getSprites());
     }
@@ -43,19 +41,16 @@ public class Orb extends AreaEntity {
                     1,
                     1,
                     this,
-                    new RegionOfInterest(frame * 32, this.signal.isOn() ? 0 : 64, 32, 32)
+                    new RegionOfInterest(frame * 32, this.value ? 0 : 64, 32, 32)
             );
         }
         
         return s;
     }
 
-    public boolean isActivated() {
-        return this.signal.isOn();
-    }
-
     protected void turnOn() {
-        this.signal = Logic.TRUE;
+        this.value = true;
+        this.animation = new Animation(10, this.getSprites());
     }
 
     @Override
@@ -80,7 +75,7 @@ public class Orb extends AreaEntity {
 
     @Override
     public boolean isCellInteractable() {
-        return false;
+        return true;
     }
 
     @Override
@@ -91,5 +86,10 @@ public class Orb extends AreaEntity {
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((ARPGInteractionVisitor) v).interactWith(this);
+    }
+
+    @Override
+    public float getIntensity(float t) {
+        return this.value ? 1 : 0;
     }
 }

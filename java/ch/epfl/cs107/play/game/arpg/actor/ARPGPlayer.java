@@ -182,6 +182,8 @@ public class ARPGPlayer extends Player implements Destroyable {
     @Override
     public void update(float deltaTime) {
 
+        System.out.println(this.getPosition());
+
         if (!this.state.equals(ARPGPlayerState.CONSUMING_ITEM)) {
             if (this.keyboard.get(Keys.MOVE_UP).isDown()) this.move(Orientation.UP);
             if (this.keyboard.get(Keys.MOVE_DOWN).isDown()) this.move(Orientation.DOWN);

@@ -6,4 +6,5 @@ public abstract class AreaNames {
     public static final String ROUTE = "zelda/Route";
     public static final String ROUTE_CHATEAU = "zelda/RouteChateau";
     public static final String CHATEAU = "zelda/Chateau";
+    public static final String MAISON_FERME = "zelda/MaisonFerme";
 }

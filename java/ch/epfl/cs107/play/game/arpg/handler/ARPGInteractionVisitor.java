@@ -41,6 +41,14 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a defused bomb
+     * @param defusedBomb (DefusedBomb), not null
+     */
+    default void interactWith(DefusedBomb defusedBomb){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a bomb
      * @param bomb (Bomb), not null
      */
@@ -65,10 +73,50 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a sword
+     * @param sword (Sword), not null
+     */
+    default void interactWith(Sword sword){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a staff
+     * @param staff (Staff), not null
+     */
+    default void interactWith(Staff staff){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a orb
+     * @param orb (Orb), not null
+     */
+    default void interactWith(Orb orb){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a bow
+     * @param bow (Bow), not null
+     */
+    default void interactWith(Bow bow){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a castle door
      * @param castleDoor (CastleDoor), not null
      */
     default void interactWith(CastleDoor castleDoor){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a cave door
+     * @param caveDoor (CaveDoor), not null
+     */
+    default void interactWith(CaveDoor caveDoor){
         // by default the interaction is empty
     }
 
@@ -105,6 +153,14 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a uglyGoblin
+     * @param uglyGoblin (UglyGoblin), not null
+     */
+    default void interactWith(UglyGoblin uglyGoblin){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a arrow
      * @param arrow (Arrow), not null
      */
@@ -125,6 +181,14 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
      * @param swordSlash (SwordSlash), not null
      */
     default void interactWith(SwordSlash swordSlash){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a npc
+     * @param npc (NPC), not null
+     */
+    default void interactWith(NPC npc){
         // by default the interaction is empty
     }
 

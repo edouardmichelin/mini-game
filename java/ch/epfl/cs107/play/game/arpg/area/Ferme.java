@@ -6,7 +6,10 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.arpg.actor.*;
 import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
+import ch.epfl.cs107.play.game.rpg.misc.NPCProperties;
+import ch.epfl.cs107.play.io.XMLTexts;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
 public class Ferme extends ARPGArea {
@@ -16,9 +19,15 @@ public class Ferme extends ARPGArea {
         this.registerActor(new Background(this));
         this.registerActor(new Foreground(this));
         this.registerDoors();
+        this.registerFlowers();
+
+        NPCProperties npcProps_1 = new NPCProperties(XMLTexts.getText("npcFerme1"), false);
+        NPCProperties npcProps_2 = new NPCProperties(XMLTexts.getText("npcFerme2"), true);
 
         this.registerActor(new LogMonster(this, Orientation.DOWN, new DiscreteCoordinates(9, 3)));
         this.registerActor(new LogMonster(this, Orientation.RIGHT, new DiscreteCoordinates(16, 12)));
+        this.registerActor(new NPC(this, Orientation.RIGHT, new DiscreteCoordinates(16, 12), npcProps_1));
+        this.registerActor(new NPC(this, Orientation.RIGHT, new DiscreteCoordinates(13, 6), npcProps_2));
     }
 
     private void registerDoors() {
@@ -46,6 +55,20 @@ public class Ferme extends ARPGArea {
                 Orientation.DOWN,
                 new DiscreteCoordinates(13, 0),
                 new DiscreteCoordinates(14, 0)));
+        this.registerActor(new Door(
+                AreaNames.MAISON_FERME,
+                new DiscreteCoordinates(4, 2),
+                Logic.TRUE,
+                this,
+                Orientation.UP,
+                new DiscreteCoordinates(6,11)
+        ));
+    }
+
+    private void registerFlowers() {
+        this.registerActor(new FlowerBlue(new Vector(15, 3)));
+        this.registerActor(new FlowerRed(new Vector(6, 7)));
+        this.registerActor(new FlowerBlue(new Vector(17, 5)));
     }
 
     @Override

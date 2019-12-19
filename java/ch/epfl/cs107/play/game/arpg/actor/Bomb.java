@@ -76,6 +76,9 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
         return s;
     }
 
+    /**
+     * This is where the visual explosion occurs
+     */
     private void onExplode() {
         if (this.exploded) return;
 
@@ -177,6 +180,11 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
         @Override
         public void interactWith(Grass grass) {
             Bomb.this.inflictDamage(grass);
+        }
+
+        @Override
+        public void interactWith(CaveDoor caveDoor) {
+            caveDoor.open();
         }
 
     }

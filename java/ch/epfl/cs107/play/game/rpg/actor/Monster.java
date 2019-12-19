@@ -6,6 +6,7 @@ import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.window.Canvas;
 
@@ -21,6 +22,12 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
     private float maxHp;
     private Animation deathAnimation;
 
+    /**
+     * This class will be a base for every monster in the game
+     * @param area
+     * @param orientation
+     * @param coordinates
+     */
     public Monster(Area area, Orientation orientation, DiscreteCoordinates coordinates) {
         super(area, orientation, coordinates);
 
@@ -50,6 +57,10 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
         return this.deathAnimation;
     }
 
+    /**
+     * Used as every monster has a vanish animation
+     * @return
+     */
     private Sprite[] getDeathSprites() {
         Sprite[] sprites = new Sprite[DEATH_ANIMATION_FRAMES];
 
@@ -64,6 +75,19 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
         }
 
         return sprites;
+    }
+
+    protected void switchOrientation() {
+        int randomIndex = RandomGenerator.getInstance().nextInt(Orientation.values().length);
+        this.orientate(Orientation.values()[randomIndex]);
+    }
+
+    /**
+     * Allows for random navigation of the entity
+     * @return
+     */
+    protected boolean shouldSwitchOrientation() {
+        return RandomGenerator.getInstance().nextDouble() < 0.4f;
     }
 
     @Override

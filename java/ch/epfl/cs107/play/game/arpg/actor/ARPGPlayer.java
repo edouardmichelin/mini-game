@@ -9,6 +9,8 @@ import ch.epfl.cs107.play.game.arpg.config.Keys;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
+import ch.epfl.cs107.play.game.arpg.items.StaffItem;
+import ch.epfl.cs107.play.game.arpg.items.SwordItem;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
@@ -24,7 +26,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class ARPGPlayer extends Player implements Destroyable {
-    private final static int ANIMATION_DURATION = 8;
+    private final static int ANIMATION_DURATION = 10;
     private final static float DEFAULT_HEALTH_POINTS = 5f;
     private final static int CONSUMING_TIME = Settings.FRAME_RATE / 4;
 
@@ -59,11 +61,7 @@ public class ARPGPlayer extends Player implements Destroyable {
         this.interactionHandler = new ARPGPlayerHandler();
         this.inventory = new ARPGInventory(30, this);
 
-        this.inventory.addItem(ARPGInventory.ARPGItem.BOMB, 3);
-        this.inventory.addItem(ARPGInventory.ARPGItem.BOW, 1);
-        this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 5);
-        this.inventory.addItem(ARPGInventory.ARPGItem.STAFF, 1);
-        this.inventory.addItem(ARPGInventory.ARPGItem.SWORD, 1);
+        this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 20);
 
         this.inventory.addMoney(19);
 
@@ -92,7 +90,7 @@ public class ARPGPlayer extends Player implements Destroyable {
         if (this.state.equals(ARPGPlayerState.NORMAL))
             return this.getDefaultAnimations();
 
-        String spriteName = String.format("%S.%s", SpriteNames.PLAYER, currentItem.getTitle());
+        String spriteName = String.format("%s.%s", SpriteNames.PLAYER, currentItem.getTitle());
 
         return RPGSprite.createAnimations(CONSUMING_TIME / 3, RPGSprite.extractSprites(
                 spriteName,
@@ -106,11 +104,18 @@ public class ARPGPlayer extends Player implements Destroyable {
         ));
     }
 
+    /**
+     * Appelé pour le changement d'état du ARPGPlayer
+     * @param state
+     */
     private void switchState(ARPGPlayerState state) {
         this.state = state;
         this.animations = this.getAnimations();
     }
 
+    /**
+     * Appelé pour cycler dans les objets de l'inventaire du joueur
+     */
     private void switchItem() {
         this.currentItemId = (this.currentItemId + 1) % this.inventory.size();
         this.GUI.setCurrentItem(this.currentItemId);
@@ -122,6 +127,8 @@ public class ARPGPlayer extends Player implements Destroyable {
     }
 
     private void move(Orientation orientation) {
+        if (this.state.equals(ARPGPlayerState.TALKING)) return;
+
         if (this.getOrientation().equals(orientation))
             if (keyboard.get(Keys.RUN).isDown())
                 this.move(ANIMATION_DURATION / 2, 0);
@@ -143,7 +150,7 @@ public class ARPGPlayer extends Player implements Destroyable {
 
     @Override
     public boolean isWeak() {
-        return this.hp <= 2;
+        return this.hp == 0;
     }
 
     @Override
@@ -175,11 +182,13 @@ public class ARPGPlayer extends Player implements Destroyable {
 
     @Override
     public void onDying() {
-        //
+        this.strengthen();
     }
 
     @Override
     public void update(float deltaTime) {
+
+        if(this.isWeak()) this.strengthen();
 
         if (!this.state.equals(ARPGPlayerState.CONSUMING_ITEM)) {
             if (this.keyboard.get(Keys.MOVE_UP).isDown()) this.move(Orientation.UP);
@@ -269,9 +278,9 @@ public class ARPGPlayer extends Player implements Destroyable {
 
         if (item.getConsumeMethod() == null) return;
 
-        if (this.inventory.contains(item.itemToConsume ) || item.itemToConsume == null) {
+        if (this.inventory.contains(item.itemToConsume) || item.itemToConsume == null) {
             item.getConsumeMethod().accept(this, this.getOwnerArea());
-            if(item.selfConsumable) {
+            if (item.selfConsumable) {
                 this.inventory.removeSingleItem(item);
             } else {
                 this.inventory.removeSingleItem(item.itemToConsume);
@@ -284,6 +293,7 @@ public class ARPGPlayer extends Player implements Destroyable {
 
     private enum ARPGPlayerState {
         CONSUMING_ITEM,
+        TALKING,
         NORMAL
     }
 
@@ -295,9 +305,48 @@ public class ARPGPlayer extends Player implements Destroyable {
         }
 
         @Override
+        public void interactWith(CaveDoor door) {
+            if (door.isOpen()) {
+                setIsPassingADoor(door);
+            }
+        }
+
+        @Override
+        public void interactWith(NPC npc) {
+            if (ARPGPlayer.this.isInteractionKeyPressed())
+                if (!ARPGPlayer.this.state.equals(ARPGPlayerState.TALKING)) {
+                    ARPGPlayer.this.state = ARPGPlayerState.TALKING;
+                    npc.talk(ARPGPlayer.this);
+                } else {
+                    ARPGPlayer.this.state = ARPGPlayerState.NORMAL;
+                    npc.stopTalking();
+                }
+        }
+
+        @Override
         public void interactWith(Coin coin) {
             ARPGPlayer.this.inventory.addMoney(coin.getValue());
             coin.collect();
+        }
+
+        @Override
+        public void interactWith(Sword sword) {
+            ARPGPlayer.this.inventory.addSingleItem(sword.collect());
+        }
+
+        @Override
+        public void interactWith(Staff staff) {
+            ARPGPlayer.this.inventory.addSingleItem(staff.collect());
+        }
+
+        @Override
+        public void interactWith(Bow bow) {
+            ARPGPlayer.this.inventory.addSingleItem(bow.collect());
+        }
+
+        @Override
+        public void interactWith(DefusedBomb bomb) {
+            ARPGPlayer.this.inventory.addItem(bomb.collect(), 5);
         }
 
         @Override

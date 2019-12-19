@@ -71,6 +71,12 @@ public class LogMonster extends Monster {
                 ));
     }
 
+    /**
+     * Used for the sleep animation who doesn't take orientations
+     * @param spriteName
+     * @param nbFrames
+     * @return
+     */
     private Animation[] getSingleOrientationAnimations(String spriteName, int nbFrames) {
         int nbOrientation = Orientation.values().length;
 
@@ -95,15 +101,6 @@ public class LogMonster extends Monster {
             anims[i] = anim;
 
         return anims;
-    }
-
-    private void switchOrientation() {
-        int randomIndex = RandomGenerator.getInstance().nextInt(Orientation.values().length);
-        this.orientate(Orientation.values()[randomIndex]);
-    }
-
-    private boolean shouldSwitchOrientation() {
-        return RandomGenerator.getInstance().nextDouble() < 0.4f;
     }
 
     private void act() {

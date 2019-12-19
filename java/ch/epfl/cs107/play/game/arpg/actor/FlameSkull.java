@@ -48,15 +48,6 @@ public class FlameSkull extends Monster implements FlyableEntity {
         );
     }
 
-    private void switchOrientation() {
-        int randomIndex = RandomGenerator.getInstance().nextInt(Orientation.values().length);
-        this.orientate(Orientation.values()[randomIndex]);
-    }
-
-    private boolean shouldSwitchOrientation() {
-        return RandomGenerator.getInstance().nextDouble() < 0.4f;
-    }
-
     @Override
     public void update(float deltaTime) {
         if (this.isAlive()) {

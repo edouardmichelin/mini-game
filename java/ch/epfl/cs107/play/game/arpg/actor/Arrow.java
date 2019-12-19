@@ -119,6 +119,12 @@ public class Arrow extends Projectile {
             Arrow.this.inflictDamage(logMonster);
             Arrow.this.getOwnerArea().unregisterActor(Arrow.this);
         }
+
+        @Override
+        public void interactWith(Orb orb) {
+            orb.turnOn();
+            Arrow.this.getOwnerArea().unregisterActor(Arrow.this);
+        }
     }
 
 }

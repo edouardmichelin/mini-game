@@ -1,0 +1,70 @@
+package ch.epfl.cs107.play.game.arpg.actor;
+
+import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
+import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
+import ch.epfl.cs107.play.game.rpg.actor.Door;
+import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
+import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.RegionOfInterest;
+import ch.epfl.cs107.play.signal.logic.Logic;
+import ch.epfl.cs107.play.window.Canvas;
+
+public class CaveDoor extends Door {
+
+    private RPGSprite sprite;
+
+    public CaveDoor(String destination, DiscreteCoordinates otherSideCoordinates, Logic signal, Area area, Orientation orientation, DiscreteCoordinates position, DiscreteCoordinates... otherCells) {
+        super(destination, otherSideCoordinates, signal, area, orientation, position, otherCells);
+
+        this.sprite = this.getSprite();
+    }
+
+    private RPGSprite getSprite() {
+        return new RPGSprite(
+                this.isOpen() ? SpriteNames.CAVE_DOOR_OPEN : SpriteNames.CAVE_DOOR_CLOSE,
+                1,
+                1,
+                this,
+                new RegionOfInterest(0, 0, 16, 16)
+        );
+    }
+
+    protected void close() {
+        this.setSignal(Logic.FALSE);
+        this.sprite = this.getSprite();
+    }
+
+    protected void open() {
+        this.setSignal(Logic.TRUE);
+        this.sprite = this.getSprite();
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        this.sprite.draw(canvas);
+    }
+
+    @Override
+    public boolean takeCellSpace() {
+        return !this.isOpen();
+    }
+
+    @Override
+    public boolean isViewInteractable() {
+        return !this.isOpen();
+    }
+
+    @Override
+    public void acceptInteraction(AreaInteractionVisitor v) {
+        ((ARPGInteractionVisitor) v).interactWith(this);
+    }
+
+}

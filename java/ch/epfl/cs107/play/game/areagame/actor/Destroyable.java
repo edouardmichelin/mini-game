@@ -4,6 +4,10 @@ import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 
 import java.util.List;
 
+/**
+ * This interface is intended for every destructible object which will enable us the use of interactions
+ * to deal damage to an actor and "destroy" it depending on damage type
+ */
 public interface Destroyable {
     float getHp();
 

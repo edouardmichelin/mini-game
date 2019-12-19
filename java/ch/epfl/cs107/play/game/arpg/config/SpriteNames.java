@@ -12,6 +12,13 @@ public abstract class SpriteNames {
     public static final String DARK_LORD = "zelda/darkLord";
     public static final String DARK_LORD_SPELL = "zelda/darkLord.spell";
     public static final String FLAME_SKULL = "zelda/flameSkull";
+    public static final String GOBLIN = "zelda/goblin";
+
+    // NPCs
+    public static final String NPC_1 = "zelda/npc.1";
+    public static final String NPC_2 = "zelda/npc.2";
+    public static final String NPC_3 = "zelda/npc.3";
+    public static final String NPC_4 = "zelda/npc.4";
 
     // CLASSICAL ENTITIES
     public static final String GRASS = "zelda/Grass";
@@ -19,10 +26,18 @@ public abstract class SpriteNames {
     public static final String BOMB = "zelda/bomb";
     public static final String CASTLE_DOOR_OPEN = "zelda/castleDoor.open";
     public static final String CASTLE_DOOR_CLOSE = "zelda/castleDoor.close";
+    public static final String CAVE_DOOR_OPEN = "zelda/cave.open";
+    public static final String CAVE_DOOR_CLOSE = "zelda/cave.close";
     public static final String HEART = "zelda/heart";
     public static final String FIRE_SPELL = "zelda/fire";
     public static final String COIN = "zelda/coin";
     public static final String CASTLE_KEY = "zelda/key";
+    public static final String FLOWER_RED = "zelda/flower.red";
+    public static final String FLOWER_BLUE = "zelda/flower.blue";
+    public static final String WATERFALL = "zelda/waterfall";
+    public static final String BRIDGE = "zelda/bridge";
+    public static final String ORB = "zelda/orb";
+    public static final String STAFF = "zelda/staff";
 
     // PROJECTILES
     public static final String MAGIC_WATER = "zelda/magicWaterProjectile";
@@ -39,6 +54,8 @@ public abstract class SpriteNames {
     public static final String ARROW_ITEM = "zelda/arrow.icon";
     public static final String SWORD_ITEM = "zelda/sword.icon";
     public static final String STAFF_ITEM = "zelda/staff_water.icon";
+    public static final String SWORD = "zelda/sword.icon";
+    public static final String BOW = "zelda/bow.icon";
 
     // INVENTORY
     public static final String GEAR_DISPLAY = "zelda/gearDisplay";
@@ -49,5 +66,5 @@ public abstract class SpriteNames {
     public static final String EXPLOSION = "zelda/explosion";
     public static final String DIGITS = "zelda/digits";
     public static final String VANISH = "zelda/vanish";
-    public static final String WATERFALL = "zelda/waterfall";
+    public static final String DIALOG = "zelda/dialog";
 }

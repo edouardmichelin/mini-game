@@ -11,7 +11,7 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
-    private final static int DEPTH = 100000;
+    private final static int DEPTH = 2000;
 
     private boolean displayFortune = false;
     private float healthPoint;
@@ -48,6 +48,9 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
         this.healthPoint = hp;
     }
 
+    /**
+     * Utilisé quand on veut l'affichage de l'inventaire en + de la richesse en appuyant sur L
+     */
     public void switchCoinsDisplay() {
         this.displayFortune = !this.displayFortune;
     }
@@ -75,7 +78,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
                 this.currentItem.getTextureRoi(),
                 anchor.add(new Vector(1.075f, height - 2f)),
                 1,
-                DEPTH * 2);
+                DEPTH + 1);
 
         currentEquipment.draw(canvas);
     }
@@ -116,7 +119,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
                     DigitsRegionOfInterest.fromInt(digit).regionOfInterest,
                     anchor.add(new Vector(X + (2 - i) * OFFSET, Y)),
                     1,
-                    DEPTH * 2
+                    DEPTH + 1
             ).draw(canvas);
         }
     }
@@ -128,9 +131,6 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
 
         Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(width / 2, height / 2));
 
-        // 5 -> MAXIMUM PLAYER'S HP
-        // TODO - PLAYER CAN FIND HEARTS THAT INCREASE HIS MAX HP
-        // TODO - 2 HP: HEARTS START SHAKING / 1 HP: HEARTS SHAKE STRONGER
         for (int i = 0; i < 5; i++) {
             float data = (this.healthPoint - i) > 0f ? this.healthPoint - i > 0.5f ? 1f : 0.5f : 0f;
 
@@ -141,7 +141,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
                     HeartsRegionOfInterest.fromFloat(data).regionOfInterest,
                     anchor.add(new Vector(X + i * OFFSET, Y)),
                     1,
-                    DEPTH * 2
+                    DEPTH + 1
             ).draw(canvas);
         }
     }

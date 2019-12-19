@@ -11,6 +11,9 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * When hitting with a sword, we actually use an invisible projectile that takes effect one cell in front of the player.
+ */
 public class SwordSlash extends AreaEntity implements Interactor, NotClipable {
     private final static DamageType DAMAGE_TYPE = DamageType.PHYSICAL;
     private final static float DEFAULT_DAMAGE = 0.5f;
@@ -113,8 +116,13 @@ public class SwordSlash extends AreaEntity implements Interactor, NotClipable {
         }
 
         @Override
+        public void interactWith(UglyGoblin goblin) {
+            SwordSlash.this.inflictDamage(goblin);
+            SwordSlash.this.consumed = true;
+        }
+
+        @Override
         public void interactWith(Bomb bomb) {
-            System.out.println("top");
             bomb.explode();
             SwordSlash.this.consumed = true;
         }

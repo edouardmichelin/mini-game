@@ -13,6 +13,12 @@ public abstract class SpriteNames {
     public static final String DARK_LORD_SPELL = "zelda/darkLord.spell";
     public static final String FLAME_SKULL = "zelda/flameSkull";
 
+    // NPCs
+    public static final String NPC_1 = "zelda/npc.1";
+    public static final String NPC_2 = "zelda/npc.2";
+    public static final String NPC_3 = "zelda/npc.3";
+    public static final String NPC_4 = "zelda/npc.4";
+
     // CLASSICAL ENTITIES
     public static final String GRASS = "zelda/Grass";
     public static final String GRASS_SLICED = "zelda/grass.sliced";
@@ -50,4 +56,7 @@ public abstract class SpriteNames {
     public static final String DIGITS = "zelda/digits";
     public static final String VANISH = "zelda/vanish";
     public static final String WATERFALL = "zelda/waterfall";
+    public static final String DIALOG = "zelda/dialog";
+    public static final String FLOWER_RED = "zelda/flower.red";
+    public static final String FLOWER_BLUE = "zelda/flower.blue";
 }

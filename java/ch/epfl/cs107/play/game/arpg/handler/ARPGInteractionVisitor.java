@@ -129,6 +129,14 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a npc
+     * @param npc (NPC), not null
+     */
+    default void interactWith(NPC npc){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a destroyable
      * @param destroyable (Destroyable), not null
      */

@@ -6,6 +6,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.arpg.actor.*;
 import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
+import ch.epfl.cs107.play.game.rpg.misc.NPCProperties;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
@@ -17,8 +18,13 @@ public class Ferme extends ARPGArea {
         this.registerActor(new Foreground(this));
         this.registerDoors();
 
+        NPCProperties npcProps = new NPCProperties();
+        npcProps.canMove = false;
+        npcProps.message = "Coucou, je suis votre premier NPC !";
+
         this.registerActor(new LogMonster(this, Orientation.DOWN, new DiscreteCoordinates(9, 3)));
         this.registerActor(new LogMonster(this, Orientation.RIGHT, new DiscreteCoordinates(16, 12)));
+        this.registerActor(new NPC(this, Orientation.RIGHT, new DiscreteCoordinates(16, 12), npcProps));
     }
 
     private void registerDoors() {

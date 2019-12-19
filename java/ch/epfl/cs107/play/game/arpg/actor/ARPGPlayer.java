@@ -9,6 +9,7 @@ import ch.epfl.cs107.play.game.arpg.config.Keys;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
+import ch.epfl.cs107.play.game.arpg.items.StaffItem;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
@@ -284,6 +285,7 @@ public class ARPGPlayer extends Player implements Destroyable {
 
     private enum ARPGPlayerState {
         CONSUMING_ITEM,
+        TALKING,
         NORMAL
     }
 
@@ -292,6 +294,15 @@ public class ARPGPlayer extends Player implements Destroyable {
         @Override
         public void interactWith(Door door) {
             setIsPassingADoor(door);
+        }
+
+        @Override
+        public void interactWith(NPC npc) {
+            if (ARPGPlayer.this.isInteractionKeyPressed())
+                if (!ARPGPlayer.this.state.equals(ARPGPlayerState.TALKING))
+                    npc.talk(ARPGPlayer.this);
+                else
+                    npc.stopTalking();
         }
 
         @Override

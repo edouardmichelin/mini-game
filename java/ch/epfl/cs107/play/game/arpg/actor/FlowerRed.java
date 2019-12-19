@@ -10,7 +10,7 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 public class FlowerRed extends Entity {
-    public static final int ANIMATION_DURATION = (Settings.FRAME_RATE * 3) / 2;
+    public static final int ANIMATION_DURATION = Settings.FRAME_RATE * 2 / 3;
     private Animation animation;
 
     public FlowerRed(Vector position) {

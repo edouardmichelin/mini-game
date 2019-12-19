@@ -31,6 +31,9 @@ public class DarkLord extends Monster {
     private static final int TELEPORTATION_RADIUS = 3;
     private static final int MIN_SPELL_WAIT_DURATION = 200;
     private static final int MAX_SPELL_WAIT_DURATION = 500;
+    private final static int MIN_INACTIVITY_DURATION = 2 * Settings.FRAME_RATE;
+    private final static int MAX_INACTIVITY_DURATION = 8 * Settings.FRAME_RATE;
+    private final static int SIMULATION_CYCLE = 12 * Settings.FRAME_RATE;
 
     private Animation[] idleAnimations;
     private Animation[] spellAnimations;
@@ -38,6 +41,8 @@ public class DarkLord extends Monster {
     private ARPGDarkLordHandler interactionHandler;
     private int simulationCyle;
     private int simulationStep;
+    private boolean isInactive;
+    private int inactivityDuration;
 
     public DarkLord(Area area, Orientation orientation, DiscreteCoordinates coordinates) {
         super(area, orientation, coordinates);
@@ -45,6 +50,7 @@ public class DarkLord extends Monster {
         this.idleAnimations = RPGSprite.createAnimations(ANIMATION_DURATION, this.getSprites(SpriteNames.DARK_LORD));
         this.spellAnimations = RPGSprite.createAnimations(ANIMATION_DURATION, this.getSprites(SpriteNames.DARK_LORD_SPELL), false);
         this.state = State.IDLE;
+        this.simulationStep = SIMULATION_CYCLE;
         this.interactionHandler = new ARPGDarkLordHandler();
         this.simulationCyle = Helpers.random(MIN_SPELL_WAIT_DURATION, MAX_SPELL_WAIT_DURATION);
     }
@@ -96,7 +102,21 @@ public class DarkLord extends Monster {
     }
 
     private void act() {
+        this.inactivityDuration--;
+
+        if (this.inactivityDuration == 0)
+            this.isInactive = false;
+
+        if (this.isInactive) return;
+
         switch (this.state) {
+            case IDLE: {
+                if (this.simulationStep % SIMULATION_CYCLE == 0) {
+                    this.isInactive = true;
+                    this.inactivityDuration = Helpers.random(MIN_INACTIVITY_DURATION, MAX_INACTIVITY_DURATION);
+                }
+            }
+            break;
             case ATTACKING: {
                 Animation currentAnim = this.getCharacterAnimations()[this.getOrientation().ordinal()];
                 if (currentAnim.isCompleted()) {
@@ -152,30 +172,34 @@ public class DarkLord extends Monster {
     }
 
     @Override
+    protected boolean isAnimationPaused() {
+        return this.isInactive;
+    }
+
+    @Override
     public void update(float deltaTime) {
         if (this.isAlive()) {
             this.simulationStep++;
 
-            if (this.state.equals(State.IDLE))
-                this.move(45);
+            if (!this.isInactive) {
+                if (this.state.equals(State.IDLE))
+                    this.move(45);
 
-            if (this.isTargetReached()) {
-                if (!this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells()))
-                    this.orientate(this.whereToThrowFireSpell());
+                if (this.isTargetReached()) {
+                    if (!this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells()))
+                        this.orientate(this.whereToThrowFireSpell());
 
-                if (this.shouldSwitchOrientation() && this.state.equals(State.IDLE))
-                    this.switchOrientation();
-            }
-
-            if (
-                    !this.state.equals(State.INVOKING) &&
-                    !this.state.equals(State.ATTACKING)
-            )
-                if (this.simulationStep % this.simulationCyle == 0) {
-                    double random = RandomGenerator.getInstance().nextDouble();
-                    this.state = random > 0.7 ? State.ATTACKING : State.INVOKING;
-                    this.orientate(this.whereToThrowFireSpell());
+                    if (this.shouldSwitchOrientation() && this.state.equals(State.IDLE))
+                        this.switchOrientation();
                 }
+
+                if (!this.state.equals(State.INVOKING) && !this.state.equals(State.ATTACKING))
+                    if (this.simulationStep % this.simulationCyle == 0) {
+                        double random = RandomGenerator.getInstance().nextDouble();
+                        this.state = random > 0.7 ? State.ATTACKING : State.INVOKING;
+                        this.orientate(this.whereToThrowFireSpell());
+                    }
+            }
 
             this.act();
         }
@@ -246,6 +270,8 @@ public class DarkLord extends Monster {
 
         @Override
         public void interactWith(ARPGPlayer player) {
+            if (DarkLord.this.isInactive) return;
+
             if (!DarkLord.this.state.equals(State.TELEPORTING)) {
                 DarkLord.this.state = State.PREPARING_TELEPORTATION;
             }

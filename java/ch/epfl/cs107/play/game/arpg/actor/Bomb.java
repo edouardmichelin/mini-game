@@ -154,7 +154,6 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
     }
 
     private void inflictDamage(Destroyable destroyable) {
-        // Will occur EXPLOSION_FRAMES_NUMBER times. +1 because Animation.isCompleted is wrongly coded
         destroyable.damage(DAMAGE / (EXPLOSION_FRAMES_NUMBER + 1), DAMAGE_TYPE);
     }
 
@@ -168,6 +167,11 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
         @Override
         public void interactWith(FlameSkull flameSkull) {
             Bomb.this.inflictDamage(flameSkull);
+        }
+
+        @Override
+        public void interactWith(LogMonster logMonster) {
+            Bomb.this.inflictDamage(logMonster);
         }
 
         @Override

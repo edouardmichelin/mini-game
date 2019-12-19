@@ -46,9 +46,9 @@ public class LogMonster extends Monster {
         super(area, orientation, coordinates);
 
         this.state = State.IDLE;
+        this.simulationStep = SIMULATION_CYCLE;
         this.animations = this.getAnimations();
         this.interactionHandler = new ARPGLogMonsterHandler();
-        this.simulationStep = SIMULATION_CYCLE;
     }
 
     private Animation[] getAnimations() {

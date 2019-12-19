@@ -197,6 +197,11 @@ public class FireSpell extends AreaEntity implements Interactor, Dropable, Destr
         }
 
         @Override
+        public void interactWith(LogMonster logMonster) {
+            inflictDamage(logMonster);
+        }
+
+        @Override
         public void interactWith(Grass grass) {
             inflictDamage(grass);
         }

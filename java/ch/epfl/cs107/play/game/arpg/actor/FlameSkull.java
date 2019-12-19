@@ -15,11 +15,10 @@ import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.Vector;
 
 import java.util.List;
-import java.util.Random;
 
 public class FlameSkull extends Monster implements FlyableEntity {
-    private final static int MIN_LIFE_TIME = 150;
-    private final static int MAX_LIFE_TIME = 1500;
+    private final static int MIN_LIFE_TIME = Settings.FRAME_RATE * 2;
+    private final static int MAX_LIFE_TIME = Settings.FRAME_RATE * 10;
     private final static DamageType DAMAGE_TYPE = DamageType.FIRE;
 
     private Animation[] animations;
@@ -133,6 +132,11 @@ public class FlameSkull extends Monster implements FlyableEntity {
         @Override
         public void interactWith(ARPGPlayer player) {
             inflictDamage(player);
+        }
+
+        @Override
+        public void interactWith(LogMonster logMonster) {
+            inflictDamage(logMonster);
         }
 
         @Override

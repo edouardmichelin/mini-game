@@ -112,6 +112,9 @@ public class ARPGInventory implements Inventory {
         return this.removeItem(item, 1);
     }
 
+    /**
+     * Enumération de tous les objets que le joueur peut prendre en compte pour les gérer
+     */
     public enum ARPGItem implements Inventory.InventoryItem {
         ARROW(ArrowItem.TITLE, ArrowItem.WEIGHT, ArrowItem.PRICE, false, SpriteNames.ARROW_ITEM, null, ArrowItem.ITEM_TO_CONSUME, false, null),
         BOW(BowItem.TITLE, BowItem.WEIGHT, BowItem.PRICE, true, SpriteNames.BOW_ITEM, ArrowItem::consume, BowItem.ITEM_TO_CONSUME, false,null),

@@ -48,6 +48,9 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
         this.healthPoint = hp;
     }
 
+    /**
+     * Utilisé quand on veut l'affichage de l'inventaire en + de la richesse en appuyant sur L
+     */
     public void switchCoinsDisplay() {
         this.displayFortune = !this.displayFortune;
     }
@@ -128,9 +131,6 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
 
         Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(width / 2, height / 2));
 
-        // 5 -> MAXIMUM PLAYER'S HP
-        // TODO - PLAYER CAN FIND HEARTS THAT INCREASE HIS MAX HP
-        // TODO - 2 HP: HEARTS START SHAKING / 1 HP: HEARTS SHAKE STRONGER
         for (int i = 0; i < 5; i++) {
             float data = (this.healthPoint - i) > 0f ? this.healthPoint - i > 0.5f ? 1f : 0.5f : 0f;
 

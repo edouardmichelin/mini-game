@@ -9,6 +9,7 @@ import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.misc.NPCProperties;
 import ch.epfl.cs107.play.io.XMLTexts;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
 public class Village extends ARPGArea {
@@ -18,6 +19,7 @@ public class Village extends ARPGArea {
         this.registerActor(new Background(this));
         this.registerActor(new Foreground(this));
         this.registerDoors();
+        registerFlowers();
 
         NPCProperties prop1 = new NPCProperties(XMLTexts.getText("npcVillage1"), false);
         NPCProperties prop2 = new NPCProperties(XMLTexts.getText("npcVillage2"), false);
@@ -63,6 +65,12 @@ public class Village extends ARPGArea {
                 this,
                 Orientation.UP,
                 new DiscreteCoordinates(25, 18)));
+    }
+
+    private void registerFlowers() {
+        this.registerActor(new FlowerBlue(new Vector(27, 10)));
+        this.registerActor(new FlowerRed(new Vector(5, 6)));
+        this.registerActor(new FlowerBlue(new Vector(9, 15)));
     }
 
     @Override

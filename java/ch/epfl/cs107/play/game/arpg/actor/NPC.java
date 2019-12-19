@@ -52,6 +52,7 @@ public class NPC extends MovableAreaEntity implements Interactor {
         this.interactionHandler = new NPCHandler();
         this.state = State.NORMAL;
 
+
         this.animations = RPGSprite.createAnimations(ANIMATION_DURATION, RPGSprite.extractSprites(
                 SPRITES[RandomGenerator.getInstance().nextInt(SPRITES.length)],
                 4,

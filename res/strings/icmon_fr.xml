@@ -10,5 +10,6 @@
     <string name="npcRoute1">Celui qui possède une tondeuse dans cette foutue contrée devient automatiquement roi du royaume.</string>
     <string name="npcRoute2">Qui l'eut cru que l'herbe pouvait cacher tant de richesses!.... Ah....</string>
     <string name="npcRouteTemple1">J'crois que je n'ai pas mangé depuis 4 jours... vous avez des fraises?</string>
-    <string name="npcRouteTemple2">Vous voici en présence de mon fameux gratte dos! Ça lance accessoirement de la magie aussi...</string>
+    <string name="npcTemple1">Vous voici en présence de mon fameux gratte dos! Ça lance accessoirement de la magie aussi...</string>
+    <string name="npcChateau1">Bon, et bien j'crois que vous avez gagné la partie... voilà bravo. Palpitant...</string>
 </strings>

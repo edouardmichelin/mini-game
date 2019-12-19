@@ -3,12 +3,13 @@ package ch.epfl.cs107.play.game.arpg.area;
 import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.game.areagame.actor.Foreground;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.arpg.actor.CastleDoor;
-import ch.epfl.cs107.play.game.arpg.actor.DarkLord;
-import ch.epfl.cs107.play.game.arpg.actor.LogMonster;
+import ch.epfl.cs107.play.game.arpg.actor.*;
 import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
+import ch.epfl.cs107.play.game.rpg.misc.NPCProperties;
+import ch.epfl.cs107.play.io.XMLTexts;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
 public class RouteTemple extends ARPGArea {
@@ -18,6 +19,11 @@ public class RouteTemple extends ARPGArea {
         this.registerActor(new Background(this));
         this.registerActor(new Foreground(this));
         this.registerDoors();
+
+        NPCProperties prop1 = new NPCProperties(XMLTexts.getText("npcRouteTemple1"), false);
+        this.registerActor(new FlowerBlue(new Vector(1, 6)));
+
+        this.registerActor(new NPC(this, Orientation.LEFT, new DiscreteCoordinates(7, 5), prop1));
     }
 
     private void registerDoors() {

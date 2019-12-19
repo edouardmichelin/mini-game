@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class ARPGPlayer extends Player implements Destroyable {
-    private final static int ANIMATION_DURATION = 8;
+    private final static int ANIMATION_DURATION = 10;
     private final static float DEFAULT_HEALTH_POINTS = 5f;
     private final static int CONSUMING_TIME = Settings.FRAME_RATE / 4;
 
@@ -61,10 +61,7 @@ public class ARPGPlayer extends Player implements Destroyable {
         this.interactionHandler = new ARPGPlayerHandler();
         this.inventory = new ARPGInventory(30, this);
 
-        this.inventory.addItem(ARPGInventory.ARPGItem.BOMB, 3);
-        this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 5);
-        this.inventory.addItem(ARPGInventory.ARPGItem.BOW, 5);
-        this.inventory.addItem(ARPGInventory.ARPGItem.SWORD , 5);
+        this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 20);
 
         this.inventory.addMoney(19);
 
@@ -107,11 +104,18 @@ public class ARPGPlayer extends Player implements Destroyable {
         ));
     }
 
+    /**
+     * Appelé pour le changement d'état du ARPGPlayer
+     * @param state
+     */
     private void switchState(ARPGPlayerState state) {
         this.state = state;
         this.animations = this.getAnimations();
     }
 
+    /**
+     * Appelé pour cycler dans les objets de l'inventaire du joueur
+     */
     private void switchItem() {
         this.currentItemId = (this.currentItemId + 1) % this.inventory.size();
         this.GUI.setCurrentItem(this.currentItemId);
@@ -146,7 +150,7 @@ public class ARPGPlayer extends Player implements Destroyable {
 
     @Override
     public boolean isWeak() {
-        return this.hp <= 2;
+        return this.hp == 0;
     }
 
     @Override
@@ -178,13 +182,13 @@ public class ARPGPlayer extends Player implements Destroyable {
 
     @Override
     public void onDying() {
-        //
+        this.strengthen();
     }
 
     @Override
     public void update(float deltaTime) {
 
-        System.out.println(this.getPosition());
+        if(this.isWeak()) this.strengthen();
 
         if (!this.state.equals(ARPGPlayerState.CONSUMING_ITEM)) {
             if (this.keyboard.get(Keys.MOVE_UP).isDown()) this.move(Orientation.UP);
@@ -342,7 +346,7 @@ public class ARPGPlayer extends Player implements Destroyable {
 
         @Override
         public void interactWith(DefusedBomb bomb) {
-            ARPGPlayer.this.inventory.addSingleItem(bomb.collect());
+            ARPGPlayer.this.inventory.addItem(bomb.collect(), 5);
         }
 
         @Override

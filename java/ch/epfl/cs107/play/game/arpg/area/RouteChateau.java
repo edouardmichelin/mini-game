@@ -4,6 +4,8 @@ import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.game.areagame.actor.Foreground;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.arpg.actor.CastleDoor;
+import ch.epfl.cs107.play.game.arpg.actor.DarkLord;
+import ch.epfl.cs107.play.game.arpg.actor.LogMonster;
 import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -16,6 +18,8 @@ public class RouteChateau extends ARPGArea {
         this.registerActor(new Background(this));
         this.registerActor(new Foreground(this));
         this.registerDoors();
+
+        this.registerActor(new DarkLord(this, Orientation.DOWN, new DiscreteCoordinates(10, 10)));
     }
 
     private void registerDoors() {

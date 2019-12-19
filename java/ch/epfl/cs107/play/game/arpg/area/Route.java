@@ -3,10 +3,7 @@ package ch.epfl.cs107.play.game.arpg.area;
 import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.game.areagame.actor.Foreground;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.arpg.actor.Bomb;
-import ch.epfl.cs107.play.game.arpg.actor.FlameSkull;
-import ch.epfl.cs107.play.game.arpg.actor.Grass;
-import ch.epfl.cs107.play.game.arpg.actor.WaterFall;
+import ch.epfl.cs107.play.game.arpg.actor.*;
 import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -19,10 +16,12 @@ public class Route extends ARPGArea {
     protected void createArea() {
         this.registerActor(new Background(this));
         this.registerActor(new Foreground(this));
-        this.registerActor(new FlameSkull(this, Orientation.DOWN, new DiscreteCoordinates(5, 8)));
         this.registerActor(new WaterFall(new Vector(15, 3)));
         this.registerDoors();
         this.plantGrasses();
+
+        this.registerActor(new LogMonster(this, Orientation.RIGHT, new DiscreteCoordinates(9, 9)));
+        this.registerActor(new LogMonster(this, Orientation.DOWN, new DiscreteCoordinates(12, 7)));
     }
 
     private void registerDoors() {

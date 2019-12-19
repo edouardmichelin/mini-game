@@ -47,5 +47,7 @@ public class ARPG extends RPG {
         this.addArea(new Chateau());
         this.addArea(new MaisonFerme());
         this.addArea(new Grotte());
+        this.addArea(new RouteTemple());
+        this.addArea(new Temple());
     }
 }

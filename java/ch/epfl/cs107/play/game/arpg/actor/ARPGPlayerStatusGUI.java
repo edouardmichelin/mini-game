@@ -11,7 +11,7 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
-    private final static int DEPTH = 600;
+    private final static int DEPTH = 2000;
 
     private boolean displayFortune = false;
     private float healthPoint;
@@ -75,7 +75,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
                 this.currentItem.getTextureRoi(),
                 anchor.add(new Vector(1.075f, height - 2f)),
                 1,
-                DEPTH * 2);
+                DEPTH + 1);
 
         currentEquipment.draw(canvas);
     }
@@ -116,7 +116,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
                     DigitsRegionOfInterest.fromInt(digit).regionOfInterest,
                     anchor.add(new Vector(X + (2 - i) * OFFSET, Y)),
                     1,
-                    DEPTH * 2
+                    DEPTH + 1
             ).draw(canvas);
         }
     }
@@ -141,7 +141,7 @@ public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
                     HeartsRegionOfInterest.fromFloat(data).regionOfInterest,
                     anchor.add(new Vector(X + i * OFFSET, Y)),
                     1,
-                    DEPTH * 2
+                    DEPTH + 1
             ).draw(canvas);
         }
     }

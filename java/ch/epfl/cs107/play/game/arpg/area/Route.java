@@ -49,6 +49,16 @@ public class Route extends ARPGArea {
                 Orientation.UP,
                 new DiscreteCoordinates(10, 19),
                 new DiscreteCoordinates(9, 19)));
+        this.registerActor(new Door(
+                AreaNames.ROUTE_TEMPLE,
+                new DiscreteCoordinates(1, 5),
+                Logic.TRUE,
+                this,
+                Orientation.RIGHT,
+                new DiscreteCoordinates(19, 11),
+                new DiscreteCoordinates(19, 10),
+                new DiscreteCoordinates(19, 9),
+                new DiscreteCoordinates(19, 8)));
     }
 
     private void plantGrasses() {

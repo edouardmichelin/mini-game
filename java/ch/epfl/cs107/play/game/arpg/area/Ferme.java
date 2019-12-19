@@ -59,6 +59,14 @@ public class Ferme extends ARPGArea {
                 Orientation.DOWN,
                 new DiscreteCoordinates(13, 0),
                 new DiscreteCoordinates(14, 0)));
+        this.registerActor(new Door(
+                AreaNames.MAISON_FERME,
+                new DiscreteCoordinates(4, 2),
+                Logic.TRUE,
+                this,
+                Orientation.DOWN,
+                new DiscreteCoordinates(6,11)
+        ));
     }
 
     private void registerFlowers() {

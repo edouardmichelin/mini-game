@@ -300,7 +300,9 @@ public class ARPGPlayer extends Player implements Destroyable {
 
         @Override
         public void interactWith(CaveDoor door) {
-            setIsPassingADoor(door);
+            if (door.isOpen()) {
+                setIsPassingADoor(door);
+            }
         }
 
         @Override

@@ -14,6 +14,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.math.Vector;
+import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.Collections;
@@ -23,10 +24,12 @@ import java.util.Random;
 public class Bridge extends AreaEntity {
     public static final int ANIMATION_DURATION = Settings.FRAME_RATE / 6;
     private RPGSprite sprite;
-    private boolean active;
+    private Logic signal;
 
-    public Bridge(Area area, Orientation orientation, DiscreteCoordinates position) {
+    public Bridge(Area area, Orientation orientation, DiscreteCoordinates position, Logic signal) {
         super(area, orientation, position);
+
+        this.signal = signal;
 
         this.sprite = new RPGSprite(
                 SpriteNames.BRIDGE,
@@ -37,21 +40,19 @@ public class Bridge extends AreaEntity {
                 new Vector(-1f, -0.5f)
         );
 
-        this.activate();
-
     }
 
-    public boolean isActive() {
-        return this.active;
+    public boolean isActivated() {
+        return this.signal.isOn();
     }
 
     public void activate() {
-        this.active = true;
+        this.signal = Logic.TRUE;
     }
 
     @Override
     public void draw(Canvas canvas) {
-        if (this.active) this.sprite.draw(canvas);
+        if (this.isActivated()) this.sprite.draw(canvas);
     }
 
     @Override
@@ -66,7 +67,7 @@ public class Bridge extends AreaEntity {
 
     @Override
     public boolean takeCellSpace() {
-        return !this.active;
+        return !this.isActivated();
     }
 
     @Override

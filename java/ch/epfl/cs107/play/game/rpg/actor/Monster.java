@@ -6,6 +6,7 @@ import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.window.Canvas;
 
@@ -64,6 +65,15 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
         }
 
         return sprites;
+    }
+
+    protected void switchOrientation() {
+        int randomIndex = RandomGenerator.getInstance().nextInt(Orientation.values().length);
+        this.orientate(Orientation.values()[randomIndex]);
+    }
+
+    protected boolean shouldSwitchOrientation() {
+        return RandomGenerator.getInstance().nextDouble() < 0.4f;
     }
 
     @Override

@@ -12,6 +12,7 @@ public abstract class SpriteNames {
     public static final String DARK_LORD = "zelda/darkLord";
     public static final String DARK_LORD_SPELL = "zelda/darkLord.spell";
     public static final String FLAME_SKULL = "zelda/flameSkull";
+    public static final String GOBLIN = "zelda/goblin";
 
     // NPCs
     public static final String NPC_1 = "zelda/npc.1";

@@ -113,8 +113,13 @@ public class SwordSlash extends AreaEntity implements Interactor, NotClipable {
         }
 
         @Override
+        public void interactWith(UglyGoblin goblin) {
+            SwordSlash.this.inflictDamage(goblin);
+            SwordSlash.this.consumed = true;
+        }
+
+        @Override
         public void interactWith(Bomb bomb) {
-            System.out.println("top");
             bomb.explode();
             SwordSlash.this.consumed = true;
         }

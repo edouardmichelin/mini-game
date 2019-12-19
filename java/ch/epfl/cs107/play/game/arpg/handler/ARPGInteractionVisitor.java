@@ -137,6 +137,14 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a uglyGoblin
+     * @param uglyGoblin (UglyGoblin), not null
+     */
+    default void interactWith(UglyGoblin uglyGoblin){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a arrow
      * @param arrow (Arrow), not null
      */

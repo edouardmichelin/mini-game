@@ -6,6 +6,7 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
+import ch.epfl.cs107.play.game.arpg.items.BowItem;
 import ch.epfl.cs107.play.game.rpg.actor.Monster;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.DamageType;
@@ -16,45 +17,34 @@ import ch.epfl.cs107.play.math.Vector;
 
 import java.util.List;
 
-public class FlameSkull extends Monster implements FlyableEntity {
-    private final static int MIN_LIFE_TIME = Settings.FRAME_RATE * 2;
-    private final static int MAX_LIFE_TIME = Settings.FRAME_RATE * 10;
+public class UglyGoblin extends Monster {
+    private final static float DAMAGE_AMOUNT = 1.5f / Settings.FRAME_RATE;
     private final static DamageType DAMAGE_TYPE = DamageType.FIRE;
+    private static final int ANIMATION_DURATION = Settings.FRAME_RATE / 10;
 
     private Animation[] animations;
-    private int lifeTime;
-    private int simulationStep;
     private ARPGFlameSkullHandler interactionHandler;
 
-    public FlameSkull(Area area, Orientation orientation, DiscreteCoordinates position) {
+    public UglyGoblin(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
         this.interactionHandler = new ARPGFlameSkullHandler();
-        this.lifeTime = Helpers.random(MIN_LIFE_TIME, MAX_LIFE_TIME);
-        this.animations = RPGSprite.createAnimations(12, getSprites());
-    }
 
-    private Sprite[][] getSprites() {
-        return RPGSprite.extractSprites(
-                SpriteNames.FLAME_SKULL,
-                3,
-                1.8f,
-                1.8f,
+        this.animations = RPGSprite.createAnimations(ANIMATION_DURATION, RPGSprite.extractSprites(
+                SpriteNames.GOBLIN,
+                4,
+                1,
+                2,
                 this,
+                16,
                 32,
-                32,
-                new Vector(-0.45f, 0.2f),
-                new Orientation[] {Orientation.UP, Orientation.LEFT, Orientation.DOWN, Orientation.RIGHT}
-        );
+                new Orientation[]{Orientation.UP, Orientation.RIGHT, Orientation.DOWN, Orientation.LEFT}
+        ));
     }
 
     @Override
     public void update(float deltaTime) {
         if (this.isAlive()) {
-            this.simulationStep++;
-
-            if (this.simulationStep == this.lifeTime)
-                this.destroy();
 
             if (this.shouldSwitchOrientation() && this.isTargetReached())
                 this.switchOrientation();
@@ -76,22 +66,22 @@ public class FlameSkull extends Monster implements FlyableEntity {
 
     @Override
     public float getMaxHp() {
-        return 1;
+        return 2.5f;
     }
 
     @Override
     public List<DamageType> getWeaknesses() {
-        return List.of(DamageType.MAGICAL, DamageType.PHYSICAL);
+        return List.of(DamageType.PHYSICAL);
     }
 
     @Override
     public void onDying() {
-
+        BowItem.drop(this, this.getOwnerArea());
     }
 
     @Override
     public boolean takeCellSpace() {
-        return false;
+        return true;
     }
 
     @Override
@@ -115,7 +105,7 @@ public class FlameSkull extends Monster implements FlyableEntity {
     }
 
     private void inflictDamage(Destroyable destroyable) {
-        destroyable.damage(5f / Settings.FRAME_RATE, DAMAGE_TYPE);
+        destroyable.damage(DAMAGE_AMOUNT, DAMAGE_TYPE);
     }
 
     private class ARPGFlameSkullHandler implements ARPGInteractionVisitor {
@@ -123,21 +113,6 @@ public class FlameSkull extends Monster implements FlyableEntity {
         @Override
         public void interactWith(ARPGPlayer player) {
             inflictDamage(player);
-        }
-
-        @Override
-        public void interactWith(LogMonster logMonster) {
-            inflictDamage(logMonster);
-        }
-
-        @Override
-        public void interactWith(Grass grass) {
-            inflictDamage(grass);
-        }
-
-        @Override
-        public void interactWith(Bomb bomb) {
-            bomb.explode();
         }
 
     }

@@ -37,8 +37,8 @@ public class RouteChateau extends ARPGArea {
                 Logic.FALSE,
                 this,
                 Orientation.UP,
-                new DiscreteCoordinates(9, 13),
-                new DiscreteCoordinates(10, 13)));
+                new DiscreteCoordinates(9, 14),
+                new DiscreteCoordinates(10, 14)));
     }
 
     @Override

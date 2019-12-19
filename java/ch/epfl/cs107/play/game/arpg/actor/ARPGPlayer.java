@@ -299,6 +299,11 @@ public class ARPGPlayer extends Player implements Destroyable {
         }
 
         @Override
+        public void interactWith(CaveDoor door) {
+            setIsPassingADoor(door);
+        }
+
+        @Override
         public void interactWith(NPC npc) {
             if (ARPGPlayer.this.isInteractionKeyPressed())
                 if (!ARPGPlayer.this.state.equals(ARPGPlayerState.TALKING)) {

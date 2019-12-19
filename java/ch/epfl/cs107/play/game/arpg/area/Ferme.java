@@ -64,7 +64,7 @@ public class Ferme extends ARPGArea {
                 new DiscreteCoordinates(4, 2),
                 Logic.TRUE,
                 this,
-                Orientation.DOWN,
+                Orientation.UP,
                 new DiscreteCoordinates(6,11)
         ));
     }

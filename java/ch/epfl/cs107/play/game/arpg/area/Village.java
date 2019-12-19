@@ -4,6 +4,8 @@ import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.game.areagame.actor.Foreground;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.arpg.actor.Arrow;
+import ch.epfl.cs107.play.game.arpg.actor.CastleDoor;
+import ch.epfl.cs107.play.game.arpg.actor.CaveDoor;
 import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -44,6 +46,13 @@ public class Village extends ARPGArea {
                 Orientation.UP,
                 new DiscreteCoordinates(29, 19),
                 new DiscreteCoordinates(30, 19)));
+        this.registerActor(new CaveDoor(
+                AreaNames.GROTTE,
+                new DiscreteCoordinates(8, 3),
+                Logic.FALSE,
+                this,
+                Orientation.UP,
+                new DiscreteCoordinates(25, 18)));
     }
 
     @Override

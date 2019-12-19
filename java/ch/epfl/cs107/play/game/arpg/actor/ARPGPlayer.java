@@ -329,6 +329,11 @@ public class ARPGPlayer extends Player implements Destroyable {
         }
 
         @Override
+        public void interactWith(Bow bow) {
+            ARPGPlayer.this.inventory.addSingleItem(bow.collect());
+        }
+
+        @Override
         public void interactWith(Heart heart) {
             if (ARPGPlayer.this.hp <= (ARPGPlayer.this.maxHp - 1))
                 ARPGPlayer.this.hp++;

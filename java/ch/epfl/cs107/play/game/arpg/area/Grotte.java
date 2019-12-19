@@ -2,6 +2,7 @@ package ch.epfl.cs107.play.game.arpg.area;
 
 import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.arpg.actor.Bow;
 import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -12,6 +13,8 @@ public class Grotte extends ARPGArea {
     protected void createArea() {
         this.registerActor(new Background(this));
         registerDoors();
+
+        this.registerActor(new Bow(this, Orientation.DOWN, new DiscreteCoordinates(8, 7)));
     }
 
     private void registerDoors() {

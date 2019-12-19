@@ -73,6 +73,14 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a bow
+     * @param bow (Bow), not null
+     */
+    default void interactWith(Bow bow){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a castle door
      * @param castleDoor (CastleDoor), not null
      */

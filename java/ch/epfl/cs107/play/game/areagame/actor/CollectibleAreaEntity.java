@@ -10,7 +10,7 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class CollectibleAreaEntity extends AreaEntity {
+public abstract class CollectibleAreaEntity extends AreaEntity implements Dropable {
     private RPGSprite sprite;
 
     /**

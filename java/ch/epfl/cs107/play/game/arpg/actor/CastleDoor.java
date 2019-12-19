@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
@@ -13,14 +14,8 @@ import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Canvas;
 
 public class CastleDoor extends Door {
-    private static final String CLOSE_SPRITE = "zelda/castleDoor.close";
-    private static final String OPEN_SPRITE = "zelda/castleDoor.open";
 
     private RPGSprite sprite;
-
-    public CastleDoor(String destination, DiscreteCoordinates otherSideCoordinates, Logic signal, Area area, Orientation orientation, DiscreteCoordinates position) {
-        super(destination, otherSideCoordinates, signal, area, orientation, position);
-    }
 
     public CastleDoor(String destination, DiscreteCoordinates otherSideCoordinates, Logic signal, Area area, Orientation orientation, DiscreteCoordinates position, DiscreteCoordinates... otherCells) {
         super(destination, otherSideCoordinates, signal, area, orientation, position, otherCells);
@@ -30,7 +25,7 @@ public class CastleDoor extends Door {
 
     private RPGSprite getSprite() {
         return new RPGSprite(
-                this.isOpen() ? OPEN_SPRITE : CLOSE_SPRITE,
+                this.isOpen() ? SpriteNames.CASTLE_DOOR_OPEN : SpriteNames.CASTLE_DOOR_CLOSE,
                 2,
                 2,
                 this,

@@ -3,37 +3,30 @@ package ch.epfl.cs107.play.game.arpg.actor;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
-import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
-import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
+import ch.epfl.cs107.play.game.rpg.misc.DamageType;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.Collections;
 import java.util.List;
 
-public class Bomb extends AreaEntity implements Interactor {
-    private final static int DEFAULT_COUNTDOWN = 5 * Settings.FRAME_RATE;
-    private final static float DEFAULT_DAMAGE = 2.5f;
-    private final static String TEX = "zelda/bomb";
-    private final static String EXPL_TEX = "zelda/explosion";
+public class Bomb extends AreaEntity implements Interactor, Dropable {
+    private final static int TIME_BEFORE_DETONATION = 5;
+    private final static int EXPLOSION_FRAMES_NUMBER = 7;
+    private final static float DAMAGE = 2.5f;
+    private final static DamageType DAMAGE_TYPE = DamageType.PHYSICAL;
 
-    private int countdown;
     private ARPGBombHandler interactionHandler;
     private Animation animation;
-
-    public static void consume(AreaEntity consumer, Area area) {
-        DiscreteCoordinates position = consumer
-                .getCurrentCells()
-                .get(0)
-                .jump(consumer.getOrientation().toVector());
-
-        area.registerActor(new Bomb(area, Orientation.DOWN, position));
-    }
+    private int simulationStep;
+    private boolean detonate;
+    private boolean exploded;
 
     /**
      * Default AreaEntity constructor
@@ -45,46 +38,67 @@ public class Bomb extends AreaEntity implements Interactor {
     public Bomb(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
-        this.animation = new Animation(Settings.FRAME_RATE / 3, getDefaultSprites(), true);
         this.interactionHandler = new ARPGBombHandler();
-        this.countdown = DEFAULT_COUNTDOWN;
+        this.animation = new Animation(Settings.FRAME_RATE / 3, getDefaultSprites(), true);
     }
 
     private Sprite[] getDefaultSprites() {
-        return new Sprite[] {
-                new RPGSprite(TEX, 1, 1, this, new RegionOfInterest(0, 0, 16, 16)),
-                new RPGSprite(TEX, 1, 1, this, new RegionOfInterest(16, 0, 16, 16))
+        return new Sprite[]{
+                new RPGSprite(
+                        SpriteNames.BOMB,
+                        1,
+                        1,
+                        this,
+                        new RegionOfInterest(0, 0, 16, 16),
+                        new Vector(0, 0.3f)),
+                new RPGSprite(
+                        SpriteNames.BOMB,
+                        1,
+                        1,
+                        this,
+                        new RegionOfInterest(16, 0, 16, 16),
+                        new Vector(0, 0.3f))
         };
     }
 
     private Sprite[] getExplosionSprites() {
-        Sprite[] s = new Sprite[7];
-        for (int frame = 0; frame < 7; frame++)
+        Sprite[] s = new Sprite[EXPLOSION_FRAMES_NUMBER];
+        for (int frame = 0; frame < EXPLOSION_FRAMES_NUMBER; frame++)
             s[frame] = new RPGSprite(
-                    EXPL_TEX,
+                    SpriteNames.EXPLOSION,
                     1,
                     1,
                     this,
-                    new RegionOfInterest(frame * 32, 0, 32, 32)
+                    new RegionOfInterest(frame * 32, 0, 32, 32),
+                    new Vector(0, 0.2f)
             );
 
         return s;
     }
 
-    private void explode() {
-        this.animation.reset();
-        this.animation = new Animation(Settings.FRAME_RATE / 18, this.getExplosionSprites(), true);
+    private void onExplode() {
+        if (this.exploded) return;
+
+        this.animation = new Animation(1, this.getExplosionSprites(), false);
+        this.exploded = true;
+    }
+
+    void explode() {
+        this.detonate = true;
     }
 
     @Override
     public void update(float deltaTime) {
-        if (this.countdown < -(Settings.FRAME_RATE / 4)) {
-            this.getOwnerArea().unregisterActor(this);
-            return;
-        }
+        this.simulationStep++;
 
-        this.countdown = this.countdown - 1;
-        this.animation.update(deltaTime);
+        if (!this.detonate && simulationStep == TIME_BEFORE_DETONATION * Settings.FRAME_RATE)
+            this.explode();
+
+        if (this.animation.isCompleted())
+            this.getOwnerArea().unregisterActor(this);
+        else
+            this.animation.update(deltaTime);
+
         super.update(deltaTime);
     }
 
@@ -105,23 +119,23 @@ public class Bomb extends AreaEntity implements Interactor {
 
     @Override
     public boolean wantsCellInteraction() {
-        return countdown == 0;
+        return this.detonate;
     }
 
     @Override
     public boolean wantsViewInteraction() {
-        return countdown == 0;
+        return this.detonate;
     }
 
     @Override
     public void interactWith(Interactable other) {
-        this.explode();
+        this.onExplode();
         other.acceptInteraction(this.interactionHandler);
     }
 
     @Override
     public boolean takeCellSpace() {
-        return false;
+        return true;
     }
 
     @Override
@@ -136,27 +150,33 @@ public class Bomb extends AreaEntity implements Interactor {
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
+        ((ARPGInteractionVisitor) v).interactWith(this);
+    }
 
+    private void inflictDamage(Destroyable destroyable) {
+        destroyable.damage(DAMAGE / (EXPLOSION_FRAMES_NUMBER + 1), DAMAGE_TYPE);
     }
 
     private class ARPGBombHandler implements ARPGInteractionVisitor {
 
         @Override
-        public void interactWith(Door door) {
+        public void interactWith(ARPGPlayer player) {
+            Bomb.this.inflictDamage(player);
         }
 
         @Override
-        public void interactWith(ARPGBehavior.ARPGCell cell){
+        public void interactWith(FlameSkull flameSkull) {
+            Bomb.this.inflictDamage(flameSkull);
         }
 
         @Override
-        public void interactWith(ARPGPlayer player){
-            player.damage(DEFAULT_DAMAGE);
+        public void interactWith(LogMonster logMonster) {
+            Bomb.this.inflictDamage(logMonster);
         }
 
         @Override
         public void interactWith(Grass grass) {
-                grass.cut();
+            Bomb.this.inflictDamage(grass);
         }
 
     }

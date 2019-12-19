@@ -1,7 +1,9 @@
 package ch.epfl.cs107.play.game.arpg.handler;
 
+import ch.epfl.cs107.play.game.areagame.actor.Destroyable;
 import ch.epfl.cs107.play.game.arpg.actor.*;
 import ch.epfl.cs107.play.game.arpg.area.ARPGBehavior.ARPGCell;
+import ch.epfl.cs107.play.game.rpg.actor.Monster;
 import ch.epfl.cs107.play.game.rpg.handler.RPGInteractionVisitor;
 
 public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
@@ -32,15 +34,23 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
 
     /**
      * Simulate and interaction between RPG Interactor and a coin
-     * @param coin (ARPGPlayer), not null
+     * @param coin (Coin), not null
      */
     default void interactWith(Coin coin){
         // by default the interaction is empty
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a bomb
+     * @param bomb (Bomb), not null
+     */
+    default void interactWith(Bomb bomb){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a castle key
-     * @param castleKey (ARPGPlayer), not null
+     * @param castleKey (CastleKey), not null
      */
     default void interactWith(CastleKey castleKey){
         // by default the interaction is empty
@@ -48,7 +58,7 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
 
     /**
      * Simulate and interaction between RPG Interactor and a heart
-     * @param heart (ARPGPlayer), not null
+     * @param heart (Heart), not null
      */
     default void interactWith(Heart heart){
         // by default the interaction is empty
@@ -56,9 +66,73 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
 
     /**
      * Simulate and interaction between RPG Interactor and a castle door
-     * @param castleDoor (ARPGPlayer), not null
+     * @param castleDoor (CastleDoor), not null
      */
     default void interactWith(CastleDoor castleDoor){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a darkLord
+     * @param darkLord (DarkLord), not null
+     */
+    default void interactWith(DarkLord darkLord){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a logMonster
+     * @param logMonster (LogMonster), not null
+     */
+    default void interactWith(LogMonster logMonster){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a fireSpell
+     * @param fireSpell (FireSpell), not null
+     */
+    default void interactWith(FireSpell fireSpell){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a flameSkull
+     * @param flameSkull (FlameSkull), not null
+     */
+    default void interactWith(FlameSkull flameSkull){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a arrow
+     * @param arrow (Arrow), not null
+     */
+    default void interactWith(Arrow arrow){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a arrow
+     * @param magicWaterProjectile (MagicWaterProjectile), not null
+     */
+    default void interactWith(MagicWaterProjectile magicWaterProjectile){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a arrow
+     * @param swordSlash (SwordSlash), not null
+     */
+    default void interactWith(SwordSlash swordSlash){
+        // by default the interaction is empty
+    }
+
+    /**
+     * Simulate and interaction between RPG Interactor and a destroyable
+     * @param destroyable (Destroyable), not null
+     */
+    default void interactWith(Destroyable destroyable){
         // by default the interaction is empty
     }
 

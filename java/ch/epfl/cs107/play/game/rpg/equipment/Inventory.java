@@ -2,9 +2,11 @@ package ch.epfl.cs107.play.game.rpg.equipment;
 
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
+import ch.epfl.cs107.play.game.arpg.actor.ARPGInventory;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 public interface Inventory extends InventoryContentAccessor {
 
@@ -22,9 +24,15 @@ public interface Inventory extends InventoryContentAccessor {
 
         int getPrice();
 
+        boolean getRequiresAnimations();
+
         String getSpriteName();
 
         BiConsumer<AreaEntity, Area> getConsumeMethod();
+
+        ARPGInventory.ARPGItem getItemToConsume();
+
+        boolean getSelfConsumable();
 
         RegionOfInterest getTextureRoi();
     }

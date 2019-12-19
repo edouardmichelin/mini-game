@@ -4,6 +4,8 @@ import ch.epfl.cs107.play.game.actor.Entity;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.arpg.ARPG;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
+import ch.epfl.cs107.play.game.arpg.items.*;
 import ch.epfl.cs107.play.game.rpg.equipment.Inventory;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import com.sun.jdi.VoidType;
@@ -77,6 +79,7 @@ public class ARPGInventory implements Inventory {
     }
 
     public boolean addItem(InventoryItem item, int quantity) {
+        if (item == null) return false;
         if (this.remainingCapacity < quantity) return false;
 
         int qt = this.getItemQuantity(item);
@@ -92,6 +95,7 @@ public class ARPGInventory implements Inventory {
     }
 
     public boolean removeItem(InventoryItem item, int quantity) {
+        if (item == null) return false;
         int qt = this.getItemQuantity(item) - quantity;
 
         if (qt < 0) return false;
@@ -109,40 +113,35 @@ public class ARPGInventory implements Inventory {
     }
 
     public enum ARPGItem implements Inventory.InventoryItem {
-        ARROW("Arrow", 0, 5, "zelda/arrow.icon"),
-        BOW("Bow", 0, 15, "zelda/bow.icon"),
-        SWORD("Sword", 0, 20, "zelda/sword.icon"),
-        STAFF("Staff", 0, 200, "zelda/staff_water.icon"),
-        BOMB("Bomb", 0, 50, "zelda/bomb", Bomb::consume, new RegionOfInterest(0,0,16,16)),
-        CASTLE_KEY("CastleKey", 0, 100, "zelda/key")
+        ARROW(ArrowItem.TITLE, ArrowItem.WEIGHT, ArrowItem.PRICE, false, SpriteNames.ARROW_ITEM, null, ArrowItem.ITEM_TO_CONSUME, false, null),
+        BOW(BowItem.TITLE, BowItem.WEIGHT, BowItem.PRICE, true, SpriteNames.BOW_ITEM, ArrowItem::consume, BowItem.ITEM_TO_CONSUME, false,null),
+        SWORD(SwordItem.TITLE, SwordItem.WEIGHT, SwordItem.PRICE, true, SpriteNames.SWORD_ITEM, SwordSlashItem::consume, SwordItem.ITEM_TO_CONSUME, false,null),
+        STAFF(StaffItem.TITLE, StaffItem.WEIGHT, StaffItem.PRICE, true, SpriteNames.STAFF_ITEM, MagicWaterProjectileItem::consume, StaffItem.ITEM_TO_CONSUME, false,null),
+        BOMB(BombItem.TITLE, BombItem.WEIGHT, BombItem.PRICE, false, SpriteNames.BOMB_ITEM, BombItem::consume, BombItem.ITEM_TO_CONSUME, true, new RegionOfInterest(0,0,16,16)),
+        CASTLE_KEY(CastleKeyItem.TITLE, CastleKeyItem.WEIGHT, CastleKeyItem.PRICE, false, SpriteNames.CASTLE_KEY_ITEM, null, CastleKeyItem.ITEM_TO_CONSUME, false,null)
         ;
 
-        private String title;
-        private float weight;
-        private int price;
-        private String spriteName;
-        private BiConsumer<AreaEntity, Area> consumeMethod;
-        private RegionOfInterest roi;
+        final String title;
+        final float weight;
+        final int price;
+        final boolean requiresAnimations;
+        final String spriteName;
+        final BiConsumer<AreaEntity, Area> consumeMethod;
+        final ARPGItem itemToConsume;
+        final boolean selfConsumable;
+        final RegionOfInterest roi;
 
-        ARPGItem(String title, float weight, int price, String spriteName) {
+        ARPGItem(String title, float weight, int price, boolean requiresAnimations, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod, ARPGItem itemToConsume, boolean selfConsumable, RegionOfInterest roi) {
             this.title = title;
             this.weight = weight;
             this.price = price;
+            this.requiresAnimations = requiresAnimations;
             this.spriteName = spriteName;
-            this.consumeMethod = null;
-            this.roi = new RegionOfInterest(0,0,32,32);
-        }
-
-        ARPGItem(String title, float weight, int price, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod) {
-            this(title, weight, price, spriteName);
             this.consumeMethod = consumeMethod;
+            this.itemToConsume = itemToConsume;
+            this.selfConsumable = selfConsumable;
+            this.roi = roi == null ? new RegionOfInterest(0,0,32,32) : roi;
         }
-
-        ARPGItem(String title, float weight, int price, String spriteName, BiConsumer<AreaEntity, Area> consumeMethod, RegionOfInterest roi) {
-            this(title, weight, price, spriteName, consumeMethod);
-            this.roi = roi;
-        }
-
 
         @Override
         public String getTitle() {
@@ -159,12 +158,29 @@ public class ARPGInventory implements Inventory {
             return this.price;
         }
 
+        @Override
+        public boolean getRequiresAnimations() {
+            return this.requiresAnimations;
+        }
+
+        @Override
         public String getSpriteName() {
             return this.spriteName;
         }
 
+        @Override
         public BiConsumer<AreaEntity, Area> getConsumeMethod() {
             return this.consumeMethod;
+        }
+
+        @Override
+        public ARPGItem getItemToConsume() {
+            return this.itemToConsume;
+        }
+
+        @Override
+        public boolean getSelfConsumable() {
+            return this.selfConsumable;
         }
 
         @Override

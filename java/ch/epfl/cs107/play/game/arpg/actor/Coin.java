@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.arpg.actor;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -16,14 +17,6 @@ public class Coin extends CollectibleAreaEntity {
 
     private Animation animation;
     private int value;
-
-    public static void drop(AreaEntity source, Area area) {
-        DiscreteCoordinates position = source
-                .getCurrentCells()
-                .get(0);
-
-        area.registerActor(new Coin(area, Orientation.DOWN, position));
-    }
 
     /**
      * Default AreaEntity constructor
@@ -57,8 +50,14 @@ public class Coin extends CollectibleAreaEntity {
         Sprite[] s = new Sprite[4];
 
         for (int frame = 0; frame < 4; frame++) {
-            s[frame] = new RPGSprite("zelda/coin", coefficient, coefficient, this,
-                    new RegionOfInterest(frame * 16, 0, 16, 16), anchor);
+            s[frame] = new RPGSprite(
+                    SpriteNames.COIN,
+                    coefficient,
+                    coefficient,
+                    this,
+                    new RegionOfInterest(frame * 16, 0, 16, 16),
+                    anchor
+            );
         }
         
         return s;

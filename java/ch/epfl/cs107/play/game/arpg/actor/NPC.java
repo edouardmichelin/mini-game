@@ -89,15 +89,6 @@ public class NPC extends MovableAreaEntity implements Interactor {
         return this.animations[this.getOrientation().ordinal()];
     }
 
-    private void drawDialogBox(Canvas canvas) {
-        float width = canvas.getScaledWidth();
-        float height = canvas.getScaledHeight();
-
-        Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(width / 2 - ((width  / 20)), height / 2 - height / 20));
-
-       this.dialog.draw(canvas);
-    }
-
     @Override
     public void update(float deltaTime) {
         if (this.state.equals(State.INACTIVE)) {
@@ -127,7 +118,7 @@ public class NPC extends MovableAreaEntity implements Interactor {
     public void draw(Canvas canvas) {
         this.getAnimation().draw(canvas);
 
-        if (this.isTalking) drawDialogBox(canvas);
+        if (this.isTalking) this.dialog.draw(canvas);
     }
 
     @Override

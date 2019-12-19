@@ -73,6 +73,14 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a cave door
+     * @param caveDoor (CaveDoor), not null
+     */
+    default void interactWith(CaveDoor caveDoor){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a darkLord
      * @param darkLord (DarkLord), not null
      */

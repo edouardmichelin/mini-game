@@ -179,5 +179,10 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
             Bomb.this.inflictDamage(grass);
         }
 
+        @Override
+        public void interactWith(CaveDoor caveDoor) {
+            caveDoor.open();
+        }
+
     }
 }

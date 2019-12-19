@@ -25,10 +25,15 @@ public abstract class SpriteNames {
     public static final String BOMB = "zelda/bomb";
     public static final String CASTLE_DOOR_OPEN = "zelda/castleDoor.open";
     public static final String CASTLE_DOOR_CLOSE = "zelda/castleDoor.close";
+    public static final String CAVE_DOOR_OPEN = "zelda/cave.open";
+    public static final String CAVE_DOOR_CLOSE = "zelda/cave.close";
     public static final String HEART = "zelda/heart";
     public static final String FIRE_SPELL = "zelda/fire";
     public static final String COIN = "zelda/coin";
     public static final String CASTLE_KEY = "zelda/key";
+    public static final String FLOWER_RED = "zelda/flower.red";
+    public static final String FLOWER_BLUE = "zelda/flower.blue";
+    public static final String WATERFALL = "zelda/waterfall";
 
     // PROJECTILES
     public static final String MAGIC_WATER = "zelda/magicWaterProjectile";
@@ -55,8 +60,5 @@ public abstract class SpriteNames {
     public static final String EXPLOSION = "zelda/explosion";
     public static final String DIGITS = "zelda/digits";
     public static final String VANISH = "zelda/vanish";
-    public static final String WATERFALL = "zelda/waterfall";
     public static final String DIALOG = "zelda/dialog";
-    public static final String FLOWER_RED = "zelda/flower.red";
-    public static final String FLOWER_BLUE = "zelda/flower.blue";
 }

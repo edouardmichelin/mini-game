@@ -81,6 +81,14 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a staff
+     * @param staff (Staff), not null
+     */
+    default void interactWith(Staff staff){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a bow
      * @param bow (Bow), not null
      */

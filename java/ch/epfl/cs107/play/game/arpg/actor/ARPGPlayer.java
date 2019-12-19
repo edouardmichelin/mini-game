@@ -330,6 +330,11 @@ public class ARPGPlayer extends Player implements Destroyable {
         }
 
         @Override
+        public void interactWith(Staff staff) {
+            ARPGPlayer.this.inventory.addSingleItem(staff.collect());
+        }
+
+        @Override
         public void interactWith(Bow bow) {
             ARPGPlayer.this.inventory.addSingleItem(bow.collect());
         }

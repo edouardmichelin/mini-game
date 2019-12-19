@@ -35,6 +35,7 @@ public abstract class SpriteNames {
     public static final String FLOWER_RED = "zelda/flower.red";
     public static final String FLOWER_BLUE = "zelda/flower.blue";
     public static final String WATERFALL = "zelda/waterfall";
+    public static final String BRIDGE = "zelda/bridge";
 
     // PROJECTILES
     public static final String MAGIC_WATER = "zelda/magicWaterProjectile";

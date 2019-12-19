@@ -62,7 +62,6 @@ public class ARPGPlayer extends Player implements Destroyable {
         this.inventory = new ARPGInventory(30, this);
 
         this.inventory.addItem(ARPGInventory.ARPGItem.BOMB, 3);
-        this.inventory.addItem(ARPGInventory.ARPGItem.BOW, 1);
         this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 5);
         this.inventory.addItem(ARPGInventory.ARPGItem.STAFF, 1);
 
@@ -123,6 +122,8 @@ public class ARPGPlayer extends Player implements Destroyable {
     }
 
     private void move(Orientation orientation) {
+        if (this.state.equals(ARPGPlayerState.TALKING)) return;
+
         if (this.getOrientation().equals(orientation))
             if (keyboard.get(Keys.RUN).isDown())
                 this.move(ANIMATION_DURATION / 2, 0);
@@ -272,9 +273,9 @@ public class ARPGPlayer extends Player implements Destroyable {
 
         if (item.getConsumeMethod() == null) return;
 
-        if (this.inventory.contains(item.itemToConsume ) || item.itemToConsume == null) {
+        if (this.inventory.contains(item.itemToConsume) || item.itemToConsume == null) {
             item.getConsumeMethod().accept(this, this.getOwnerArea());
-            if(item.selfConsumable) {
+            if (item.selfConsumable) {
                 this.inventory.removeSingleItem(item);
             } else {
                 this.inventory.removeSingleItem(item.itemToConsume);

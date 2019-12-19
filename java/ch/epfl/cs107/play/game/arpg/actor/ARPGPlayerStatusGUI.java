@@ -11,7 +11,7 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 public class ARPGPlayerStatusGUI implements ARPGStatusGUI {
-    private final static int DEPTH = 100000;
+    private final static int DEPTH = 600;
 
     private boolean displayFortune = false;
     private float healthPoint;

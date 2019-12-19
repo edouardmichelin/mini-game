@@ -9,6 +9,7 @@ import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
+import ch.epfl.cs107.play.game.rpg.actor.Dialog;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.misc.Helpers;
 import ch.epfl.cs107.play.game.rpg.misc.NPCProperties;
@@ -31,8 +32,7 @@ public class NPC extends MovableAreaEntity implements Interactor {
     private Animation[] animations;
     private int speed;
     private boolean isTalking;
-    private ImageGraphics dialogBox;
-    private TextGraphics message;
+    private Dialog dialog;
     private NPCHandler interactionHandler;
     private State state;
     private int inactivityCounter;
@@ -63,16 +63,7 @@ public class NPC extends MovableAreaEntity implements Interactor {
                 new Orientation[]{Orientation.UP, Orientation.RIGHT, Orientation.DOWN, Orientation.LEFT}
         ));
 
-        this.message = new TextGraphics(
-                this.properties.getMessage(),
-                0.4f,
-                Color.BLACK,
-                null,
-                1f,
-                false,
-                true,
-                null);
-        this.message.setDepth(DEPTH + 1);
+        this.dialog = new Dialog(this.properties.getMessage(), SpriteNames.DIALOG, this.getOwnerArea() );
     }
 
     private void switchOrientation() {
@@ -103,20 +94,7 @@ public class NPC extends MovableAreaEntity implements Interactor {
 
         Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(width / 2 - ((width  / 20)), height / 2 - height / 20));
 
-        this.dialogBox = new ImageGraphics(
-                ResourcePath.getSprite(SpriteNames.DIALOG),
-                width * 9 / 10,
-                height / 4,
-                new RegionOfInterest(0, 0, 240, 80),
-                anchor,
-                1,
-                DEPTH
-        );
-
-        this.dialogBox.draw(canvas);
-
-        this.message.setAnchor(anchor.add(new Vector(0.8f, 1.75f)));
-        this.message.draw(canvas);
+       this.dialog.draw(canvas);
     }
 
     @Override

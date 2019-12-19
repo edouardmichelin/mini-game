@@ -93,7 +93,7 @@ public class ARPGPlayer extends Player implements Destroyable {
         if (this.state.equals(ARPGPlayerState.NORMAL))
             return this.getDefaultAnimations();
 
-        String spriteName = String.format("%S.%s", SpriteNames.PLAYER, currentItem.getTitle());
+        String spriteName = String.format("%s.%s", SpriteNames.PLAYER, currentItem.getTitle());
 
         return RPGSprite.createAnimations(CONSUMING_TIME / 3, RPGSprite.extractSprites(
                 spriteName,

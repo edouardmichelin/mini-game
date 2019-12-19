@@ -63,7 +63,6 @@ public class ARPGPlayer extends Player implements Destroyable {
 
         this.inventory.addItem(ARPGInventory.ARPGItem.BOMB, 3);
         this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 5);
-        this.inventory.addItem(ARPGInventory.ARPGItem.STAFF, 1);
 
         this.inventory.addMoney(19);
 

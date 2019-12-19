@@ -40,7 +40,7 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
 
         this.interactionHandler = new ARPGBombHandler();
         this.animation = new Animation(Settings.FRAME_RATE / 3, getDefaultSprites(), true);
-    }g
+    }
 
     private Sprite[] getDefaultSprites() {
         return new Sprite[]{

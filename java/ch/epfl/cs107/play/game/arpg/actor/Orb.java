@@ -20,7 +20,7 @@ public class Orb extends AreaEntity implements Signal {
 
 
     /**
-     * Default AreaEntity constructor
+     * Will take care of the bridge opening
      *
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null

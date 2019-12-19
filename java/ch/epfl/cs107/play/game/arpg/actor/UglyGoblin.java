@@ -17,6 +17,9 @@ import ch.epfl.cs107.play.math.Vector;
 
 import java.util.List;
 
+/**
+ * Will give us the bow once killed
+ */
 public class UglyGoblin extends Monster {
     private final static float DAMAGE_AMOUNT = 1.5f / Settings.FRAME_RATE;
     private final static DamageType DAMAGE_TYPE = DamageType.FIRE;

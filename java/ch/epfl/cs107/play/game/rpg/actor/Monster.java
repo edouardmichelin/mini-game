@@ -22,6 +22,12 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
     private float maxHp;
     private Animation deathAnimation;
 
+    /**
+     * This class will be a base for every monster in the game
+     * @param area
+     * @param orientation
+     * @param coordinates
+     */
     public Monster(Area area, Orientation orientation, DiscreteCoordinates coordinates) {
         super(area, orientation, coordinates);
 
@@ -51,6 +57,10 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
         return this.deathAnimation;
     }
 
+    /**
+     * Used as every monster has a vanish animation
+     * @return
+     */
     private Sprite[] getDeathSprites() {
         Sprite[] sprites = new Sprite[DEATH_ANIMATION_FRAMES];
 
@@ -72,6 +82,10 @@ public abstract class Monster extends MovableAreaEntity implements Destroyable, 
         this.orientate(Orientation.values()[randomIndex]);
     }
 
+    /**
+     * Allows for random navigation of the entity
+     * @return
+     */
     protected boolean shouldSwitchOrientation() {
         return RandomGenerator.getInstance().nextDouble() < 0.4f;
     }

@@ -81,3 +81,9 @@ Le scénario (assez simple) se déroule de la manière suivante
     public static int SWITCH_ITEM = Keyboard.TAB;
     public static int SWITCH_COINS_DISPLAY = Keyboard.L;
     public static int CONSUME_ITEM = Keyboard.SPACE;
+    
+## Note importante
+
+Nous avons oublié d'implémenter la possibilité de tester le code avec un "mode de triche"
+Le poids des objets est identique pour tous les objets (classes `*Items` dans `*arpg.items`)
+Le poids des objets est identique pour tous les objets (classes `*Items` dans `*arpg.items`)

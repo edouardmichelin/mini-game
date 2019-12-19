@@ -41,6 +41,14 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a defused bomb
+     * @param defusedBomb (DefusedBomb), not null
+     */
+    default void interactWith(DefusedBomb defusedBomb){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a bomb
      * @param bomb (Bomb), not null
      */

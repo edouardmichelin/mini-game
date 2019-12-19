@@ -27,6 +27,7 @@ public class Sword extends CollectibleAreaEntity implements Dropable {
 
     }
 
+    @Override
     public ARPGInventory.ARPGItem collect() {
         this.getOwnerArea().unregisterActor(this);
 

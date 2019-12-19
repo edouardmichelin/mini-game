@@ -27,6 +27,7 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
     private int simulationStep;
     private boolean detonate;
     private boolean exploded;
+    private boolean isUnpinned;
 
     /**
      * Default AreaEntity constructor
@@ -119,12 +120,12 @@ public class Bomb extends AreaEntity implements Interactor, Dropable {
 
     @Override
     public boolean wantsCellInteraction() {
-        return this.detonate;
+        return this.isUnpinned && this.detonate;
     }
 
     @Override
     public boolean wantsViewInteraction() {
-        return this.detonate;
+        return this.isUnpinned && this.detonate;
     }
 
     @Override

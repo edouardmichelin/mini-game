@@ -5,6 +5,7 @@ import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.arpg.actor.ARPGInventory.ARPGItem;
 import ch.epfl.cs107.play.game.arpg.actor.Bomb;
+import ch.epfl.cs107.play.game.arpg.actor.DefusedBomb;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 import java.util.List;
@@ -29,5 +30,13 @@ public class BombItem {
         else {
             area.registerActor(new Bomb(area, Orientation.DOWN, position));
         }
+    }
+
+    public static void drop(AreaEntity source, Area area) {
+        DiscreteCoordinates position = source
+                .getCurrentCells()
+                .get(0);
+
+        area.registerActor(new DefusedBomb(area, Orientation.DOWN, position));
     }
 }

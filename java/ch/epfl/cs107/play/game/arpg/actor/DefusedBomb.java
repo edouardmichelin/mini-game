@@ -12,7 +12,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.window.Canvas;
 
-public class Bow extends CollectibleAreaEntity implements Dropable {
+public class DefusedBomb extends CollectibleAreaEntity implements Dropable {
     private RPGSprite sprite;
 
     /**
@@ -22,24 +22,23 @@ public class Bow extends CollectibleAreaEntity implements Dropable {
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
      */
-    public Bow(Area area, Orientation orientation, DiscreteCoordinates position) {
+    public DefusedBomb(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
         this.sprite = new RPGSprite(
-                SpriteNames.BOW,
+                SpriteNames.BOMB,
                 1f,
                 1f,
                 this,
                 new RegionOfInterest(0, 0, 16, 16)
         );
-
     }
 
     @Override
     public ARPGInventory.ARPGItem collect() {
         this.getOwnerArea().unregisterActor(this);
 
-        return ARPGInventory.ARPGItem.BOW;
+        return ARPGInventory.ARPGItem.BOMB;
     }
 
     @Override

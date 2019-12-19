@@ -13,11 +13,11 @@ import ch.epfl.cs107.play.window.Window;
 public class ARPG extends RPG {
     private void init() {
         this.createAreas();
-        this.setCurrentArea(AreaNames.FERME, true);
+        this.setCurrentArea(AreaNames.MAISON_FERME, true);
         this.initPlayer(new ARPGPlayer(
                 (this.getCurrentArea()),
-                Orientation.DOWN,
-                new DiscreteCoordinates(6, 10)
+                Orientation.RIGHT,
+                new DiscreteCoordinates(4, 3)
         ));
     }
 
@@ -46,5 +46,6 @@ public class ARPG extends RPG {
         this.addArea(new RouteChateau());
         this.addArea(new Chateau());
         this.addArea(new MaisonFerme());
+        this.addArea(new Grotte());
     }
 }

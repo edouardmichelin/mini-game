@@ -7,7 +7,7 @@ import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
-public class MaisonFerme extends ARPGArea {
+public class Grotte extends ARPGArea {
     @Override
     protected void createArea() {
         this.registerActor(new Background(this));
@@ -16,20 +16,19 @@ public class MaisonFerme extends ARPGArea {
 
     private void registerDoors() {
         this.registerActor(new Door(
-                AreaNames.FERME,
-                new DiscreteCoordinates(6, 10),
+                AreaNames.VILLAGE,
+                new DiscreteCoordinates(25, 17),
                 Logic.TRUE,
                 this,
-                Orientation.DOWN,
-                new DiscreteCoordinates(3,0),
-                new DiscreteCoordinates(4, 0)
+                Orientation.UP,
+                new DiscreteCoordinates(8,2)
         ));
     }
 
 
     @Override
     public String getTitle() {
-        return AreaNames.MAISON_FERME;
+        return AreaNames.GROTTE;
     }
 
 }

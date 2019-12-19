@@ -11,6 +11,7 @@ public class MaisonFerme extends ARPGArea {
     @Override
     protected void createArea() {
         this.registerActor(new Background(this));
+
         registerDoors();
     }
 

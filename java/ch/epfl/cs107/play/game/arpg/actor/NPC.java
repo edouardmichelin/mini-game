@@ -64,8 +64,8 @@ public class NPC extends MovableAreaEntity implements Interactor {
         ));
 
         this.message = new TextGraphics(
-                this.properties.message,
-                0.5f,
+                this.properties.getMessage(),
+                0.4f,
                 Color.BLACK,
                 null,
                 1f,
@@ -115,7 +115,7 @@ public class NPC extends MovableAreaEntity implements Interactor {
 
         this.dialogBox.draw(canvas);
 
-        this.message.setAnchor(anchor);
+        this.message.setAnchor(anchor.add(new Vector(0.8f, 1.75f)));
         this.message.draw(canvas);
     }
 
@@ -126,7 +126,7 @@ public class NPC extends MovableAreaEntity implements Interactor {
             this.getAnimation().reset();
         }
 
-        if (this.properties.canMove && !this.state.equals(State.INACTIVE)) {
+        if (this.properties.canMove() && !this.state.equals(State.INACTIVE)) {
             this.move(this.speed);
 
             if (this.isTargetReached())
@@ -168,7 +168,7 @@ public class NPC extends MovableAreaEntity implements Interactor {
 
     @Override
     public boolean wantsViewInteraction() {
-        return this.properties.canMove;
+        return this.properties.canMove();
     }
 
     @Override

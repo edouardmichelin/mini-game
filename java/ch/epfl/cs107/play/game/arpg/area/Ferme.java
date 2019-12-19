@@ -20,13 +20,8 @@ public class Ferme extends ARPGArea {
         this.registerDoors();
         this.registerFlowers();
 
-        NPCProperties npcProps_1 = new NPCProperties();
-        npcProps_1.canMove = false;
-        npcProps_1.message = "Coucou, je suis votre premier NPC !";
-
-        NPCProperties npcProps_2 = new NPCProperties();
-        npcProps_2.canMove = true;
-        npcProps_2.message = "Coucou, je suis votre second NPC !";
+        NPCProperties npcProps_1 = new NPCProperties("J'ai l'impression d'avoir vu que cette ferme toute ma vie... pas vous?", false);
+        NPCProperties npcProps_2 = new NPCProperties("Des bûches qui marchent? J'devrais arrêter de manger ces fleurs...", true);
 
         this.registerActor(new LogMonster(this, Orientation.DOWN, new DiscreteCoordinates(9, 3)));
         this.registerActor(new LogMonster(this, Orientation.RIGHT, new DiscreteCoordinates(16, 12)));
@@ -72,6 +67,7 @@ public class Ferme extends ARPGArea {
     private void registerFlowers() {
         this.registerActor(new FlowerBlue(new Vector(15, 3)));
         this.registerActor(new FlowerRed(new Vector(6, 7)));
+        this.registerActor(new FlowerBlue(new Vector(17, 5)));
     }
 
     @Override

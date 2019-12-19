@@ -52,9 +52,21 @@ public class Route extends ARPGArea {
     }
 
     private void plantGrasses() {
-        for (int i = 5; i < 8; i++)
+        for (int i = 5; i < 8; i++) {
             for (int j = 6; j < 12; j++)
                 plantGrass(new DiscreteCoordinates(i, j));
+        }
+
+        plantGrass(new DiscreteCoordinates(2, 14));
+        plantGrass(new DiscreteCoordinates(2, 15));
+        plantGrass(new DiscreteCoordinates(2, 16));
+
+        plantGrass(new DiscreteCoordinates(8, 2));
+        plantGrass(new DiscreteCoordinates(8, 3));
+        plantGrass(new DiscreteCoordinates(9, 3));
+        plantGrass(new DiscreteCoordinates(10, 3));
+        plantGrass(new DiscreteCoordinates(11, 3));
+        plantGrass(new DiscreteCoordinates(11, 2));
     }
 
     private void plantGrass(DiscreteCoordinates coordinates) {

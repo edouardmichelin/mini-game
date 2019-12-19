@@ -3,10 +3,7 @@ package ch.epfl.cs107.play.game.arpg.actor;
 import ch.epfl.cs107.play.game.actor.ImageGraphics;
 import ch.epfl.cs107.play.game.actor.TextGraphics;
 import ch.epfl.cs107.play.game.areagame.Area;
-import ch.epfl.cs107.play.game.areagame.actor.Animation;
-import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
-import ch.epfl.cs107.play.game.areagame.actor.MovableAreaEntity;
-import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
 import ch.epfl.cs107.play.game.arpg.config.Settings;
@@ -22,12 +19,13 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
-public class NPC extends MovableAreaEntity {
+public class NPC extends MovableAreaEntity implements Interactor {
     private static final int DEPTH = 99999999;
     private static final String[] SPRITES = {SpriteNames.NPC_1, SpriteNames.NPC_2};
     private static final int ANIMATION_DURATION = Settings.FRAME_RATE / 10;
     private static final int MIN_SPEED = 2;
     private static final int MAX_SPEED = 4;
+    private static final int MAX_INACTIVITY_TIME = Settings.FRAME_RATE / 2;
 
     private NPCProperties properties;
     private Animation[] animations;
@@ -35,6 +33,9 @@ public class NPC extends MovableAreaEntity {
     private boolean isTalking;
     private ImageGraphics dialogBox;
     private TextGraphics message;
+    private NPCHandler interactionHandler;
+    private State state;
+    private int inactivityCounter;
 
     /**
      * Default MovableAreaEntity constructor
@@ -48,6 +49,8 @@ public class NPC extends MovableAreaEntity {
 
         this.properties = properties;
         this.speed = Settings.FRAME_RATE / Helpers.random(MIN_SPEED, MAX_SPEED);
+        this.interactionHandler = new NPCHandler();
+        this.state = State.NORMAL;
 
         this.animations = RPGSprite.createAnimations(ANIMATION_DURATION, RPGSprite.extractSprites(
                 SPRITES[RandomGenerator.getInstance().nextInt(SPRITES.length)],
@@ -70,8 +73,6 @@ public class NPC extends MovableAreaEntity {
                 true,
                 null);
         this.message.setDepth(DEPTH + 1);
-
-
     }
 
     private void switchOrientation() {
@@ -120,7 +121,12 @@ public class NPC extends MovableAreaEntity {
 
     @Override
     public void update(float deltaTime) {
-        if (this.properties.canMove) {
+        if (this.state.equals(State.INACTIVE)) {
+            this.inactivityCounter++;
+            this.getAnimation().reset();
+        }
+
+        if (this.properties.canMove && !this.state.equals(State.INACTIVE)) {
             this.move(this.speed);
 
             if (this.isTargetReached())
@@ -132,6 +138,8 @@ public class NPC extends MovableAreaEntity {
 
             this.getAnimation().update(deltaTime);
         }
+
+        if (this.inactivityCounter % MAX_INACTIVITY_TIME == 0) this.state = State.NORMAL;
 
         super.update(deltaTime);
     }
@@ -145,7 +153,27 @@ public class NPC extends MovableAreaEntity {
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
+        return Collections.singletonList(this.getCurrentMainCellCoordinates());
+    }
+
+    @Override
+    public List<DiscreteCoordinates> getFieldOfViewCells() {
+        return this.getCurrentMainCellCoordinates().getNeighbours();
+    }
+
+    @Override
+    public boolean wantsCellInteraction() {
+        return false;
+    }
+
+    @Override
+    public boolean wantsViewInteraction() {
+        return this.properties.canMove;
+    }
+
+    @Override
+    public void interactWith(Interactable other) {
+        other.acceptInteraction(this.interactionHandler);
     }
 
     @Override
@@ -166,5 +194,20 @@ public class NPC extends MovableAreaEntity {
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((ARPGInteractionVisitor) v).interactWith(this);
+    }
+
+    private enum State {
+        NORMAL,
+        INACTIVE,
+    }
+
+    private class NPCHandler implements ARPGInteractionVisitor {
+        @Override
+        public void interactWith(ARPGPlayer player) {
+            if (NPC.this.state.equals(State.NORMAL)) {
+                NPC.this.orientate(player.getOrientation().opposite());
+                NPC.this.state = State.INACTIVE;
+            }
+        }
     }
 }

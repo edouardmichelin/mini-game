@@ -30,11 +30,14 @@ public class Bridge extends AreaEntity {
 
         this.sprite = new RPGSprite(
                 SpriteNames.BRIDGE,
+                4f,
                 2f,
-                1f,
                 this,
-                new RegionOfInterest(0, 0, 64, 48)
+                new RegionOfInterest(0, 0, 64, 48),
+                new Vector(-1f, -0.5f)
         );
+
+        this.activate();
 
     }
 

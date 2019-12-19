@@ -23,16 +23,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class NPC extends MovableAreaEntity {
+    private static final int DEPTH = 99999999;
     private static final String[] SPRITES = {SpriteNames.NPC_1, SpriteNames.NPC_2};
-    private static final int ANIMATION_DURATION = Settings.FRAME_RATE / 4;
-    private static final int MIN_SPEED = 4;
-    private static final int MAX_SPEED = 6;
+    private static final int ANIMATION_DURATION = Settings.FRAME_RATE / 10;
+    private static final int MIN_SPEED = 2;
+    private static final int MAX_SPEED = 4;
 
     private NPCProperties properties;
     private Animation[] animations;
     private int speed;
     private boolean isTalking;
     private ImageGraphics dialogBox;
+    private TextGraphics message;
 
     /**
      * Default MovableAreaEntity constructor
@@ -57,6 +59,28 @@ public class NPC extends MovableAreaEntity {
                 32,
                 new Orientation[]{Orientation.UP, Orientation.RIGHT, Orientation.DOWN, Orientation.LEFT}
         ));
+
+        this.message = new TextGraphics(
+                this.properties.message,
+                0.5f,
+                Color.BLACK,
+                null,
+                1f,
+                false,
+                true,
+                null);
+        this.message.setDepth(DEPTH + 1);
+
+
+    }
+
+    private void switchOrientation() {
+        int randomIndex = RandomGenerator.getInstance().nextInt(Orientation.values().length);
+        this.orientate(Orientation.values()[randomIndex]);
+    }
+
+    private boolean shouldSwitchOrientation() {
+        return RandomGenerator.getInstance().nextDouble() < 0.4f;
     }
 
     public void talk(AreaEntity source) {
@@ -73,7 +97,6 @@ public class NPC extends MovableAreaEntity {
     }
 
     private void drawDialogBox(Canvas canvas) {
-        final int DEPTH = 99999999;
         float width = canvas.getScaledWidth();
         float height = canvas.getScaledHeight();
 
@@ -89,24 +112,26 @@ public class NPC extends MovableAreaEntity {
                 DEPTH
         );
 
-        TextGraphics hpt = new TextGraphics(this.properties.message, 0.3f, Color.RED);
-        // hpt.setParent(this);
-        hpt.setDepth(DEPTH + 1);
-        hpt.setAnchor(anchor);
-
-        // canvas.drawText(this.properties.message, 1, Transform.I.rotated(0), Color.BLACK, Color.white, 1, false, false, anchor, TextAlign.Horizontal.LEFT, TextAlign.Vertical.BOTTOM, 1, DEPTH + 1);
-
         this.dialogBox.draw(canvas);
-        hpt.draw(canvas);
-    }
 
-    private void drawDialog(Canvas canvas) {
+        this.message.setAnchor(anchor);
+        this.message.draw(canvas);
     }
 
     @Override
     public void update(float deltaTime) {
-        if (this.properties.canMove)
+        if (this.properties.canMove) {
             this.move(this.speed);
+
+            if (this.isTargetReached())
+                if (
+                        this.shouldSwitchOrientation() ||
+                        !this.getOwnerArea().canEnterAreaCells(this, this.getNextCurrentCells())
+                )
+                    this.switchOrientation();
+
+            this.getAnimation().update(deltaTime);
+        }
 
         super.update(deltaTime);
     }
@@ -115,10 +140,7 @@ public class NPC extends MovableAreaEntity {
     public void draw(Canvas canvas) {
         this.getAnimation().draw(canvas);
 
-        if (this.isTalking) {
-            drawDialogBox(canvas);
-        } else {
-        }
+        if (this.isTalking) drawDialogBox(canvas);
     }
 
     @Override

@@ -18,13 +18,18 @@ public class Ferme extends ARPGArea {
         this.registerActor(new Foreground(this));
         this.registerDoors();
 
-        NPCProperties npcProps = new NPCProperties();
-        npcProps.canMove = false;
-        npcProps.message = "Coucou, je suis votre premier NPC !";
+        NPCProperties npcProps_1 = new NPCProperties();
+        npcProps_1.canMove = false;
+        npcProps_1.message = "Coucou, je suis votre premier NPC !";
+
+        NPCProperties npcProps_2 = new NPCProperties();
+        npcProps_2.canMove = true;
+        npcProps_2.message = "Coucou, je suis votre second NPC !";
 
         this.registerActor(new LogMonster(this, Orientation.DOWN, new DiscreteCoordinates(9, 3)));
         this.registerActor(new LogMonster(this, Orientation.RIGHT, new DiscreteCoordinates(16, 12)));
-        this.registerActor(new NPC(this, Orientation.RIGHT, new DiscreteCoordinates(16, 12), npcProps));
+        this.registerActor(new NPC(this, Orientation.RIGHT, new DiscreteCoordinates(16, 12), npcProps_1));
+        this.registerActor(new NPC(this, Orientation.RIGHT, new DiscreteCoordinates(13, 6), npcProps_2));
     }
 
     private void registerDoors() {

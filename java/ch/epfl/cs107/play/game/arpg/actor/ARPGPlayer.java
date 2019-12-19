@@ -299,10 +299,13 @@ public class ARPGPlayer extends Player implements Destroyable {
         @Override
         public void interactWith(NPC npc) {
             if (ARPGPlayer.this.isInteractionKeyPressed())
-                if (!ARPGPlayer.this.state.equals(ARPGPlayerState.TALKING))
+                if (!ARPGPlayer.this.state.equals(ARPGPlayerState.TALKING)) {
+                    ARPGPlayer.this.state = ARPGPlayerState.TALKING;
                     npc.talk(ARPGPlayer.this);
-                else
+                } else {
+                    ARPGPlayer.this.state = ARPGPlayerState.NORMAL;
                     npc.stopTalking();
+                }
         }
 
         @Override

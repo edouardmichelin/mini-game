@@ -20,6 +20,8 @@ public class Route extends ARPGArea {
         this.registerDoors();
         this.plantGrasses();
 
+
+
         this.registerActor(new Bridge(this, Orientation.RIGHT, new DiscreteCoordinates(16, 10), Logic.FALSE));
         this.registerActor(new Orb(this, Orientation.UP, new DiscreteCoordinates(18, 18), Logic.FALSE));
 

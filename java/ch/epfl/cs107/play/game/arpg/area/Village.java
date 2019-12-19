@@ -7,6 +7,7 @@ import ch.epfl.cs107.play.game.arpg.actor.*;
 import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.misc.NPCProperties;
+import ch.epfl.cs107.play.io.XMLTexts;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
@@ -18,10 +19,13 @@ public class Village extends ARPGArea {
         this.registerActor(new Foreground(this));
         this.registerDoors();
 
-        NPCProperties prop1 = new NPCProperties("J'vendrais bien d'la limonade mais mes parents m'ont pas implémenté la fonction. Tu peux éventuellement sucer tes pièces d'or, ça a ", false);
-        NPCProperties prop2 = new NPCProperties("La légende", false);
+        NPCProperties prop1 = new NPCProperties(XMLTexts.getText("npcVillage1"), false);
+        NPCProperties prop2 = new NPCProperties(XMLTexts.getText("npcVillage2"), false);
+        NPCProperties prop3 = new NPCProperties(XMLTexts.getText("npcVillage3"), true);
 
         this.registerActor(new NPC(this, Orientation.DOWN, new DiscreteCoordinates(17, 11), prop1));
+        this.registerActor(new NPC(this, Orientation.DOWN, new DiscreteCoordinates(21, 3), prop2));
+        this.registerActor(new NPC(this, Orientation.DOWN, new DiscreteCoordinates(11, 6), prop3));
 
         this.registerActor(new Sword(this, Orientation.DOWN, new DiscreteCoordinates(25, 5)));
     }

@@ -7,6 +7,7 @@ import ch.epfl.cs107.play.game.arpg.actor.*;
 import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.misc.NPCProperties;
+import ch.epfl.cs107.play.io.XMLTexts;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.signal.logic.Logic;
@@ -20,8 +21,8 @@ public class Ferme extends ARPGArea {
         this.registerDoors();
         this.registerFlowers();
 
-        NPCProperties npcProps_1 = new NPCProperties("J'ai l'impression d'avoir vu que cette ferme toute ma vie... pas vous?", false);
-        NPCProperties npcProps_2 = new NPCProperties("Des bûches qui marchent? J'devrais arrêter de manger ces fleurs...", true);
+        NPCProperties npcProps_1 = new NPCProperties(XMLTexts.getText("npcFerme1"), false);
+        NPCProperties npcProps_2 = new NPCProperties(XMLTexts.getText("npcFerme2"), true);
 
         this.registerActor(new LogMonster(this, Orientation.DOWN, new DiscreteCoordinates(9, 3)));
         this.registerActor(new LogMonster(this, Orientation.RIGHT, new DiscreteCoordinates(16, 12)));

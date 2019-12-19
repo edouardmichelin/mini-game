@@ -4,8 +4,11 @@
     <string name="npcMaisonFerme2">Mais ?! J'ai tourné la tête un instant et vous êtes apparus !</string>
     <string name="npcFerme1">J'ai l'impression de n'avoir vu que cette ferme toute ma vie.... pas vous?</string>
     <string name="npcFerme2">Des bûches qui marchent? J'devrais arrêter de manger ces fleurs...</string>
-    <string name="npcVillage1">J'vendrais bien d'la limonade mais mes parents m'ont pas implémenté la fonction. Tu peux éventuellement sucer tes pièces d'or, j'crois que ça a bon goût.</string>
+    <string name="npcVillage1">J'vendrais bien d'la limonade mais mes parents m'ont pas implémenté la fonction.</string>
     <string name="npcVillage2">La légende dit qu'en 2D on ne peut pas voir l'horizon. C'est vachement noir comme idée...</string>
-    <string name=""></string>
-    <string name=""></string>
+    <string name="npcVillage3">Apparemment sucer ses pièces d'or c'est bon pour la santé, c'est leur utilité.</string>
+    <string name="npcRoute1">Celui qui possède une tondeuse dans cette foutue contrée devient automatiquement roi du royaume.</string>
+    <string name="npcRoute2">Qui l'eut cru que l'herbe pouvait cacher tant de richesses!.... Ah....</string>
+    <string name="npcRouteTemple1">J'crois que je n'ai pas mangé depuis 4 jours... vous avez des fraises?</string>
+    <string name="npcRouteTemple2">Vous voici en présence de mon fameux gratte dos! Ça lance accessoirement de la magie aussi...</string>
 </strings>

@@ -10,6 +10,7 @@ import ch.epfl.cs107.play.game.arpg.config.Settings;
 import ch.epfl.cs107.play.game.arpg.config.SpriteNames;
 import ch.epfl.cs107.play.game.arpg.handler.ARPGInteractionVisitor;
 import ch.epfl.cs107.play.game.arpg.items.StaffItem;
+import ch.epfl.cs107.play.game.arpg.items.SwordItem;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
@@ -64,7 +65,6 @@ public class ARPGPlayer extends Player implements Destroyable {
         this.inventory.addItem(ARPGInventory.ARPGItem.BOW, 1);
         this.inventory.addItem(ARPGInventory.ARPGItem.ARROW, 5);
         this.inventory.addItem(ARPGInventory.ARPGItem.STAFF, 1);
-        this.inventory.addItem(ARPGInventory.ARPGItem.SWORD, 1);
 
         this.inventory.addMoney(19);
 
@@ -321,6 +321,11 @@ public class ARPGPlayer extends Player implements Destroyable {
         public void interactWith(Coin coin) {
             ARPGPlayer.this.inventory.addMoney(coin.getValue());
             coin.collect();
+        }
+
+        @Override
+        public void interactWith(Sword sword) {
+            ARPGPlayer.this.inventory.addSingleItem(sword.collect());
         }
 
         @Override

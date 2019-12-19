@@ -50,6 +50,7 @@ public abstract class SpriteNames {
     public static final String ARROW_ITEM = "zelda/arrow.icon";
     public static final String SWORD_ITEM = "zelda/sword.icon";
     public static final String STAFF_ITEM = "zelda/staff_water.icon";
+    public static final String SWORD = "zelda/sword.icon";
 
     // INVENTORY
     public static final String GEAR_DISPLAY = "zelda/gearDisplay";

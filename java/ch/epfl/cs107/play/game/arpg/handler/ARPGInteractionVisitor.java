@@ -65,6 +65,14 @@ public interface ARPGInteractionVisitor extends RPGInteractionVisitor {
     }
 
     /**
+     * Simulate and interaction between RPG Interactor and a sword
+     * @param sword (Sword), not null
+     */
+    default void interactWith(Sword sword){
+        // by default the interaction is empty
+    }
+
+    /**
      * Simulate and interaction between RPG Interactor and a castle door
      * @param castleDoor (CastleDoor), not null
      */

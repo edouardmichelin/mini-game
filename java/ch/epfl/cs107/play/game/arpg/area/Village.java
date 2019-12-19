@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.game.areagame.actor.Foreground;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.arpg.actor.Arrow;
+import ch.epfl.cs107.play.game.arpg.actor.Sword;
 import ch.epfl.cs107.play.game.arpg.config.AreaNames;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -16,6 +17,8 @@ public class Village extends ARPGArea {
         this.registerActor(new Background(this));
         this.registerActor(new Foreground(this));
         this.registerDoors();
+
+        this.registerActor(new Sword(this, Orientation.DOWN, new DiscreteCoordinates(25, 5)));
     }
 
     private void registerDoors() {
